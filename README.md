@@ -1,2 +1,3 @@
-# UndeadTowerDefense
-몰려오는 언데드를 물리치고 타워를 지켜라
+# FreeTowerDefense
+몰려오는 언데드를 물리치고 타워를 지켜라... 였으나, 에셋이 비싸다.
+무료로 만들어보자

@@ -8,5 +8,5 @@ public abstract class Unit : MonoBehaviour
     protected int _attackPoint;
     protected int _defensePoint;
     public abstract void Attack();
-    public abstract void TakenDamange();
+    public abstract void TakenDamage(float Damage);
 }

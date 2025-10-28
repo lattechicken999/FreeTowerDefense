@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class BattleManager : MonoBehaviour
 {
-    public List<Unit> units = new List<Unit>();
+    public List<UnitTemp> units = new List<UnitTemp>();
     public List<Monster> monsters = new List<Monster>();
+
 
     void Battle()
     {
@@ -13,7 +14,7 @@ public class BattleManager : MonoBehaviour
     }
 
     // 유닛이 공격할 몬스터 탐색
-    Monster FindTarget(Unit unit)
+    Monster FindTarget(UnitTemp unit)
     {
         Monster selected = null;
         return selected;
@@ -27,12 +28,12 @@ public class BattleManager : MonoBehaviour
     }
 
     // 유닛이 몬스터 공격할때
-    void Damage(Unit attacker, Monster target)
+    void Damage(UnitTemp attacker, Monster target)
     {
 
     }
 
-    void Damage(Monster attacker, Unit target)
+    void Damage(Monster attacker, UnitTemp target)
     {
 
     }

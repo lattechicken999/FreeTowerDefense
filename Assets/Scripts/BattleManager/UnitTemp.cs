@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // 테스트용 임시 파일
-public class Unit : MonoBehaviour
+public class UnitTemp : MonoBehaviour
 {
     public string unitName;
     public int Health;

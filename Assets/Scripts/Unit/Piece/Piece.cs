@@ -71,9 +71,9 @@ public class Piece : Unit
     }
 
     /// <summary>
-    /// 기물 새로 생성시 호출되는 메서드
+    /// 기물이 진짜 생성 되었을 때 호출되는 메서드
     /// </summary>
-    public void SetPosition()
+    public void InitalPiece()
     {
 
     }

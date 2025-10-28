@@ -6,11 +6,11 @@ using UnityEngine.EventSystems;
 
 public class Monster : Unit
 {
-    [field: SerializeField] public MonsterId _monsterId { get; private set; } //몬스터 아이디 (몬스터당 1개. 중복되지않고 고유해야하고, 몬스터 종류 추가될때마다 enum 추가 필요)
-    [SerializeField] private float _reward = 1.0f; //유닛 처치시 현상금]
+    [field: SerializeField] public GoldManager.MonsterNameEnum _monsterId { get; private set; } //몬스터 아이디 (몬스터당 1개. 중복되지않고 고유해야하고, 몬스터 종류 추가될때마다 enum 추가 필요)
     //▼이벤트
-    public event Action<float> _hpValueChange; //hp가 변경된걸 알리기 위해서
-    public event Action<Monster> _onDeath; //죽었다고 알리기 위해서
+    public event Action<float> _hpValueChange; //UIHpBarMonster.cs에 hp가 변경된걸 알리기 위해서
+    public event Action<Monster> _monsterDeadNotified; //MonsterManager.cs와  죽었다고 알리기 위해서
+    public event Action<GoldManager.MonsterNameEnum> _monsterDeadNotifiedById; //GoldManager.cs에 죽은 몬스터 ID로 재화관리하기 위해서
 
     //▼상속받은 hp,Attack,Defence에 [SerializeField]없어서 추가. Init()메서드에서 상속된곳에 다시 넣어줌
     [SerializeField] private float _initHp = 1.0f;
@@ -27,11 +27,11 @@ public class Monster : Unit
     public float _AttackPoint => _attackPoint;
     public float _DefensePoint => _defensePoint;
 
-    private void Awake()
+    private void OnEnable()
     {
         Init();
     }
-    
+
     /// <summary>
     /// Monster에서는 해당값을 Prefab에서 각각 설정해줘야할거같아서 추가. Init()메서드에서 상속된곳에 다시 넣어줌
     /// moveDirection(초기 이동방향) 도 설정
@@ -68,21 +68,14 @@ public class Monster : Unit
     }
 
     /// <summary>
-    /// 현상금 반환 (죽으면 재화 발생 기능)
-    /// </summary>
-    /// <returns></returns>
-    public float GetReward()
-    {
-        return _reward;
-    }
-    /// <summary>
     /// Hp가 0이 되었는지 확인, 이후 스스로 본인을 파괴한다
     /// </summary>
-    private void CheckHpZero() 
+    private void CheckHpZero()
     {
-        if(_Hp <= 0)
+        if (_Hp <= 0)
         {
-            _onDeath.Invoke(this);
+            _monsterDeadNotified.Invoke(this);
+            _monsterDeadNotifiedById.Invoke(_monsterId);
             Destroy(gameObject);
         }
     }
@@ -103,7 +96,7 @@ public class Monster : Unit
     }
     private void OnTriggerEnter(Collider other) //웨이포인트 테스트용... 가보자
     {
-        if(other.gameObject.CompareTag("WayPoints"))
+        if (other.gameObject.CompareTag("WayPoints"))
         {
             Debug.Log("Waypoint 들어옴");
             Vector3 vec = other.gameObject.transform.position;

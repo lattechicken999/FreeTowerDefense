@@ -38,6 +38,11 @@ public class SoundManager : Singleton<SoundManager>
         }
     }
 
+    /// <summary>
+    /// UI 사운드 디스플레이용 메서드
+    /// UISoundClipEnum 의 값을 받으면 저장되어 있는 배열의 클립을 플레이해줌
+    /// </summary>
+    /// <param name="selUiClip">UISoundClipEnum.cs 형식 참고</param>
     public void PlayUiSound(UISoundClipEnum selUiClip)
     {
         ChageUiAudioClip(selUiClip);
@@ -47,6 +52,11 @@ public class SoundManager : Singleton<SoundManager>
 
     private void ChageUiAudioClip(UISoundClipEnum selUiClip)
     {
+        if(_uiClips.Length <= (int)selUiClip)
+        {
+            _uiAudioSource.clip = null;
+            return;
+        }
         _uiAudioSource.clip =  _uiClips[(int)selUiClip]; ;
     }
     private void ResetUiAudioClip()

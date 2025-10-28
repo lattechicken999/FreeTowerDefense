@@ -100,4 +100,4 @@ InitTestScene*.unity*
 
 #AssetSotre
 /[Aa]ssets/AssetStore/*
-!/[Aa]ssets/AssetStore/*.meta
+!/[Aa]ssets/AssetStore/**/*.meta

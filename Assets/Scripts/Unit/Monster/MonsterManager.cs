@@ -8,11 +8,10 @@ public class MonsterManager : Singleton<MonsterManager>
     //####해야할일
     //(Set)배틀 매니저에 공격밭을 타겟을 넘겨줌.
     //####
-    /*
-    //아래 정보 필요없음 (StageManager에서 어짜피 받아서 쓰기때문에 설정할 이유가 없다)
-    [SerializeField] private int _spawnCount = 5; //몬스터 몇마리 소환하는지
-    [SerializeField] private float _spawnCoolDown = 1.0f; //몬스터 소환 쿨타임
-    */
+    
+    private int _spawnCount = 5; //몬스터 몇마리 소환하는지
+    private List<GoldManager.MonsterNameEnum> _currentStageMonstersInfo;
+
     [SerializeField] private List<GameObject> _monsterPrefabs; //몬스터들이 담긴 프리팹
     private Dictionary<GoldManager.MonsterNameEnum, GameObject> _monsterMap; //딕셔너리값으로 몬스터 찾기
     [SerializeField] GameObject _uiHpBarPrefab; //UI바 프리팹(Monster위에 표시하기 위해)
@@ -46,7 +45,8 @@ public class MonsterManager : Singleton<MonsterManager>
         monsterIds.Add(GoldManager.MonsterNameEnum.Turtle);
         monsterIds.Add(GoldManager.MonsterNameEnum.Box);
         int spawnDelay = 2;
-        SummonMonsters(spawnCnt, monsterIds, spawnDelay); //스테이지 매니저에서 불렀다치고 해보기
+        SetMonstersFromStageManager(spawnCnt, monsterIds, spawnDelay); //스테이지 매니저에서 불렀다치고 해보기
+        StartMonsterRun(); //스테이지 매니저에서 불렀다치고 해보기
     }
 
     /// <summary>
@@ -68,14 +68,31 @@ public class MonsterManager : Singleton<MonsterManager>
             }
         }
     }
-    //(Get)스테이지 관리자에서 스테이지별 어느 몬스터를 어느 규모로 소환할지 받아와야함 (몇마리?, 어느몬스터?[인덱스넘겨줄거야?],쿨타임은?
-    public void SummonMonsters(int spawnCount, List<GoldManager.MonsterNameEnum> monstersInfo, int coolDown) //둘다 해보죠? 1. List
+
+    /// <summary>
+    /// StageManager에서 사용하는 스테이지 정보를 Set해주는 메서드
+    /// </summary>
+    /// <param name="spawnCount">소환 개수</param>
+    /// <param name="monstersInfo">생성할몬스터타입리스트</param>
+    /// <param name="coolDown">생성 주기</param>
+    public void SetMonstersFromStageManager(int spawnCnt, List<GoldManager.MonsterNameEnum> monstersInfo, int coolDown)
     {
-        //Debug.Log("SummonMonsters 들어옴");
+        //Debug.Log("SetMonstersFromStageManager 들어옴");
+        _spawnCount = spawnCnt;
+        _currentStageMonstersInfo = new List<GoldManager.MonsterNameEnum>(monstersInfo); //깊은복사로 가져옴
         _delay = new WaitForSeconds(coolDown);
+    }
+
+    //(Get)스테이지 관리자에서 스테이지별 어느 몬스터를 어느 규모로 소환할지 받아와야함 (몇마리?, 어느몬스터?[인덱스넘겨줄거야?],쿨타임은?
+    /// <summary>
+    /// StageManager에서 사용하는 스테이지를 실행시키는 메서드
+    /// SetMonstersFromStageManager 로 정보가 Set된 상태에서 실행한다
+    /// </summary>
+    public void StartMonsterRun()
+    {
+        //Debug.Log("StartMonsterRun 들어옴");
         _aliveMonsters = new List<Monster>(); //받으면 일단 초기화
-        //count만큼, List에 들어있는 종류만큼, coolDown만큼 지연을 두며 실행
-        StartCoroutine(SummonMonsterCoroutine(spawnCount, monstersInfo));
+        StartCoroutine(SummonMonsterCoroutine(_spawnCount, _currentStageMonstersInfo));
     }
     /// <summary>
     /// 코루틴에서 사용할 메서드 (몬스터 소환)

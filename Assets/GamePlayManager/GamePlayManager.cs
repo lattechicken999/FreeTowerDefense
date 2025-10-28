@@ -5,13 +5,13 @@ using UnityEditor.Build.Content;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class NewBehaviourScript : MonoBehaviour
+public class GamePlayManager : MonoBehaviour
 {
 
     private bool _isGameStart;
 
     //NewBehaviourScript.instance
-    static NewBehaviourScript instance;
+    static GamePlayManager instance;
 
     /// <summary>
     /// 게임플레이 시작시 UI로 메서드호출

@@ -28,7 +28,7 @@ public class GameManager : Singleton<GameManager>
     /// </summary>
     public void GameEndButton()
     {
-        SceneManager.LoadScene("GameEnd");
+        Application.Quit();
     }
 
     /// <summary>

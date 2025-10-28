@@ -41,6 +41,7 @@ public class MonsterManager : MonoBehaviour
     */
     [SerializeField] private List<GameObject> _monsterPrefabs; //몬스터들이 담긴 프리팹
     private Dictionary<MonsterId, GameObject> _monsterMap; //딕셔너리값으로 몬스터 찾기
+    [SerializeField] GameObject _uiHpBarPrefab;
     //코루틴용 private 필드
     private WaitForSeconds _delay;
     private Coroutine _coroutine; //코루틴 중복실행때문에 쓸까 하는데 안써도될듯? 좀 생각해봐야함
@@ -105,8 +106,7 @@ public class MonsterManager : MonoBehaviour
     //(Get)스테이지 관리자에서 스테이지별 어느 몬스터를 어느 규모로 소환할지 받아와야함 (몇마리?, 어느몬스터?[인덱스넘겨줄거야?],쿨타임은?
     public void SummonMonsters(int spawnCount, List<MonsterId> monsterType, int coolDown) //둘다 해보죠? 1. List
     {
-        Debug.Log("SummonMonsters 들어옴");
-        //아래거를 코루틴으로........
+        //Debug.Log("SummonMonsters 들어옴");
         _delay = new WaitForSeconds(coolDown);
         //count만큼, List에 들어있는 종류만큼, coolDown만큼 지연을 두며 실행
         StartCoroutine(SummonMonsterCoroutine(spawnCount, monsterType));
@@ -119,16 +119,35 @@ public class MonsterManager : MonoBehaviour
     /// <returns></returns>
     IEnumerator SummonMonsterCoroutine(int spawnCount, List<MonsterId> monsterType)
     {
-        Debug.Log("SummonMonsterCoroutine 들어옴");
+       // Debug.Log("SummonMonsterCoroutine 들어옴");
         int typeCount = monsterType.Count;
         for (int index = 0; index < spawnCount; index++)
         {
-            Debug.Log("SummonMonsterCoroutine- for문 동작");
-            Debug.Log(typeCount);
+            //Monster 생성
             int rndNum = Random.Range(0, typeCount);
             GameObject pickMonster = _monsterMap[monsterType[rndNum]]; //랜덤으로 선택된 게임 오브젝트
-            Instantiate(pickMonster, transform.position, transform.rotation);
+            GameObject makedMonster = Instantiate(pickMonster, transform.position, transform.rotation);
+            makedMonster.name += index;
+            Monster mon = makedMonster.GetComponent<Monster>();
+            //Monster를 따라다니는 체력바도 생성;
+            int maxHp = (int)mon._Hp;
+            Transform uiRootTransform = FindUiRoot();
+            GameObject obj = Instantiate(_uiHpBarPrefab, makedMonster.transform.position, makedMonster.transform.rotation, uiRootTransform);
+            obj.name += index;
+            UIHpBarMonster uiHealthBar = obj.GetComponent<UIHpBarMonster>();
+            uiHealthBar.SetUIPos(mon);
+
+
             yield return _delay;
         }
+    }
+    private Transform FindUiRoot()//캔버스에서 UIRoot라는 태그를 가진 위치에 생성하기 위해 사용
+    {
+        //태그로 찾기 -> 씬에서 "UIRoot" 태그를 붙여두면 가장 빠름
+        GameObject tagged = GameObject.FindWithTag("UIRoot");
+        if (tagged != null)
+            return tagged.transform;
+
+        return null;
     }
 }

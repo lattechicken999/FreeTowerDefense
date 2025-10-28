@@ -10,8 +10,9 @@ public class Unit : MonoBehaviour
     public int AttackPower;
     public int AttackRange;
     public int Defense;
+    public float attackCooldown = 1f;
 
-    public Unit()
+    public void Awake()
     {
         unitName = "knight";
         AttackPower = 3;

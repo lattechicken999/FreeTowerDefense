@@ -11,7 +11,9 @@ public class Monster : MonoBehaviour
     public int AttackRange;
     public int Defense;
     public float SpawnTime;
-    public Monster()
+    public float attackCooldown = 1f;
+
+    public void Awake()
     {
         monsterName = "Slime";
         Health = 10;

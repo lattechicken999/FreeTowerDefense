@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// enum안에 유닛과 몬스터 추가 및 수정, 딕셔너리에 보상 수정, 판매 금액 조정
 public class GoldManager : MonoBehaviour
 {
     // 유닛 이름 enum 나중에 업그레이드 유닛 추가

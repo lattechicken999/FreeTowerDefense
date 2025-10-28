@@ -20,7 +20,7 @@ public class GameManager : Singleton<GameManager>
     /// </summary>
     public void GameStartButton()
     {
-        SceneManager.LoadScene("Stage");
+        SceneManager.LoadScene("InGame");
     }
 
     /// <summary>
@@ -29,5 +29,13 @@ public class GameManager : Singleton<GameManager>
     public void GameEndButton()
     {
         SceneManager.LoadScene("GameEnd");
+    }
+
+    /// <summary>
+    /// 게임 메뉴 버튼을 누르면 게임메뉴씬 호출
+    /// </summary>
+    public void MainMenuButton()
+    {
+        SceneManager.LoadScene("MainMenu");
     }
 }

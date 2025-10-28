@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,7 +15,8 @@ public class MonsterManager : Singleton<MonsterManager>
     */
     [SerializeField] private List<GameObject> _monsterPrefabs; //몬스터들이 담긴 프리팹
     private Dictionary<GoldManager.MonsterNameEnum, GameObject> _monsterMap; //딕셔너리값으로 몬스터 찾기
-    [SerializeField] GameObject _uiHpBarPrefab;
+    [SerializeField] GameObject _uiHpBarPrefab; //UI바 프리팹(Monster위에 표시하기 위해)
+    public event Action<int> _notifiedMonsterCount;
     //코루틴용 private 필드
     private WaitForSeconds _delay;
     private Coroutine _coroutine; //코루틴 중복실행때문에 쓸까 하는데 안써도될듯? 좀 생각해봐야함
@@ -38,6 +40,8 @@ public class MonsterManager : Singleton<MonsterManager>
     {
         int spawnCnt = 5;
         List<GoldManager.MonsterNameEnum> monsterIds = new List<GoldManager.MonsterNameEnum>();
+        monsterIds.Add(GoldManager.MonsterNameEnum.Slime);
+        monsterIds.Add(GoldManager.MonsterNameEnum.Slime);
         monsterIds.Add(GoldManager.MonsterNameEnum.Slime);
         monsterIds.Add(GoldManager.MonsterNameEnum.Turtle);
         monsterIds.Add(GoldManager.MonsterNameEnum.Box);
@@ -64,15 +68,14 @@ public class MonsterManager : Singleton<MonsterManager>
             }
         }
     }
-
     //(Get)스테이지 관리자에서 스테이지별 어느 몬스터를 어느 규모로 소환할지 받아와야함 (몇마리?, 어느몬스터?[인덱스넘겨줄거야?],쿨타임은?
-    public void SummonMonsters(int spawnCount, List<GoldManager.MonsterNameEnum> monsterType, int coolDown) //둘다 해보죠? 1. List
+    public void SummonMonsters(int spawnCount, List<GoldManager.MonsterNameEnum> monstersInfo, int coolDown) //둘다 해보죠? 1. List
     {
         //Debug.Log("SummonMonsters 들어옴");
         _delay = new WaitForSeconds(coolDown);
         _aliveMonsters = new List<Monster>(); //받으면 일단 초기화
         //count만큼, List에 들어있는 종류만큼, coolDown만큼 지연을 두며 실행
-        StartCoroutine(SummonMonsterCoroutine(spawnCount, monsterType));
+        StartCoroutine(SummonMonsterCoroutine(spawnCount, monstersInfo));
     }
     /// <summary>
     /// 코루틴에서 사용할 메서드 (몬스터 소환)
@@ -80,21 +83,19 @@ public class MonsterManager : Singleton<MonsterManager>
     /// <param name="spawnCount">소환 갯수</param>
     /// <param name="monsterType">소환될 몬스터 종류</param>
     /// <returns></returns>
-    IEnumerator SummonMonsterCoroutine(int spawnCount, List<GoldManager.MonsterNameEnum> monsterType)
+    IEnumerator SummonMonsterCoroutine(int spawnCount, List<GoldManager.MonsterNameEnum> monstersInfo)
     {
        // Debug.Log("SummonMonsterCoroutine 들어옴");
-        int typeCount = monsterType.Count;
         for (int index = 0; index < spawnCount; index++)
         {
-            //Monster 생성
-            int rndNum = Random.Range(0, typeCount);
-            GameObject pickMonster = _monsterMap[monsterType[rndNum]]; //랜덤으로 선택된 게임 오브젝트
-            GameObject makedMonster = Instantiate(pickMonster, transform.position, transform.rotation);
-            makedMonster.name += index;
+            //▼Monster 생성 (현재 선택된 몬스터 타입으로 Prefab에서 찾아서 설정
+            GoldManager.MonsterNameEnum currentMonsterType = monstersInfo[index]; //현재 선택된 몬스터 타입
+            GameObject makedMonster = Instantiate(_monsterMap[currentMonsterType], transform.position, transform.rotation);
+            makedMonster.name += index; //이름 임시 변경
             Monster mon = makedMonster.GetComponent<Monster>();
-            mon._monsterDeadNotified += RemoveMonster;
+            mon._monsterDeadNotified += RemoveMonster; //몬스터가 죽을때 하는 deleate event 정의
             _aliveMonsters.Add(mon); //관리하기 위해 리스트에 추가
-            //Monster를 따라다니는 체력바도 생성;
+            //▼Monster를 따라다니는 체력바도 생성;
             int maxHp = (int)mon._Hp;
             Transform uiRootTransform = FindUiRoot();
             GameObject obj = Instantiate(_uiHpBarPrefab, makedMonster.transform.position, makedMonster.transform.rotation, uiRootTransform);
@@ -115,17 +116,19 @@ public class MonsterManager : Singleton<MonsterManager>
     {
         return _aliveMonsters.Count;
     }
-    
+
     /// <summary>
-    /// 이벤트 발생하면 삭제처리, 갯수빼줌
+    /// Monster가 삭제될때 호출되는 함수
     /// </summary>
     /// <param name="monster"></param>
     private void RemoveMonster(Monster monster) //수정필요, 지우고 이벤트 처리하는부분 이상함
     {
-        //못지우지않나? 이벤트가 이상하지않나?
-        monster._monsterDeadNotified -= RemoveMonster;
-        _aliveMonsters.Remove(monster);
-        Debug.Log("지워짐: 현재갯수 " + _aliveMonsters.Count);
+        //▼이벤트와 리스트에서 삭제
+        monster._monsterDeadNotified -= RemoveMonster; //몬스터에 들어있는 이벤트 제거 (몬스터는 RemoveMonster 끝난후 스스로 Destroy함)
+        _aliveMonsters.Remove(monster); //리스트에서도 삭제한다
+        //▼남은 몬스터의 갯수를 StageManager로 전달
+        int remainMonster = ReturnCurrentMonsterCount(); 
+        _notifiedMonsterCount.Invoke(remainMonster); //현재 남은 몬스터의 정보를 StageManager에 쏴준다(없어질때마다)
     }
     private Transform FindUiRoot()//캔버스에서 UIRoot라는 태그를 가진 위치에 생성하기 위해 사용
     {

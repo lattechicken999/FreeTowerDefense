@@ -71,8 +71,7 @@ public class Piece : Unit
     }
 
     /// <summary>
-    /// UI에서 기물 구매 버튼 클릭시 호출되는 메서드
-    /// 클릭시 Map 클래스에서 선택된 자리가 비어있는지 확인 해야함
+    /// 기물 새로 생성시 호출되는 메서드
     /// </summary>
     public void SetPosition()
     {

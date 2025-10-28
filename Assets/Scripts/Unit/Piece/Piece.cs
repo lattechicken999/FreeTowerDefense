@@ -7,12 +7,34 @@ public class Piece : Unit
 {
     [SerializeField,Range(0,2)] float _atteckCoolTime;
 
-    WaitForSeconds _attackDelay;
+    private WaitForSeconds _attackDelay;
+    private Coroutine _autoCoroutine;
     private void Awake()
     {
         _attackDelay = new WaitForSeconds(_atteckCoolTime);
     }
 
+    /// <summary>
+    /// 활성화 시 자동 공격
+    /// </summary>
+    private void OnEnable()
+    {
+        _autoCoroutine = StartCoroutine(AutoAttack());
+    }
+
+
+    /// <summary>
+    /// 비활성화시 공격 중지
+    /// </summary>
+    private void OnDisable()
+    {
+        StopCoroutine(_autoCoroutine);
+    }
+
+    /// <summary>
+    /// 자동공격용 코루틴 함수
+    /// </summary>
+    /// <returns></returns>
     IEnumerator AutoAttack()
     {
         while(true)
@@ -24,7 +46,7 @@ public class Piece : Unit
 
     public override void Attack()
     {
-        
+        //사거리나 유닛 공격 특성이 달라 하위 클래스에서 재정의 필요
     }
     public override void TakenDamage(float Damage)
     {

@@ -1,12 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 
 public class PieceSpawner : MonoBehaviour
 {
     [SerializeField] GameObject _warriorPrefeb;
     [SerializeField] GameObject _wizardPrefeb;
+    [SerializeField] Material _TranslucentMaterial;
 
+    private WaitForNextFrameUnit _delay;
     public bool CreateWarrior(int level=1)
     {
         //prefeb을 반투면 상태로 만들어 마우스 따라가게 만들기
@@ -25,4 +29,15 @@ public class PieceSpawner : MonoBehaviour
         return true;
     }
 
+    private IEnumerator SetupPieceStandby(GameObject prefeb)
+    {
+        var newPiece = Instantiate(prefeb);
+
+        while(true)
+        {
+            //레이로 포지션 값 가져옴
+            //클릭 할 때 까지 반복, 마우스를 오브젝트가 따라다님.
+            yield return _delay;
+        }
+    }
 }

@@ -12,9 +12,7 @@ public enum MonsterId   //StageManager에서 생성해줄때 인덱스로하면 고치기힘듬. e
 public class MonsterManager : Singleton<MonsterManager>
 {
     //####해야할일
-    //(Set)스테이지 관리자에서 몬스터가 다 죽었다고 이벤트 발생되면? ?? 어떤 작업을 해야함
-    //(Set)배틀 매니저에 공격밭을 타겟을 넘겨줌?
-    //몬스터 자료구조
+    //(Set)배틀 매니저에 공격밭을 타겟을 넘겨줌.
     //####
     /*
     //아래 정보 필요없음 (StageManager에서 어짜피 받아서 쓰기때문에 설정할 이유가 없다)
@@ -27,6 +25,7 @@ public class MonsterManager : Singleton<MonsterManager>
     //코루틴용 private 필드
     private WaitForSeconds _delay;
     private Coroutine _coroutine; //코루틴 중복실행때문에 쓸까 하는데 안써도될듯? 좀 생각해봐야함
+    List<Monster> _aliveMonsters; //살아있는 몬스터 배열 (스테이지에서 몇마리 살아있는지 알아야하기때문에)
     //(안될듯)오브젝트풀로 생성하려 했으나.. 몬스터가 하나만 생성되는것이 아닌 여러개가 생성되기때문에 그러면 List를 Prefab갯수만큼 들고있어야함. 
     protected override void Awake()
     {
@@ -78,6 +77,7 @@ public class MonsterManager : Singleton<MonsterManager>
     {
         //Debug.Log("SummonMonsters 들어옴");
         _delay = new WaitForSeconds(coolDown);
+        _aliveMonsters = new List<Monster>(); //받으면 일단 초기화
         //count만큼, List에 들어있는 종류만큼, coolDown만큼 지연을 두며 실행
         StartCoroutine(SummonMonsterCoroutine(spawnCount, monsterType));
     }
@@ -99,6 +99,8 @@ public class MonsterManager : Singleton<MonsterManager>
             GameObject makedMonster = Instantiate(pickMonster, transform.position, transform.rotation);
             makedMonster.name += index;
             Monster mon = makedMonster.GetComponent<Monster>();
+            mon._onDeath += RemoveMonster;
+            _aliveMonsters.Add(mon); //관리하기 위해 리스트에 추가
             //Monster를 따라다니는 체력바도 생성;
             int maxHp = (int)mon._Hp;
             Transform uiRootTransform = FindUiRoot();
@@ -110,6 +112,27 @@ public class MonsterManager : Singleton<MonsterManager>
 
             yield return _delay;
         }
+    }
+
+    /// <summary>
+    /// StageManager에서 현재 남아있는 몬스터 갯수를 알기위해 사용하는 함수
+    /// </summary>
+    /// <returns></returns>
+    public int ReturnCurrentMonsterCount()
+    {
+        return _aliveMonsters.Count;
+    }
+    
+    /// <summary>
+    /// 이벤트 발생하면 삭제처리, 갯수빼줌
+    /// </summary>
+    /// <param name="monster"></param>
+    private void RemoveMonster(Monster monster) //수정필요, 지우고 이벤트 처리하는부분 이상함
+    {
+        //못지우지않나? 이벤트가 이상하지않나?
+        monster._onDeath -= RemoveMonster;
+        _aliveMonsters.Remove(monster);
+        Debug.Log("지워짐: 현재갯수 " + _aliveMonsters.Count);
     }
     private Transform FindUiRoot()//캔버스에서 UIRoot라는 태그를 가진 위치에 생성하기 위해 사용
     {

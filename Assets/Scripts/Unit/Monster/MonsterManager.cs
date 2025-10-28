@@ -9,26 +9,8 @@ public enum MonsterId   //StageManager에서 생성해줄때 인덱스로하면 고치기힘듬. e
     ghost,
     _End
 }
-public class MonsterManager : MonoBehaviour
+public class MonsterManager : Singleton<MonsterManager>
 {
-    //매니저는 싱글톤으로 관리
-    private static MonsterManager _instance;
-    public static MonsterManager Instance
-    {
-        get
-        {
-            if (_instance == null) 
-            {
-                _instance = FindObjectOfType<MonsterManager>();
-                if (_instance == null)
-                {
-                    _instance = new MonsterManager();
-                }
-            }
-            return _instance;
-        }
-    }
-
     //####해야할일
     //(Set)스테이지 관리자에서 몬스터가 다 죽었다고 이벤트 발생되면? ?? 어떤 작업을 해야함
     //(Set)배틀 매니저에 공격밭을 타겟을 넘겨줌?
@@ -46,10 +28,11 @@ public class MonsterManager : MonoBehaviour
     private WaitForSeconds _delay;
     private Coroutine _coroutine; //코루틴 중복실행때문에 쓸까 하는데 안써도될듯? 좀 생각해봐야함
     //(안될듯)오브젝트풀로 생성하려 했으나.. 몬스터가 하나만 생성되는것이 아닌 여러개가 생성되기때문에 그러면 List를 Prefab갯수만큼 들고있어야함. 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake(); //싱글톤 체크
+
         _monsterMap = new Dictionary<MonsterId, GameObject>();
-        InitSIngleton(); //싱글톤 체크
         SetPositionByMonsterId(); //몬스터에 대한 정보를 enum값으로 ID형식으로 Set
     }
     private void Start()
@@ -88,19 +71,6 @@ public class MonsterManager : MonoBehaviour
                 }
             }
         }
-    }
-    /// <summary>
-    /// 싱글톤으로 유지하기위해 체크
-    /// </summary>
-    private void InitSIngleton()
-    {
-        if (_instance != null && _instance != this)
-        {
-            Destroy(gameObject);
-            return;
-        }
-        _instance = this;
-        DontDestroyOnLoad(_instance);
     }
 
     //(Get)스테이지 관리자에서 스테이지별 어느 몬스터를 어느 규모로 소환할지 받아와야함 (몇마리?, 어느몬스터?[인덱스넘겨줄거야?],쿨타임은?

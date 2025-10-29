@@ -137,26 +137,26 @@ public class GoldManager : Singleton<GoldManager>
     /// <summary>
     /// 구독
     /// </summary>
-    public void RegistrationObserver(ICashObserver observer)
+    public void RegistrationObserver(ICashObserver cashObserver)
     {
-        _goldObservers.Add(observer);
+        _goldObservers.Add(cashObserver);
     }
 
     /// <summary>
     /// 구독 해제
     /// </summary>
-    public void UnregisterObserver(ICashObserver observer)
+    public void UnregisterObserver(ICashObserver cashObserver)
     {
-        _goldObservers.Remove(observer);
+        _goldObservers.Remove(cashObserver);
     }
     /// <summary>
     /// 지갑이 바뀔 때마다 알림 역할
     /// </summary>
     private void NotifyChangeGold()
     {
-        foreach (var observer in _goldObservers)
+        foreach (var cashObserver in _goldObservers)
         {
-            observer.NotifyChangeGold(Wallet);
+            cashObserver.NotifyChangeGold(Wallet);
         }
     }
 }

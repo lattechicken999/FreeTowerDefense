@@ -25,7 +25,7 @@ public class Monster : Unit
     private Vector3[] _wayPointPositions; //웨이포인트는 Z축방향만 알면되니까 회전을 저장하자
     private int _currentWaypoint = 1; //현재 웨이포인트가 몇번째인지, 하나씩 지날때마다 +1
     //▼몬스터가 어떤 방식으로 죽었는지 (플레이어한테 죽었으면 돈줘야하는 등 차별점이 있어야해서 추가)
-    private bool _isKilledByPlayer = false;
+    public bool _isKilledByPlayer { get; private set; } //MonsterManager에서 플레이어에서 죽은건지 체크하기위해
     //▼몬스터에 붙어있는 HP바 게임오브젝트 (몬스터가 죽으면 HP바도 없어져야해서 추가)
     private GameObject _hpBarGameObject;
 
@@ -56,11 +56,7 @@ public class Monster : Unit
     /// </summary>
     public override void Attack()
     {
-        //공격을 한다? 몬스터 타겟을
-        //타겟에 대한 정보와, 현재 몬스터에 대한 공격력을 MonsterManager에 보내줌
-        //그리고 MonsterManager이 BattleManager에 해당 타겟에 대한정보(방어,체력)와 몬스터 공격력을 넘겨줌
-        //배틀매니저는 데미지계산해서 타겟에다가 넘겨줌(이건 배틀매니저 안에서 하기때문에 몬스터는 보내주기만 하면됨)
-        _monsterAttackAction.Invoke(_attackPoint); //공격력만큼 Attack
+        _monsterAttackAction.Invoke(_attackPoint); //MonsterManager이 이벤트 구독. 공격력만큼 Attack
     }
     public void SetHpBarObject(GameObject hpBar)
     {
@@ -93,26 +89,10 @@ public class Monster : Unit
 
     private void MonsterDeath() //몬스터가 죽을경우 통합 메서드
     {
-        if (_isKilledByPlayer) //플레이어한테 사망
-        {
-            ByPlayerKilled();
-        }
-        else //몬스터가 끝지점까지 가서 스스로 파괴(성벽 HP감소시키고)
-        {
-            BySelfKilled();
-        }
         _monsterDeadNotified?.Invoke(this);
         _monsterDeadNotifiedById?.Invoke(_monsterId);
         Destroy(_hpBarGameObject);
         Destroy(gameObject);
-    }
-    private void ByPlayerKilled()
-    {
-        //플레이어가 죽였을때 행동 저장. 돈을 증가시킨다 등
-    }
-    private void BySelfKilled()
-    {
-        //몬스터가 끝지점까지 가서 스스로 파괴했을때 행동 저장. 성벽HP가 감소한다
     }
 
     /// <summary>
@@ -153,15 +133,6 @@ public class Monster : Unit
             MonsterDeath();
 
         }
-
-        /*
-        //(문제)Waypoint의 중앙에 Collider(Trigger)를 두고 이동했더니 중앙 위치로 가기전에 Collider가 감지되서 부자연스럽게 이동함
-        if(_currentWaypoint < _wayPointPositions.Length)
-        {
-            Vector3 direction = (_wayPointPositions[_currentWaypoint] - transform.position).normalized;
-            transform.position += direction * Time.deltaTime * _moveSpeed;
-        }
-        */
     }
     /// <summary>
     /// MonserManager로부터 웨이포인트를 설정받는 메서드
@@ -170,7 +141,6 @@ public class Monster : Unit
     /// <param name="wayPoints">wayPoint정보</param>
     public void SetWayPoints(List<Transform> wayPoints)
     {
-        Debug.Log("SetWayPoints들어옴");
         _wayPointPositions = new Vector3[wayPoints.Count];
         for (int index = 0; index < wayPoints.Count; index++)
         {

@@ -1,19 +1,19 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
 
 public class MonsterManager : Singleton<MonsterManager>
-{
-    //####해야할일
-    //(Set)배틀 매니저에 공격밭을 타겟을 넘겨줌.
-    //####
-    
+{   
     private int _spawnCount = 5; //몬스터 몇마리 소환하는지
     private List<GoldManager.MonsterNameEnum> _currentStageMonstersInfo;
     [SerializeField] private List<GameObject> _monsterPrefabs; //몬스터들이 담긴 프리팹
     private Dictionary<GoldManager.MonsterNameEnum, GameObject> _monsterMap; //딕셔너리값으로 몬스터 찾기
-    [SerializeField] GameObject _uiHpBarPrefab; //UI바 프리팹(Monster위에 표시하기 위해)
+    [SerializeField] GameObject _hpBarPrefab; //UI hp바 프리팹(Monster위에 표시하기 위해)
+    [SerializeField] float _hpBarWidthSize = 300.0f; //UI hp바 가로크기 설정
+    [SerializeField] float _hpBarHeightSize = 40.0f; //UI hp바 세로크기 설정
+    [SerializeField] float _hpBarHeightGap = 1.0f; //UI hp바 아래 위 방향으로 위치 조절
     public event Action<int> _notifiedMonsterCount; //몬스터의 갯수가 변화했음을 알림
     //코루틴용 private 필드
     private WaitForSeconds _delay; //StageManager에서 Set하면 설정되는 몬스터 생성 딜레이
@@ -99,7 +99,6 @@ public class MonsterManager : Singleton<MonsterManager>
     /// <param name="coolDown">생성 주기</param>
     public void SetMonstersFromStageManager(int spawnCnt, List<GoldManager.MonsterNameEnum> monstersInfo, int coolDown)
     {
-        //Debug.Log("SetMonstersFromStageManager 들어옴");
         _spawnCount = spawnCnt;
         _currentStageMonstersInfo = new List<GoldManager.MonsterNameEnum>(monstersInfo); //깊은복사로 가져옴
         _delay = new WaitForSeconds(coolDown);
@@ -112,7 +111,6 @@ public class MonsterManager : Singleton<MonsterManager>
     /// </summary>
     public void StartMonsterRun()
     {
-        //Debug.Log("StartMonsterRun 들어옴");
         _aliveMonsters = new List<Monster>(); //받으면 일단 초기화
         StartCoroutine(SummonMonsterCoroutine(_spawnCount, _currentStageMonstersInfo));
     }
@@ -124,33 +122,43 @@ public class MonsterManager : Singleton<MonsterManager>
     /// <returns></returns>
     IEnumerator SummonMonsterCoroutine(int spawnCount, List<GoldManager.MonsterNameEnum> monstersInfo)
     {
-       // Debug.Log("SummonMonsterCoroutine 들어옴");
         for (int index = 0; index < spawnCount; index++)
         {
             //▼Monster 생성 (현재 선택된 몬스터 타입으로 Prefab에서 찾아서 설정
-            GoldManager.MonsterNameEnum currentMonsterType = monstersInfo[index]; //현재 선택된 몬스터 타입
-            GameObject makedMonster = Instantiate(_monsterMap[currentMonsterType], _wayPointChilds[0].position, transform.rotation);
-            makedMonster.name += index; //이름 임시 변경
-            Monster mon = makedMonster.GetComponent<Monster>();
-            mon._monsterDeadNotified += RemoveMonster; //몬스터가 죽을때 하는 deleate event 정의
-            mon._monsterAttackAction += MonsterAttackTarget; //몬스터가 성벽 공격할때 delegate event
-            _aliveMonsters.Add(mon); //관리하기 위해 리스트에 추가
-
+            GameObject makedMonster = CreateMonster(monstersInfo, index);
             //▼Monser에 wayPoint를 설정한다.
+            Monster mon = makedMonster.GetComponent<Monster>();
             mon.SetWayPoints(_wayPointChilds);
-
             //▼Monster를 따라다니는 체력바도 생성;
-            int maxHp = (int)mon._Hp;
-            Transform uiRootTransform = FindUiRoot();
-            GameObject obj = Instantiate(_uiHpBarPrefab, makedMonster.transform.position, makedMonster.transform.rotation, uiRootTransform);
-            obj.name += index;
-            UIHpBarMonster uiHealthBar = obj.GetComponent<UIHpBarMonster>();
-            uiHealthBar.SetUIPos(mon);
-
-            mon.SetHpBarObject(obj); // _aliveMonsters[index].SetHpBarObject(obj);
-
+            CreateMonsterFollowHpBar(makedMonster, mon,index);
             yield return _delay;
         }
+    }
+    private GameObject CreateMonster(List<GoldManager.MonsterNameEnum> monstersInfo,int index)
+    {
+        GoldManager.MonsterNameEnum currentMonsterType = monstersInfo[index]; //현재 선택된 몬스터 타입
+        GameObject monsterInstance = Instantiate(_monsterMap[currentMonsterType], _wayPointChilds[0].position, transform.rotation);
+        monsterInstance.name += index; //이름 임시 변경
+        Monster mon = monsterInstance.GetComponent<Monster>();
+        mon._monsterDeadNotified += RemoveMonster; //몬스터가 죽을때 하는 deleate event 정의
+        mon._monsterAttackAction += MonsterAttackTarget; //몬스터가 성벽 공격할때 delegate event
+        _aliveMonsters.Add(mon); //관리하기 위해 리스트에 추가
+        return monsterInstance;
+    }
+
+    private void CreateMonsterFollowHpBar(GameObject makedMonster, Monster mon, int index)
+    {
+        Transform uiRootTransform = FindUiRoot();
+        GameObject obj = Instantiate(_hpBarPrefab, makedMonster.transform.position, makedMonster.transform.rotation, uiRootTransform);
+        obj.name += index;
+        UIHpBarMonster uiHealthBar = obj.GetComponent<UIHpBarMonster>();
+        uiHealthBar.SetGapPos(_hpBarHeightGap);
+        //▼uiHealthBar의 크기 변경
+        RectTransform hpBarRectTransform = obj.GetComponent<RectTransform>();
+        hpBarRectTransform.sizeDelta = new Vector2(_hpBarWidthSize, _hpBarHeightSize);
+        uiHealthBar.SetUIPos(mon);
+        
+        mon.SetHpBarObject(obj); // _aliveMonsters[index].SetHpBarObject(obj);
     }
 
     /// <summary>
@@ -166,7 +174,6 @@ public class MonsterManager : Singleton<MonsterManager>
         //BattleManager._instance.MonsterAttack(attackValue,defence,hp); //배틀매니저가 싱글톤이 아님. 되면 작업하기
     }
     
-
     /// <summary>
     /// StageManager에서 현재 남아있는 몬스터 갯수를 알기위해 사용하는 함수
     /// </summary>
@@ -182,15 +189,34 @@ public class MonsterManager : Singleton<MonsterManager>
     /// <param name="monster"></param>
     private void RemoveMonster(Monster monster) //수정필요, 지우고 이벤트 처리하는부분 이상함
     {
+        //▼삭제 전, 어떻게 죽었는지 확인 후, 처리
+        if(monster._isKilledByPlayer) //플레이어에 의해 죽었다면?
+        {
+            ByPlayerKilled();
+        }
+        else //목표지점까지 도달해서 성벽에 자폭했다면?
+        {
+            BySelfKilled();
+        }
+
+
         //▼이벤트와 리스트에서 삭제
         monster._monsterDeadNotified -= RemoveMonster; //몬스터에 들어있는 이벤트 제거 (몬스터는 RemoveMonster 끝난후 스스로 Destroy함)
         monster._monsterAttackAction -= MonsterAttackTarget; //몬스터가 성벽 공격할때 delegate event
-
         _aliveMonsters.Remove(monster); //리스트에서도 삭제한다
         //▼남은 몬스터의 갯수를 StageManager로 전달
         int remainMonster = ReturnCurrentMonsterCount(); 
         //_notifiedMonsterCount.Invoke(remainMonster); //현재 남은 몬스터의 정보를 StageManager에 쏴준다(없어질때마다)
     }
+    private void ByPlayerKilled()
+    {
+        //플레이어가 죽였을때 행동 저장. 돈을 증가시킨다 등
+    }
+    private void BySelfKilled()
+    {
+        //몬스터가 끝지점까지 가서 스스로 파괴했을때 행동 저장. 성벽HP가 감소한다
+    }
+
     private Transform FindUiRoot()//캔버스에서 UIRoot라는 태그를 가진 위치에 생성하기 위해 사용
     {
         //태그로 찾기 -> 씬에서 "UIRoot" 태그를 붙여두면 가장 빠름

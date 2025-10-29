@@ -7,6 +7,7 @@ TagManager:
   - UIRoot
   - WayPoints
   - Monster
+  - Place
   layers:
   - Default
   - TransparentFX

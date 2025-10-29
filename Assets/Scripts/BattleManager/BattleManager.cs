@@ -23,11 +23,10 @@ public class BattleManager : MonoBehaviour
     public float _attackRange = 3f;
 
     /// <summary>
-    /// 사거리 내에 적을 공격하는 메서드
+    /// 사거리 내에 가장 가까운 적을 찾는 메서드
     /// </summary>
-    void Battle()
+    public GameObject Trarget()
     {
-
         // 테스트용 오브젝트 3개 생성-----------
         TestObjects = new List<GameObject>();
         GameObject object1 = new GameObject("Enemy1");
@@ -45,7 +44,7 @@ public class BattleManager : MonoBehaviour
         TestObjects.Add(object3);
 
         // 재사용시 문제를 없애기 위해 초기화
-        _shortDistance = 0;
+        _shortDistance = Mathf.Infinity;
 
         // 모두 둘러보고 가장가까운 곳 찾기
         foreach (GameObject obj in TestObjects)
@@ -60,9 +59,34 @@ public class BattleManager : MonoBehaviour
             }
         }
         // 사거리 보다 짧으면 
-        if (_attackRange < _shortDistance)
+        if (_shortEnemy != null || _attackRange <= _shortDistance)
         {
-            // 나중에 공격 로직 추가
+            return _shortEnemy;
         }
+        return null;
+    }
+
+    public int UintAttack(string unitName, string monsterName)
+    {
+
+
+        //GameObject target = Trarget();
+        //if (target != null)
+        //{
+        //    int damage = Damage(attackPower, defensePower);
+        //    return damage;
+        //}
+        return 0;
+    }
+
+    public int Damage(int attack, int defense)
+    {
+        int damage = attack - defense;
+        return damage;
+    }
+
+    public void MonsterAttack()
+    {
+
     }
 }

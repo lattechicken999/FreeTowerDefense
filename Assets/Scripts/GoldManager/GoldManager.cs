@@ -33,6 +33,8 @@ public class GoldManager : Singleton<GameManager>
     /// </summary>
     private int _gold = 0;
 
+    private List<ICashObserver> _goldObservers = new List<ICashObserver>();
+
     /// <summary>
     /// 메인 재화인 골드 프로퍼티
     /// 값이 0 아래가 되지 않도록 if문 사용
@@ -53,6 +55,7 @@ public class GoldManager : Singleton<GameManager>
             {
                 _gold = value;
             }
+            NotifyChangeGold();
         }
     }
 
@@ -129,5 +132,28 @@ public class GoldManager : Singleton<GameManager>
     {
         // 부모 init 호출
         base.init();
+    }
+
+    /// <summary>
+    /// 옵저버 등록
+    /// </summary>
+    public void RegistrationObserver()
+    {
+
+    }
+
+    /// <summary>
+    /// 옵저버 해제
+    /// </summary>
+    public void UnsubObserver()
+    {
+
+    }
+    /// <summary>
+    /// 알림 역할
+    /// </summary>
+    private void NotifyChangeGold()
+    {
+
     }
 }

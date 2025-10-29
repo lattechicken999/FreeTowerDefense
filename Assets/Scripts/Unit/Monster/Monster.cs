@@ -17,13 +17,15 @@ public class Monster : Unit
     [SerializeField] private float _initHp = 1.0f;
     [SerializeField] private int _initAttackPoint = 1;
     [SerializeField] private int _initDefensePoint = 1;
+    //▼이동시 회전 속도
+    [SerializeField] private float _rotationSpeed = 5.0f;
 
     //▼웨이포인트 설정
     private float _moveSpeed = 1.0f;
     private Vector3[] _wayPointPositions; //웨이포인트는 Z축방향만 알면되니까 회전을 저장하자
-    int _currentWaypoint = 1; //현재 웨이포인트가 몇번째인지, 하나씩 지날때마다 +1
+    private int _currentWaypoint = 1; //현재 웨이포인트가 몇번째인지, 하나씩 지날때마다 +1
     //▼몬스터가 어떤 방식으로 죽었는지 (플레이어한테 죽었으면 돈줘야하는 등 차별점이 있어야해서 추가)
-    bool _isKilledByPlayer = false;
+    private bool _isKilledByPlayer = false;
     //▼몬스터에 붙어있는 HP바 게임오브젝트 (몬스터가 죽으면 HP바도 없어져야해서 추가)
     private GameObject _hpBarGameObject;
 
@@ -132,6 +134,11 @@ public class Monster : Unit
         float _distance = 0.1f;
         Vector3 direction = (_wayPointPositions[_currentWaypoint] - transform.position).normalized;
         transform.position += direction * Time.deltaTime * _moveSpeed;
+
+        //오브젝트가 해당 방향을 바라보게 만들어야 한다. 서서히
+        Vector3 direction2 = (_wayPointPositions[_currentWaypoint] - transform.position);
+        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(direction2), Time.deltaTime * _rotationSpeed);
+
         var diff = Vector3.Distance(transform.position, _wayPointPositions[_currentWaypoint]);
         if (diff < _distance)
         {

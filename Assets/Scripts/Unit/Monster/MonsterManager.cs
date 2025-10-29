@@ -22,6 +22,9 @@ public class MonsterManager : Singleton<MonsterManager>
     //▼웨이포인트용 필드
     [SerializeField] private GameObject _wayPointParent; //웨이포인트 정보를 자식으로 가지고있는 부모 게임 오브젝트
     private List<Transform> _wayPointChilds = new List<Transform>(); //_wayPointParent에 있는 자식정보를 꺼내서 저장한 필드
+    //▼몬스터 타겟
+    [SerializeField] private MonsterTarget _mosterAttackTarget;
+
     //(안될듯)오브젝트풀로 생성하려 했으나.. 몬스터가 하나만 생성되는것이 아닌 여러개가 생성되기때문에 그러면 List를 Prefab갯수만큼 들고있어야함. 
     protected override void Awake()
     {
@@ -157,7 +160,10 @@ public class MonsterManager : Singleton<MonsterManager>
     /// <param name="attackValue"></param>
     private void MonsterAttackTarget(int attackValue) //몬스터가 성벽을 공격. 배틀매니저한테 보냄
     {
-        //BattleManager한테 보냄
+        //BattleManager한테 보냄 (아래 주석내용 다른곳에서 작업 완료된 이후 할수있음)
+        //int defence = _mosterAttackTarget._defensePoint; //이거 protected라 접근불가. 프로퍼티 작업 필요함
+        //int hp = _mosterAttackTarget._hp; //이거 protected라 접근불가. 프로퍼티 작업 필요함
+        //BattleManager._instance.MonsterAttack(attackValue,defence,hp); //배틀매니저가 싱글톤이 아님. 되면 작업하기
     }
     
 

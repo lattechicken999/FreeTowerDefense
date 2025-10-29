@@ -17,11 +17,15 @@ public class Monster : Unit
     [SerializeField] private int _initAttackPoint = 1;
     [SerializeField] private int _initDefensePoint = 1;
 
-    //웨이포인트 설정
+    //▼웨이포인트 설정
     private float _moveSpeed = 3.0f;
     private Vector3[] _wayPointPositions; //웨이포인트는 Z축방향만 알면되니까 회전을 저장하자
-    //[SerializeField] List<Vector3> _waypointsPosition = new List<Vector3>(); //웨이포인트들에 대한 정보 -> 쓸거면 웨이포인트있는 부모 오브젝트를 찾아서? 해줘야함
     int _currentWaypoint = 0; //현재 웨이포인트가 몇번째인지, 하나씩 지날때마다 +1
+    //▼몬스터가 어떤 방식으로 죽었는지 (플레이어한테 죽었으면 돈줘야하는 등 차별점이 있어야해서 추가)
+    bool _isKilledByPlayer = false;
+    //▼몬스터에 붙어있는 HP바 게임오브젝트 (몬스터가 죽으면 HP바도 없어져야해서 추가)
+    private GameObject _hpBarGameObject;
+
 
     //Get할수있는 프로퍼티도 만들어준다
     public float _Hp => _hp;
@@ -56,6 +60,11 @@ public class Monster : Unit
 
         throw new System.NotImplementedException();
     }
+    public void SetHpBarObject(GameObject hpBar)
+    {
+        _hpBarGameObject = hpBar;
+    }
+
     /// <summary>
     /// 데미지를 받을때 호출되는 메서드 (상속받은 메서드)
     /// </summary>
@@ -75,10 +84,38 @@ public class Monster : Unit
     {
         if (_Hp <= 0)
         {
+            _isKilledByPlayer = true;
+            MonsterDeath();
+            /*
             _monsterDeadNotified.Invoke(this);
             _monsterDeadNotifiedById.Invoke(_monsterId);
             Destroy(gameObject);
+            */
         }
+    }
+
+    private void MonsterDeath() //몬스터가 죽을경우 통합 메서드
+    {
+        if(_isKilledByPlayer) //플레이어한테 사망
+        {
+            ByPlayerKilled();
+        }
+        else //몬스터가 끝지점까지 가서 스스로 파괴(성벽 HP감소시키고)
+        {
+            BySelfKilled();
+        }
+        _monsterDeadNotified?.Invoke(this);
+        _monsterDeadNotifiedById?.Invoke(_monsterId);
+        Destroy(gameObject);
+        Destroy(_hpBarGameObject);
+    }
+    private void ByPlayerKilled()
+    {
+        //플레이어가 죽였을때 행동 저장. 돈을 증가시킨다 등
+    }
+    private void BySelfKilled()
+    {
+        //몬스터가 끝지점까지 가서 스스로 파괴했을때 행동 저장. 성벽HP가 감소한다
     }
 
     /// <summary>
@@ -119,7 +156,7 @@ public class Monster : Unit
     {
         if (other.gameObject.CompareTag("WayPoints"))
         {
-            Debug.Log("Waypoint 들어옴: " +other.name);
+            //Debug.Log("Waypoint 들어옴: " +other.name);
             if(_currentWaypoint < _wayPointPositions.Length-1)
             {
                 _currentWaypoint++; //이동할 위치 설정
@@ -127,6 +164,8 @@ public class Monster : Unit
             else //웨이포인트 끝까지 왔으면 
             {
                 //공격력만큼 성문HP감소시키기위해서 배틀매니저에 보내야함
+                _isKilledByPlayer = false;
+                MonsterDeath();
                 Debug.Log("성문도달");
             }
             

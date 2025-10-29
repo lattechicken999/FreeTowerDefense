@@ -143,6 +143,7 @@ public class MonsterManager : Singleton<MonsterManager>
             UIHpBarMonster uiHealthBar = obj.GetComponent<UIHpBarMonster>();
             uiHealthBar.SetUIPos(mon);
 
+            mon.SetHpBarObject(obj); // _aliveMonsters[index].SetHpBarObject(obj);
 
             yield return _delay;
         }
@@ -170,7 +171,7 @@ public class MonsterManager : Singleton<MonsterManager>
         _aliveMonsters.Remove(monster); //리스트에서도 삭제한다
         //▼남은 몬스터의 갯수를 StageManager로 전달
         int remainMonster = ReturnCurrentMonsterCount(); 
-        _notifiedMonsterCount.Invoke(remainMonster); //현재 남은 몬스터의 정보를 StageManager에 쏴준다(없어질때마다)
+        //_notifiedMonsterCount.Invoke(remainMonster); //현재 남은 몬스터의 정보를 StageManager에 쏴준다(없어질때마다)
     }
     private Transform FindUiRoot()//캔버스에서 UIRoot라는 태그를 가진 위치에 생성하기 위해 사용
     {

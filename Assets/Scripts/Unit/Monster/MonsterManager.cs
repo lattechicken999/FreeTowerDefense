@@ -126,10 +126,11 @@ public class MonsterManager : Singleton<MonsterManager>
         {
             //▼Monster 생성 (현재 선택된 몬스터 타입으로 Prefab에서 찾아서 설정
             GoldManager.MonsterNameEnum currentMonsterType = monstersInfo[index]; //현재 선택된 몬스터 타입
-            GameObject makedMonster = Instantiate(_monsterMap[currentMonsterType], transform.position, transform.rotation);
+            GameObject makedMonster = Instantiate(_monsterMap[currentMonsterType], _wayPointChilds[0].position, transform.rotation);
             makedMonster.name += index; //이름 임시 변경
             Monster mon = makedMonster.GetComponent<Monster>();
             mon._monsterDeadNotified += RemoveMonster; //몬스터가 죽을때 하는 deleate event 정의
+            mon._monsterAttackAction += MonsterAttackTarget; //몬스터가 성벽 공격할때 delegate event
             _aliveMonsters.Add(mon); //관리하기 위해 리스트에 추가
 
             //▼Monser에 wayPoint를 설정한다.
@@ -149,6 +150,15 @@ public class MonsterManager : Singleton<MonsterManager>
         }
     }
 
+    /// <summary>
+    /// 몬스터가 웨이포인트 끝지점에 도달했을때 공격하는 메서드
+    /// BattleManager에서 처리하도록 타겟과 공격력을 보내주기만 한다. 
+    /// </summary>
+    /// <param name="attackValue"></param>
+    private void MonsterAttackTarget(int attackValue) //몬스터가 성벽을 공격. 배틀매니저한테 보냄
+    {
+        //BattleManager한테 보냄
+    }
     
 
     /// <summary>
@@ -168,6 +178,8 @@ public class MonsterManager : Singleton<MonsterManager>
     {
         //▼이벤트와 리스트에서 삭제
         monster._monsterDeadNotified -= RemoveMonster; //몬스터에 들어있는 이벤트 제거 (몬스터는 RemoveMonster 끝난후 스스로 Destroy함)
+        monster._monsterAttackAction -= MonsterAttackTarget; //몬스터가 성벽 공격할때 delegate event
+
         _aliveMonsters.Remove(monster); //리스트에서도 삭제한다
         //▼남은 몬스터의 갯수를 StageManager로 전달
         int remainMonster = ReturnCurrentMonsterCount(); 

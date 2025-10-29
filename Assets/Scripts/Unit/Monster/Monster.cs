@@ -11,6 +11,7 @@ public class Monster : Unit
     public event Action<float> _hpValueChange; //UIHpBarMonster.cs에 hp가 변경된걸 알리기 위해서
     public event Action<Monster> _monsterDeadNotified; //MonsterManager.cs와  죽었다고 알리기 위해서
     public event Action<GoldManager.MonsterNameEnum> _monsterDeadNotifiedById; //GoldManager.cs에 죽은 몬스터 ID로 재화관리하기 위해서
+    public event Action<int> _monsterAttackAction; //MonsterManager.cs에 몬스터가 공격한다는 것을 알림 (웨이포인트 끝지점 도달했을때 발동)
 
     //▼상속받은 hp,Attack,Defence에 [SerializeField]없어서 추가. Init()메서드에서 상속된곳에 다시 넣어줌
     [SerializeField] private float _initHp = 1.0f;
@@ -18,9 +19,9 @@ public class Monster : Unit
     [SerializeField] private int _initDefensePoint = 1;
 
     //▼웨이포인트 설정
-    private float _moveSpeed = 3.0f;
+    private float _moveSpeed = 1.0f;
     private Vector3[] _wayPointPositions; //웨이포인트는 Z축방향만 알면되니까 회전을 저장하자
-    int _currentWaypoint = 0; //현재 웨이포인트가 몇번째인지, 하나씩 지날때마다 +1
+    int _currentWaypoint = 1; //현재 웨이포인트가 몇번째인지, 하나씩 지날때마다 +1
     //▼몬스터가 어떤 방식으로 죽었는지 (플레이어한테 죽었으면 돈줘야하는 등 차별점이 있어야해서 추가)
     bool _isKilledByPlayer = false;
     //▼몬스터에 붙어있는 HP바 게임오브젝트 (몬스터가 죽으면 HP바도 없어져야해서 추가)
@@ -57,8 +58,7 @@ public class Monster : Unit
         //타겟에 대한 정보와, 현재 몬스터에 대한 공격력을 MonsterManager에 보내줌
         //그리고 MonsterManager이 BattleManager에 해당 타겟에 대한정보(방어,체력)와 몬스터 공격력을 넘겨줌
         //배틀매니저는 데미지계산해서 타겟에다가 넘겨줌(이건 배틀매니저 안에서 하기때문에 몬스터는 보내주기만 하면됨)
-
-        throw new System.NotImplementedException();
+        _monsterAttackAction.Invoke(_attackPoint); //공격력만큼 Attack
     }
     public void SetHpBarObject(GameObject hpBar)
     {
@@ -86,17 +86,12 @@ public class Monster : Unit
         {
             _isKilledByPlayer = true;
             MonsterDeath();
-            /*
-            _monsterDeadNotified.Invoke(this);
-            _monsterDeadNotifiedById.Invoke(_monsterId);
-            Destroy(gameObject);
-            */
         }
     }
 
     private void MonsterDeath() //몬스터가 죽을경우 통합 메서드
     {
-        if(_isKilledByPlayer) //플레이어한테 사망
+        if (_isKilledByPlayer) //플레이어한테 사망
         {
             ByPlayerKilled();
         }
@@ -106,8 +101,8 @@ public class Monster : Unit
         }
         _monsterDeadNotified?.Invoke(this);
         _monsterDeadNotifiedById?.Invoke(_monsterId);
-        Destroy(gameObject);
         Destroy(_hpBarGameObject);
+        Destroy(gameObject);
     }
     private void ByPlayerKilled()
     {
@@ -126,17 +121,40 @@ public class Monster : Unit
         _hpValueChange.Invoke(_Hp);
         CheckHpZero(); //hp가 0이하인지 확인
     }
+
     private void Update()
     {
         //테스트용. 그냥 생성되면 앞으로 이동되게 한다 (몇개 생성됬는지 확인 위해서)
 
         //웨이포인트에 설정된 좌표대로 순서대로 이동
+
+        //거리로 판단하기로 결정. 
+        float _distance = 0.1f;
+        Vector3 direction = (_wayPointPositions[_currentWaypoint] - transform.position).normalized;
+        transform.position += direction * Time.deltaTime * _moveSpeed;
+        var diff = Vector3.Distance(transform.position, _wayPointPositions[_currentWaypoint]);
+        if (diff < _distance)
+        {
+            _currentWaypoint++;
+        }
+        if (_currentWaypoint > _wayPointPositions.Length - 1) //웨이포인트 끝까지 왔으면 
+        {
+            //공격력만큼 성문HP감소시키기위해서 배틀매니저에 보내야함
+            Debug.Log("성문도달");
+            _isKilledByPlayer = false;
+            Attack();
+            MonsterDeath();
+
+        }
+
+        /*
+        //(문제)Waypoint의 중앙에 Collider(Trigger)를 두고 이동했더니 중앙 위치로 가기전에 Collider가 감지되서 부자연스럽게 이동함
         if(_currentWaypoint < _wayPointPositions.Length)
         {
             Vector3 direction = (_wayPointPositions[_currentWaypoint] - transform.position).normalized;
             transform.position += direction * Time.deltaTime * _moveSpeed;
         }
-        
+        */
     }
     /// <summary>
     /// MonserManager로부터 웨이포인트를 설정받는 메서드
@@ -147,28 +165,10 @@ public class Monster : Unit
     {
         Debug.Log("SetWayPoints들어옴");
         _wayPointPositions = new Vector3[wayPoints.Count];
-        for(int index=0; index < wayPoints.Count; index++)
+        for (int index = 0; index < wayPoints.Count; index++)
         {
             _wayPointPositions[index] = wayPoints[index].position; //웨이포인트의 회전정보 저장(Z축만 쓸거임)
         }
     }
-    private void OnTriggerEnter(Collider other) //웨이포인트 테스트용... 가보자
-    {
-        if (other.gameObject.CompareTag("WayPoints"))
-        {
-            //Debug.Log("Waypoint 들어옴: " +other.name);
-            if(_currentWaypoint < _wayPointPositions.Length-1)
-            {
-                _currentWaypoint++; //이동할 위치 설정
-            }
-            else //웨이포인트 끝까지 왔으면 
-            {
-                //공격력만큼 성문HP감소시키기위해서 배틀매니저에 보내야함
-                _isKilledByPlayer = false;
-                MonsterDeath();
-                Debug.Log("성문도달");
-            }
-            
-        }
-    }
+
 }

@@ -121,11 +121,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <_monsterId>k__BackingField: 0
-  _reward: 1
   _initHp: 2
   _initAttackPoint: 1
   _initDefensePoint: 1
-  _waypointsPosition: []
+  _testTarget: {fileID: 2060044362594595656, guid: f96eef807678e4d4c976adb957528e19, type: 3}
 --- !u!54 &4027620882873758000
 Rigidbody:
   m_ObjectHideFlags: 0

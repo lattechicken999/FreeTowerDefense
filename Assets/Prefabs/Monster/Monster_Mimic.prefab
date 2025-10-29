@@ -77,6 +77,7 @@ MonoBehaviour:
   _initHp: 2
   _initAttackPoint: 1
   _initDefensePoint: 1
+  _rotationSpeed: 5
 --- !u!1 &2240490192708964786
 GameObject:
   m_ObjectHideFlags: 0
@@ -165,6 +166,10 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: d5295d819f7bab6448e2c64c4707429e, type: 2}
+    - target: {fileID: 9500000, guid: 3353e4f866c39d043a315b41717c9bb7, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: ad8c5523f2b576b418ee719654ad4604, type: 2}
     - target: {fileID: 13700000, guid: 3353e4f866c39d043a315b41717c9bb7, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 

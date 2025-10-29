@@ -3,17 +3,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-// enum안에 유닛과 몬스터 추가 및 수정, 딕셔너리에 보상 수정, 판매 금액 조정
-public class GoldManager : MonoBehaviour
+// 수정 필요 사항 enum안에 유닛과 몬스터 다른 cs파일 만들고 삭제, 딕셔너리에 보상 수정, 판매 금액 조정
+/// <summary>
+/// 재화를 관리하는 매니저 클래스, 몬스터 처치 보상, 유닛 구매 및 판매시 재화 변경
+/// </summary>
+public class GoldManager : Singleton<GameManager>
 {
-    // 유닛 이름 enum 나중에 업그레이드 유닛 추가
+    /// <summary>
+    /// 유닛 이름 열거형
+    /// </summary>
     public enum UnitNameEnum
     {
         Knight,
         Wizard,
         _End
     }
-    // 몬스터 이름 enum
+    /// <summary>
+    /// 몬스터 이름 열거형
+    /// </summary>
     public enum MonsterNameEnum
     {
         Slime,
@@ -21,11 +28,16 @@ public class GoldManager : MonoBehaviour
         Box,
         _End
     }
-    // 게임 메인 재화
+    /// <summary>
+    /// 현재 보유중인 재화
+    /// </summary>
     private int _gold = 0;
 
-    // _gold 프로퍼티
-    public int Gold
+    /// <summary>
+    /// 메인 재화인 골드 프로퍼티
+    /// 값이 0 아래가 되지 않도록 if문 사용
+    /// </summary>
+    public int Wallet
     {
         get
         {
@@ -33,7 +45,6 @@ public class GoldManager : MonoBehaviour
         }
         private set
         {
-            // 음수 방지
             if (value < 0)
             {
                 _gold = 0;
@@ -44,15 +55,19 @@ public class GoldManager : MonoBehaviour
             }
         }
     }
-    
-    // Dictionary로 몬스터별 보상 적기
+
+    /// <summary>
+    /// 몬스터 처치 보상 정보
+    /// </summary>
     private Dictionary<MonsterNameEnum, int> _monsterGold = new Dictionary<MonsterNameEnum, int>()
     {
         { MonsterNameEnum.Slime, 1 },
         { MonsterNameEnum.Turtle, 1 },
         { MonsterNameEnum.Box, 2 },
     };
-    // Dictionary로 유닛 가격 적기
+    /// <summary>
+    /// 유닛별 구매 비용 정보
+    /// </summary>
     private Dictionary<UnitNameEnum, int> _unitGold = new Dictionary<UnitNameEnum, int>()
     {
         { UnitNameEnum.Knight, 10 },
@@ -61,12 +76,15 @@ public class GoldManager : MonoBehaviour
 
 
 
-    // 몬스터 사망시 이름을 가져와서 골드 추가
+    /// <summary>
+    /// 몬스터 처치 시 재화를 추가하는 메서드
+    /// </summary>
+    /// <param name="monsterName">사망한 몬스터의 이름</param>
     public void GoldAdd(MonsterNameEnum monsterName)
     {
-        if(_monsterGold.TryGetValue(monsterName, out int reward))
+        if (_monsterGold.TryGetValue(monsterName, out int reward))
         {
-            Gold += reward;
+            Wallet += reward;
         }
         else
         {
@@ -74,12 +92,15 @@ public class GoldManager : MonoBehaviour
         }
     }
 
-    // 유닛 구매시 골드 차감
+    /// <summary>
+    /// 유닛 구매시 메인 재화를 차감하는 메서드
+    /// </summary>
+    /// <param name="unitName">구매한 유닛 이름</param>
     public void UnitBuy(UnitNameEnum unitName)
     {
         if (_unitGold.TryGetValue(unitName, out int price))
         {
-            Gold -= price;
+            Wallet -= price;
         }
         else
         {
@@ -87,13 +108,26 @@ public class GoldManager : MonoBehaviour
         }
     }
 
-    // 유닛 판매시 골드 추가 소수점은 반올림해서 계산
+    /// <summary>
+    /// 유닛 판매시 메인 재화 추가
+    /// 지금은 판매 금액은 원래 가격의 80%, 소수점은 반올림해서 계산
+    /// </summary>
+    /// <param name="unitName">판매할 유닛 이름</param>
     public void UnitSell(UnitNameEnum unitName)
     {
         if (_unitGold.TryGetValue(unitName, out int price))
         {
             int sellingPrice = Mathf.RoundToInt(price * 0.8f);
-            Gold += sellingPrice;
+            Wallet += sellingPrice;
         }
+    }
+
+    /// <summary>
+    /// 초기화시 호출
+    /// </summary>
+    protected override void init()
+    {
+        // 부모 init 호출
+        base.init();
     }
 }

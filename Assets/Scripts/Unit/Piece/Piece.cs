@@ -6,9 +6,13 @@ using UnityEngine;
 public class Piece : Unit
 {
     [SerializeField,Range(0,2)] float _atteckCoolTime;
+    [SerializeField] GoldManager.UnitNameEnum _unitName;
 
     private WaitForSeconds _attackDelay;
     private Coroutine _autoCoroutine;
+    private bool _isPlaced = false;
+
+    protected virtual int GetPrice() => 0; 
     private void Awake()
     {
         _attackDelay = new WaitForSeconds(_atteckCoolTime);
@@ -37,9 +41,13 @@ public class Piece : Unit
     /// <returns></returns>
     IEnumerator AutoAttack()
     {
-        while(true)
+        while (true)
         {
-            Attack();
+            if (_isPlaced)
+            {
+                Attack();
+            }
+
             yield return _attackDelay;
         }
     }
@@ -57,9 +65,26 @@ public class Piece : Unit
     /// <summary>
     /// UI에서 판매 클릭시 호출되는 메서드
     /// </summary>
-    public void SelPiece()
+    public void SellPiece()
     {
-        //GoldManager의 기능 호출
+        /*
+        if (GoldManager.Instance != null)
+        {
+            GoldManager.Instance.UnitSell(_unitName);
+        }
+        
+        */
+        Destroy(gameObject);
+        // 골드 지급
+        GoldManager goldManager = FindObjectOfType<GoldManager>();
+        if (goldManager != null)
+        {
+            goldManager.UnitSell(_unitName);
+        }
+       
+
+        // 유닛 제거
+        Destroy(gameObject);
     }
 
     /// <summary>
@@ -73,9 +98,14 @@ public class Piece : Unit
     /// <summary>
     /// 기물이 진짜 생성 되었을 때 호출되는 메서드
     /// </summary>
-    public void InitalPiece()
+    public void InifalPiece()
     {
+        _isPlaced = true;
 
+        if (_autoCoroutine == null)
+        {
+            _autoCoroutine = StartCoroutine(AutoAttack());
+        }
     }
 
 

@@ -59,13 +59,14 @@ public class MonsterManager : Singleton<MonsterManager>
     /// </summary>
     private void ForSummonTest() //(삭제예정)
     {
-        int spawnCnt = 5;
+        int spawnCnt = 6;
         List<GoldManager.MonsterNameEnum> monsterIds = new List<GoldManager.MonsterNameEnum>();
         monsterIds.Add(GoldManager.MonsterNameEnum.Slime);
         monsterIds.Add(GoldManager.MonsterNameEnum.Slime);
         monsterIds.Add(GoldManager.MonsterNameEnum.Slime);
         monsterIds.Add(GoldManager.MonsterNameEnum.Turtle);
-        monsterIds.Add(GoldManager.MonsterNameEnum.Box);
+        monsterIds.Add(GoldManager.MonsterNameEnum.Mummy);
+        monsterIds.Add(GoldManager.MonsterNameEnum.Ghost);
         int spawnDelay = 2;
         SetMonstersFromStageManager(spawnCnt, monsterIds, spawnDelay); //스테이지 매니저에서 불렀다치고 해보기
         StartMonsterRun(); //스테이지 매니저에서 불렀다치고 해보기

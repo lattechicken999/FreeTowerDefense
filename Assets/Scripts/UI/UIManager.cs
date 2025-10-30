@@ -7,7 +7,7 @@ using UnityEngine.UI;
 /// 스테이지 정보 및 HP 정보, 지갑 정보 업데이트
 /// 유닛 판매시 판매 UI 띄움
 /// </summary>
-public partial class UIManager : Singleton<UIManager>, ICashObserver
+public partial class UIManager : Singleton<UIManager>, ICashObserver,IStageInfo
 {
     //몬스터 타겟 HP 용 UI
     [SerializeField] private Image _monsterTargetHpImage;
@@ -16,6 +16,10 @@ public partial class UIManager : Singleton<UIManager>, ICashObserver
     //남은 골드 갯수 확인 용
     [SerializeField] private TextMeshProUGUI _WalletInfo;
     [SerializeField] private Canvas _sellUiPrefeb;
+
+    //유닉 구매 버튼
+    [SerializeField] private Button _buyUiWarrior;
+    [SerializeField] private Button _buyUiWizard;
 
     //기물 레이어 (레이캐스트에 사용)
     [SerializeField] LayerMask _layerMask;
@@ -30,6 +34,11 @@ public partial class UIManager : Singleton<UIManager>, ICashObserver
     {
         //UI 가 변경됨
         _WalletInfo.text = leftWallet.ToString();
+    }
+
+    public void NotifyStageInfo(string Text)
+    {
+        _stageInfo.text = Text;
     }
 
 
@@ -100,6 +109,12 @@ public partial class UIManager : Singleton<UIManager>, ICashObserver
     {
         //골드메니저에 ICashObserver 구독 필요
         GoldManager.Instance.RegistrationObserver(this);
+        //스테이지 인포 구독 필요
+        StageManager.Instance.SubscribeStageInfo(this);
+
+        //버튼이벤트 연결
+        _buyUiWarrior.onClick.AddListener(PlaceablePointsCheck.Instance.CommandChackPlaceable);
+        _buyUiWizard.onClick.AddListener(PlaceablePointsCheck.Instance.CommandChackPlaceable);
     }
     private void Update()
     {

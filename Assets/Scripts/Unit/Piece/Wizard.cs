@@ -20,7 +20,7 @@ public class Wizard : Piece
         {
             if (battleManager != null)
             {
-                battleManager.UnitAttack(_attackPoint);
+                battleManager.UnitAttack(_attackPoint,_attackRange);
             }
         }
     }

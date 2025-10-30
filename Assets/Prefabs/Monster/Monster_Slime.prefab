@@ -43,6 +43,7 @@ GameObject:
   - component: {fileID: 3047811374004354435}
   - component: {fileID: 3618530681728791791}
   - component: {fileID: 6158406536813899679}
+  - component: {fileID: 6180874083535345651}
   m_Layer: 0
   m_Name: Monster_Slime
   m_TagString: Untagged
@@ -109,6 +110,28 @@ MonoBehaviour:
   _initHp: 2
   _initAttackPoint: 1
   _initDefensePoint: 1
+  _rotationSpeed: 5
+--- !u!65 &6180874083535345651
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7690610595510015920}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 0.9712354, z: 1}
+  m_Center: {x: 0, y: 0.46023303, z: 0}
 --- !u!1001 &5201359846757516974
 PrefabInstance:
   m_ObjectHideFlags: 0

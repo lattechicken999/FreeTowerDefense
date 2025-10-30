@@ -43,6 +43,7 @@ GameObject:
   - component: {fileID: 4507337293985794877}
   - component: {fileID: 2413993658134691816}
   - component: {fileID: 7479089958893027926}
+  - component: {fileID: 2039207720783979155}
   m_Layer: 0
   m_Name: Monster_Ghost
   m_TagString: Untagged
@@ -110,6 +111,27 @@ MonoBehaviour:
   _initAttackPoint: 1
   _initDefensePoint: 1
   _rotationSpeed: 5
+--- !u!65 &2039207720783979155
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6337845043539866179}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.77362096, y: 1.3910184, z: 0.79995406}
+  m_Center: {x: -0.010290027, y: -0.11318958, z: -0.0039833784}
 --- !u!1001 &4907339141841457057
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -118,6 +140,30 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 8082502412197031295}
     m_Modifications:
+    - target: {fileID: 8954800358981883560, guid: d0689260bad5ace43851bc4ad441f23d, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: ec74708cbf9a55f4480e35a959740fae, type: 2}
+    - target: {fileID: 8954800358981883561, guid: d0689260bad5ace43851bc4ad441f23d, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8954800358981883561, guid: d0689260bad5ace43851bc4ad441f23d, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8954800358981883561, guid: d0689260bad5ace43851bc4ad441f23d, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8954800358981883561, guid: d0689260bad5ace43851bc4ad441f23d, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8954800358981883561, guid: d0689260bad5ace43851bc4ad441f23d, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8954800359469898614, guid: d0689260bad5ace43851bc4ad441f23d, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -158,11 +204,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8954800359469898616, guid: d0689260bad5ace43851bc4ad441f23d, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8954800359469898617, guid: d0689260bad5ace43851bc4ad441f23d, type: 3}
       propertyPath: m_Name
       value: Little_Ghost_ZOMbi (3)
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 8954800359469898615, guid: d0689260bad5ace43851bc4ad441f23d, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

@@ -20,7 +20,7 @@ public class Warrior : Piece
         {
             if (battleManager != null)
             {
-                battleManager.UnitAttack(_attackPoint, _attackRange)
+                battleManager.UnitAttack(_attackPoint, _attackRange);
             }
         }
     }

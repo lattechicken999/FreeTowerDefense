@@ -12,15 +12,15 @@ public class Warrior : Piece
     {
         _attackPoint = 7;//전사는 공격력 얼마나 할지
     }
-    BattleManager battleManager = FindObjectOfType<BattleManager>();
+    
     public override void Attack()
     {
        GameObject targetMonster = TargetFirstMonster();
         if (targetMonster != null)
         {
-            if (battleManager != null)
+            if (BattleManager.Instance != null)
             {
-                battleManager.UnitAttack(_attackPoint, _attackRange);
+                BattleManager.Instance.UnitAttack(_attackPoint, _attackRange);
             }
         }
     }
@@ -29,9 +29,9 @@ public class Warrior : Piece
     /// </summary>
     private GameObject TargetFirstMonster()
     {
-        if (battleManager == null)
+        if (BattleManager.Instance == null)
         {
-            return battleManager.Target(_attackRange);
+            return BattleManager.Instance.Target(_attackRange);
         }
         return null;
     }

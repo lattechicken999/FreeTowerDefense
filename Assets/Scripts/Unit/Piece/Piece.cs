@@ -6,7 +6,7 @@ using UnityEngine;
 public class Piece : Unit
 {
     [SerializeField,Range(0,2)] float _atteckCoolTime;
-    [SerializeField] GoldManager.UnitNameEnum _unitName;
+    [SerializeField] UnitEnum _unitName;
 
     private WaitForSeconds _attackDelay;
     private Coroutine _autoCoroutine;
@@ -67,17 +67,8 @@ public class Piece : Unit
     /// </summary>
     public void SellPiece()
     {
-        /*
-        if (GoldManager.Instance != null)
-        {
-            GoldManager.Instance.UnitSell(_unitName);
-        }
-        
-        
-        Destroy(gameObject);
-        */
-        // °ñµå Áö±Þ
-        GoldManager goldManager = FindObjectOfType<GoldManager>();
+       
+        GoldManager goldManager = GoldManager.Instance;
         if (goldManager != null)
         {
             goldManager.UnitSell(_unitName);

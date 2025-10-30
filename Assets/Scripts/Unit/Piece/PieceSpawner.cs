@@ -9,7 +9,7 @@ public class PieceSpawner : MonoBehaviour
 {
     [SerializeField] GameObject _warriorPrefeb;
     [SerializeField] GameObject _wizardPrefeb;
-    [SerializeField] Material _TranslucentMaterial;
+   
 
     private WaitForNextFrameUnit _delay;
     public void CreateWarrior(Vector3 position,int level=1)
@@ -24,17 +24,5 @@ public class PieceSpawner : MonoBehaviour
         GameObject piece = Instantiate(_warriorPrefeb, position, Quaternion.identity);
         piece.GetComponent<Piece>().InifalPiece();
     }
-    /*
-    private IEnumerator SetupPieceStandby(GameObject prefeb)
-    {
-        var newPiece = Instantiate(prefeb);
-
-        while(true)
-        {
-            //레이로 포지션 값 가져옴
-            //클릭 할 때 까지 반복, 마우스를 오브젝트가 따라다님.
-            yield return _delay;
-        }
-    }
-    */
+   
 }

@@ -32,7 +32,10 @@ public class UIHpBarMonster : MonoBehaviour
     }
     private void OnDestroy()
     {
-        _monsterInfo._hpValueChange -= SetUIValue;
+        if(_monsterInfo != null)
+        {
+            _monsterInfo._hpValueChange -= SetUIValue;
+        }
     }
     void Update()
     {

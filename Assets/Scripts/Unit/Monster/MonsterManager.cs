@@ -14,7 +14,9 @@ public class MonsterManager : Singleton<MonsterManager>
     [SerializeField] float _hpBarWidthSize = 300.0f; //UI hp바 가로크기 설정
     [SerializeField] float _hpBarHeightSize = 40.0f; //UI hp바 세로크기 설정
     [SerializeField] float _hpBarHeightGap = 1.0f; //UI hp바 아래 위 방향으로 위치 조절
-    public event Action<int> _notifiedMonsterCount; //StageManager에서 사용. 몬스터의 갯수가 변화했음을 알림
+
+    private IMonsterCount _notifideMonsterCount;
+
     public event Action<List<Monster>> _notifiedMonsterMake; //BattleManager에서 사용. 몬스터 자체를 넘겨줌
     //코루틴용 private 필드
     private WaitForSeconds _delay; //StageManager에서 Set하면 설정되는 몬스터 생성 딜레이
@@ -26,6 +28,14 @@ public class MonsterManager : Singleton<MonsterManager>
     //▼몬스터 타겟
     [SerializeField] private MonsterTarget _mosterAttackTarget;
 
+    public void SubScribeMonsterCount(IMonsterCount subscriber)
+    {
+        _notifideMonsterCount = subscriber;
+    }
+    public void UnSubScribeMonsterCount()
+    {
+        _notifideMonsterCount = null;
+    }
     //(안될듯)오브젝트풀로 생성하려 했으나.. 몬스터가 하나만 생성되는것이 아닌 여러개가 생성되기때문에 그러면 List를 Prefab갯수만큼 들고있어야함. 
     protected override void Awake()
     {
@@ -53,7 +63,7 @@ public class MonsterManager : Singleton<MonsterManager>
     }
     private void Start()
     {
-        ForSummonTest(); //테스트용 메서드
+        //ForSummonTest(); //테스트용 메서드
     }
     /// <summary>
     /// (삭제예정)테스트용 코드. StageManager에서 event받았을때 어떻게 동작될지 확인
@@ -207,8 +217,9 @@ public class MonsterManager : Singleton<MonsterManager>
         monster._monsterAttackAction -= MonsterAttackTarget; //몬스터가 성벽 공격할때 delegate event
         AliveMonsterRemove(monster);
         //▼남은 몬스터의 갯수를 StageManager로 전달
-        int remainMonster = ReturnCurrentMonsterCount(); 
+        int remainMonster = ReturnCurrentMonsterCount();
         //_notifiedMonsterCount.Invoke(remainMonster); //현재 남은 몬스터의 정보를 StageManager에 쏴준다(없어질때마다)
+        _notifideMonsterCount?.NotifieyRemainMonsterCount(remainMonster);
     }
     /// <summary>
     /// _aliveMonsters 추가할때는 무조건 이벤트 실행되어야해서 추가

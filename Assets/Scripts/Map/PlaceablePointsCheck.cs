@@ -97,6 +97,11 @@ public partial class PlaceablePointsCheck : Singleton<PlaceablePointsCheck>
     {
         if (Input.GetMouseButtonDown(0))
         {
+            if(_selectedPlaceablPoint < 0 )
+            {
+                //선택된 곳이 없으면 그냥 종료
+                return;
+            }
             //기물 배치 불가능하게 바꿈
             _placeableStates[_selectedPlaceablPoint] = false;
             //기물 생성 명령을 스포너에게 보냄
@@ -117,7 +122,7 @@ public partial class PlaceablePointsCheck : Singleton<PlaceablePointsCheck>
     }
     private void Update()
     {
-        //if (_isPlaceState)
+        //if (_isPlaceState) 
         {
             CheckPlaceable();
             SendToCreatePieceCommand();

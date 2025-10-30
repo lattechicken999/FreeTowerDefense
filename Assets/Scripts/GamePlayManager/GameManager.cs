@@ -1,12 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class GameManager : Singleton<GameManager>
 {
     private bool _isGameStart;
+    private Vector3 _initCameraPosition;
+    private Quaternion _initCameraRotation;
+   
+    protected override void init()
+    {
 
+    }
     /// <summary>
     /// 씬넘버를 받으면 해당씬 호출
     /// </summary>
@@ -20,7 +27,9 @@ public class GameManager : Singleton<GameManager>
     /// </summary>
     public void GameStartButton()
     {
+        _isGameStart = true;
         SceneManager.LoadScene("InGame");
+        
     }
 
     /// <summary>
@@ -36,6 +45,8 @@ public class GameManager : Singleton<GameManager>
     /// </summary>
     public void MainMenuButton()
     {
+        _isGameStart = false;
         SceneManager.LoadScene("MainMenu");
     }
+
 }

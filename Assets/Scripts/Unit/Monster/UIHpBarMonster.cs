@@ -20,12 +20,12 @@ public class UIHpBarMonster : MonoBehaviour
     private void Awake()
     {
         _camera = Camera.main;
-        _gapPos = Vector3.forward * _gap;
+        SetGapPos(_gap); //_gapPos ¼öÁ¤
         // _gapPos = Vector3.up * _gap;
     }
     public void SetUIPos(Monster monster)
     {
-        Debug.Log("SetUIPos");
+        //Debug.Log("SetUIPos");
         _monsterInfo = monster;
         _maxHp = _monsterInfo._Hp;
         _monsterInfo._hpValueChange += SetUIValue;
@@ -50,6 +50,11 @@ public class UIHpBarMonster : MonoBehaviour
         Debug.Log("SetUIValue");
         float hpAmount = currentHp / _maxHp;
         _hpBarImage.fillAmount = hpAmount;
+    }
+
+    public void SetGapPos(float gapValue)
+    {
+        _gapPos = Vector3.forward * gapValue;
     }
 
 }

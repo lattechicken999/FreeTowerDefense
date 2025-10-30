@@ -7,7 +7,8 @@ using UnityEngine.SceneManagement;
 
 public class StageManager : Singleton<StageManager>
 {
-    
+    public IStageInfo _notifyStageInfoForUI; //UIManager 에서 스테이지 정보 얻어올수 있게 추가
+
     private int _stageNum = 1;
     public int StageNum
     {
@@ -35,7 +36,10 @@ public class StageManager : Singleton<StageManager>
     //만약 몬스터 규모가 0이 되면
     public void StageStart()
     {
-        if(UnitCastleHp > 0)    //만약 성 체력이 0초과면
+        string msg = $"현재 스테이지: {StageNum}";
+        _notifyStageInfoForUI.NotifyStageInfo(msg); //UI에 스테이지 정보 알림
+
+        if (UnitCastleHp > 0)    //만약 성 체력이 0초과면
         {
             StageSuccess(2);
         }

@@ -10,15 +10,6 @@ using UnityEngine;
 public class GoldManager : Singleton<GoldManager>
 {
     /// <summary>
-    /// 유닛 이름 열거형
-    /// </summary>
-    public enum UnitNameEnum
-    {
-        Knight,
-        Wizard,
-        _End
-    }
-    /// <summary>
     /// 몬스터 이름 열거형
     /// </summary>
     public enum MonsterNameEnum
@@ -73,10 +64,10 @@ public class GoldManager : Singleton<GoldManager>
     /// <summary>
     /// 유닛별 구매 비용 정보
     /// </summary>
-    private Dictionary<UnitNameEnum, int> _unitGold = new Dictionary<UnitNameEnum, int>()
+    private Dictionary<UnitEnum, int> _unitGold = new Dictionary<UnitEnum, int>()
     {
-        { UnitNameEnum.Knight, 10 },
-        { UnitNameEnum.Wizard, 15 }
+        { UnitEnum.Warrior, 10 },
+        { UnitEnum.Wizard, 15 }
     };
 
 
@@ -101,7 +92,7 @@ public class GoldManager : Singleton<GoldManager>
     /// 유닛 구매시 메인 재화를 차감하는 메서드
     /// </summary>
     /// <param name="unitName">구매한 유닛 이름</param>
-    public void UnitBuy(UnitNameEnum unitName)
+    public void UnitBuy(UnitEnum unitName)
     {
         if (_unitGold.TryGetValue(unitName, out int price))
         {
@@ -118,7 +109,7 @@ public class GoldManager : Singleton<GoldManager>
     /// 지금은 판매 금액은 원래 가격의 80%, 소수점은 반올림해서 계산
     /// </summary>
     /// <param name="unitName">판매할 유닛 이름</param>
-    public void UnitSell(UnitNameEnum unitName)
+    public void UnitSell(UnitEnum unitName)
     {
         if (_unitGold.TryGetValue(unitName, out int price))
         {

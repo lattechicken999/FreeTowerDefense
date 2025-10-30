@@ -7,6 +7,7 @@ using UnityEngine;
 public class MonsterManager : Singleton<MonsterManager>
 {   
     private int _spawnCount = 5; //몬스터 몇마리 소환하는지
+    private int _remainSpawnCount; //소환할때 몬스터가 몇마리 남아있는지 (wave종료되었는지 판단하기 위해 사용)
     private List<GoldManager.MonsterNameEnum> _currentStageMonstersInfo;
     [SerializeField] private List<GameObject> _monsterPrefabs; //몬스터들이 담긴 프리팹
     private Dictionary<GoldManager.MonsterNameEnum, GameObject> _monsterMap; //딕셔너리값으로 몬스터 찾기
@@ -15,8 +16,9 @@ public class MonsterManager : Singleton<MonsterManager>
     [SerializeField] float _hpBarHeightSize = 40.0f; //UI hp바 세로크기 설정
     [SerializeField] float _hpBarHeightGap = 1.0f; //UI hp바 아래 위 방향으로 위치 조절
 
-    private IMonsterCount _notifideMonsterCount;
-
+    //▼이벤트
+    private IMonsterCount _notifyMonsterCount; //StageManager에서 사용. 몬스터 갯수 변경될때마다 알리는 이벤트
+    private IMonsterWaveEnd _notifyWaveEnd;
     public event Action<List<Monster>> _notifiedMonsterMake; //BattleManager에서 사용. 몬스터 자체를 넘겨줌
     //코루틴용 private 필드
     private WaitForSeconds _delay; //StageManager에서 Set하면 설정되는 몬스터 생성 딜레이
@@ -27,14 +29,16 @@ public class MonsterManager : Singleton<MonsterManager>
     private List<Transform> _wayPointChilds = new List<Transform>(); //_wayPointParent에 있는 자식정보를 꺼내서 저장한 필드
     //▼몬스터 타겟
     [SerializeField] private MonsterTarget _mosterAttackTarget;
+    //▼배틀매니저
+    [SerializeField] private BattleManager _battleManager;
 
     public void SubScribeMonsterCount(IMonsterCount subscriber)
     {
-        _notifideMonsterCount = subscriber;
+        _notifyMonsterCount = subscriber;
     }
     public void UnSubScribeMonsterCount()
     {
-        _notifideMonsterCount = null;
+        _notifyMonsterCount = null;
     }
     //(안될듯)오브젝트풀로 생성하려 했으나.. 몬스터가 하나만 생성되는것이 아닌 여러개가 생성되기때문에 그러면 List를 Prefab갯수만큼 들고있어야함. 
     protected override void Awake()
@@ -134,8 +138,10 @@ public class MonsterManager : Singleton<MonsterManager>
     /// <returns></returns>
     IEnumerator SummonMonsterCoroutine(int spawnCount, List<GoldManager.MonsterNameEnum> monstersInfo)
     {
+        _remainSpawnCount = spawnCount; //남은 몬스터 체크해서 wave종료되었는지 파악
         for (int index = 0; index < spawnCount; index++)
         {
+            _remainSpawnCount--;
             //▼Monster 생성 (현재 선택된 몬스터 타입으로 Prefab에서 찾아서 설정
             GameObject makedMonster = CreateMonster(monstersInfo, index);
             //▼Monser에 wayPoint를 설정한다.
@@ -183,7 +189,8 @@ public class MonsterManager : Singleton<MonsterManager>
         //BattleManager한테 보냄 (아래 주석내용 다른곳에서 작업 완료된 이후 할수있음)
         //int defence = _mosterAttackTarget._defensePoint; //이거 protected라 접근불가. 프로퍼티 작업 필요함
         //int hp = _mosterAttackTarget._hp; //이거 protected라 접근불가. 프로퍼티 작업 필요함
-        //BattleManager._instance.MonsterAttack(attackValue,defence,hp); //배틀매니저가 싱글톤이 아님. 되면 작업하기
+        //int resultDamage = _battleManager.MonsterAttack(attackValue,defence,hp); 
+
     }
     
     /// <summary>
@@ -219,7 +226,9 @@ public class MonsterManager : Singleton<MonsterManager>
         //▼남은 몬스터의 갯수를 StageManager로 전달
         int remainMonster = ReturnCurrentMonsterCount();
         //_notifiedMonsterCount.Invoke(remainMonster); //현재 남은 몬스터의 정보를 StageManager에 쏴준다(없어질때마다)
-        _notifideMonsterCount?.NotifieyRemainMonsterCount(remainMonster);
+        _notifyMonsterCount?.NotifieyRemainMonsterCount(remainMonster);
+        //▼만약 몬스터갯수가 0이고, 더이상 소환할 몬스터가 없으면 wave종료를 StageManager에 쏴준다
+        _notifyWaveEnd?.MonsterWaveEnd();
     }
     /// <summary>
     /// _aliveMonsters 추가할때는 무조건 이벤트 실행되어야해서 추가

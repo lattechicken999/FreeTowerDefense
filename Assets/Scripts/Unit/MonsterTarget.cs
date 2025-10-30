@@ -1,9 +1,12 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class MonsterTarget : Unit
 {
+    public event Action _gameFailNotify;
+    public event Action<float> _monsterTargetHpChanged;
     /// <summary>
     /// 죽은 기능
     /// </summary>
@@ -12,21 +15,32 @@ public class MonsterTarget : Unit
         return;
     }
 
-    public override void TakenDamage(float Damage)
+    public override void TakenDamage(float _currentHp)
     {
-        HpNotify();
+        //TakeDamage 이지만 실제로 매개변수에는 현재 HP가 들어옴
+        _hp = _currentHp;
         if(_hp <= 0)
         {
+            _hp = 0;
             GameFailNotify();
         }
+        HpNotify();
     }
 
+    private void Awake()
+    {
+        StageManager.Instance.RegisterStageFailEvent(this); //이벤트 구독
+    }
+    private void OnDestroy()
+    {
+        StageManager.Instance.UnRegisterStageFailEvent(this); //이벤트 구독 해제
+    }
     /// <summary>
     /// UI에 HP가 줄어든 것을 보고
     /// </summary>
     private void HpNotify()
     {
-
+        _monsterTargetHpChanged.Invoke(_hp);
     }
 
     /// <summary>
@@ -34,7 +48,7 @@ public class MonsterTarget : Unit
     /// </summary>
     private void GameFailNotify()
     {
-
+        _gameFailNotify.Invoke();
     }
 
 

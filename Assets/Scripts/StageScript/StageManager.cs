@@ -5,7 +5,7 @@ using UnityEditor.SearchService;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class StageManager : Singleton<StageManager>
+public class StageManager : Singleton<StageManager>, IMonsterCount, IMonsterWaveEnd
 {
     [SerializeField] private List<StageDataSO> _stageDataList;
     private List<GoldManager.MonsterNameEnum> _stageMonsterList;
@@ -38,6 +38,7 @@ public class StageManager : Singleton<StageManager>
 
         //시작하자마자 스테이지 1번값 가져오고, 몬스터 매니저에 해당 정보 Set
         _stageMonsterList = GetStageData(_stageNum);
+        MonsterManager.Instance.SubScribeMonsterCount(this);
     }
 
     /// <summary>
@@ -62,21 +63,8 @@ public class StageManager : Singleton<StageManager>
     //만약 몬스터 규모가 0이 되면
     public void StageStart()
     {
-        string msg = $"현재 스테이지: {StageNum}";
-        _notifyStageInfoForUI?.NotifyStageInfo(msg); //UI에 스테이지 정보 알림
-        MonsterManager._instance?.StartMonsterRun();
-
-        /*
         
-        if (UnitCastleHp > 0)    //만약 성 체력이 0초과면
-        {
-            StageSuccess(2);
-        }
-        else
-        {
-            StageFail();
-        }
-        */
+        MonsterManager.Instance?.StartMonsterRun();
     }
     private void Start()
     {
@@ -91,7 +79,6 @@ public class StageManager : Singleton<StageManager>
     {
         SceneManager.LoadScene("MainMenu");
     }
-
     /// <summary>
     /// 스테이지 성공해서 다음 스테이지로
     /// </summary>
@@ -129,5 +116,38 @@ public class StageManager : Singleton<StageManager>
         _sponNum = _stageMonsterList.Count;
         MonsterManager._instance?.SetMonstersFromStageManager(_sponNum, _stageMonsterList, _sponDelay);
     }
-    
+
+    public void NotifieyRemainMonsterCount(int count)
+    {
+        string msg = $"현재 스테이지: {StageNum}, 남은 몬스터: {count}";
+        _notifyStageInfoForUI?.NotifyStageInfo(msg); //UI에 스테이지 정보 알림
+    }
+
+    public void RegisterStageFailEvent(MonsterTarget monsterTarget)
+    {
+        monsterTarget._gameFailNotify += StageManager.Instance.StageFail;
+    }
+    public void UnRegisterStageFailEvent(MonsterTarget monsterTarget)
+    {
+        monsterTarget._gameFailNotify -= StageManager.Instance.StageFail;
+    }
+    private void CheckStageClear()
+    {
+        /*
+        
+        if (UnitCastleHp > 0)    //만약 성 체력이 0초과면
+        {
+            StageSuccess(2);
+        }
+        else
+        {
+            StageFail();
+        }
+        */
+    }
+
+    public void MonsterWaveEnd()
+    {
+        
+    }
 }

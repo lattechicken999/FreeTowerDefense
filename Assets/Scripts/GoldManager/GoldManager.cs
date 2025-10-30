@@ -25,7 +25,8 @@ public class GoldManager : Singleton<GoldManager>
     {
         Slime,
         Turtle,
-        Box,
+        Mummy,
+        Ghost,
         _End
     }
     /// <summary>
@@ -66,7 +67,8 @@ public class GoldManager : Singleton<GoldManager>
     {
         { MonsterNameEnum.Slime, 1 },
         { MonsterNameEnum.Turtle, 1 },
-        { MonsterNameEnum.Box, 2 },
+        { MonsterNameEnum.Mummy, 2 },
+        { MonsterNameEnum.Ghost, 2 }
     };
     /// <summary>
     /// 유닛별 구매 비용 정보

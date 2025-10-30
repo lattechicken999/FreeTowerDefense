@@ -7,7 +7,7 @@ using UnityEngine;
 /// <summary>
 /// 재화를 관리하는 매니저 클래스, 몬스터 처치 보상, 유닛 구매 및 판매시 재화 변경
 /// </summary>
-public class GoldManager : Singleton<GameManager>
+public class GoldManager : Singleton<GoldManager>
 {
     /// <summary>
     /// 유닛 이름 열거형
@@ -34,6 +34,8 @@ public class GoldManager : Singleton<GameManager>
     /// </summary>
     private int _gold = 0;
 
+    private List<ICashObserver> _goldObservers = new List<ICashObserver>();
+
     /// <summary>
     /// 메인 재화인 골드 프로퍼티
     /// 값이 0 아래가 되지 않도록 if문 사용
@@ -54,6 +56,7 @@ public class GoldManager : Singleton<GameManager>
             {
                 _gold = value;
             }
+            NotifyChangeGold();
         }
     }
 
@@ -131,5 +134,31 @@ public class GoldManager : Singleton<GameManager>
     {
         // 부모 init 호출
         base.init();
+    }
+
+    /// <summary>
+    /// 구독
+    /// </summary>
+    public void RegistrationObserver(ICashObserver cashObserver)
+    {
+        _goldObservers.Add(cashObserver);
+    }
+
+    /// <summary>
+    /// 구독 해제
+    /// </summary>
+    public void UnregisterObserver(ICashObserver cashObserver)
+    {
+        _goldObservers.Remove(cashObserver);
+    }
+    /// <summary>
+    /// 지갑이 바뀔 때마다 알림 역할
+    /// </summary>
+    private void NotifyChangeGold()
+    {
+        foreach (var cashObserver in _goldObservers)
+        {
+            cashObserver.NotifyChangeGold(Wallet);
+        }
     }
 }

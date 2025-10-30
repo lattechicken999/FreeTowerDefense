@@ -36,7 +36,7 @@ public class UIHpBarMonster : MonoBehaviour
     }
     void Update()
     {
-        MoveHpVar();
+        //MoveHpVar();
     }
 
     private void MoveHpVar()

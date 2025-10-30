@@ -4,6 +4,8 @@ using UnityEngine;
 
 public enum UnitEnum
 {
-    Knight,
-    Wizard
+    _None,
+    Warrior,
+    Wizard,
+    _End
 }

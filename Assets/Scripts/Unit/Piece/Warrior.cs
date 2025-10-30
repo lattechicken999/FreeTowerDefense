@@ -6,7 +6,8 @@ public class Warrior : Piece
 {
     [SerializeField] private List<GameObject> _monsterList;
     [SerializeField] private float _attackRange = 1f;
-    
+   
+
     private void Start()
     {
         _attackPoint = 7;//전사는 공격력 얼마나 할지

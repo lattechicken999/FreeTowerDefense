@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class PieceSpawner : MonoBehaviour
 {
@@ -11,24 +12,19 @@ public class PieceSpawner : MonoBehaviour
     [SerializeField] Material _TranslucentMaterial;
 
     private WaitForNextFrameUnit _delay;
-    public bool CreateWarrior(int level=1)
+    public void CreateWarrior(Vector3 position,int level=1)
     {
-        //prefeb을 반투면 상태로 만들어 마우스 따라가게 만들기
-        //클릭시 해당 자리에 설치 가능한 자리라면 기물 생성 (반투명 없애고 Piece의 InitalPiece 호출)
-        // 해당 자리에 설치가 불가능하다면 false 리턴
-        //설치가 가능하여 정상적으로 마무리 되었다면 true 리턴
-        return true;
+        GameObject piece = Instantiate(_warriorPrefeb, position, Quaternion.identity);
+        piece.GetComponent<Piece>().InifalPiece();
+      
     }
 
-    public bool CreateWizard(int level =1)
+    public void CreateWizard(Vector3 position, int level = 1)
     {
-        //prefeb을 반투면 상태로 만들어 마우스 따라가게 만들기
-        //클릭시 해당 자리에 설치 가능한 자리라면 기물 생성 (반투명 없애고 Piece의 InitalPiece 호출)
-        // 해당 자리에 설치가 불가능하다면 false 리턴
-        //설치가 가능하여 정상적으로 마무리 되었다면 true 리턴
-        return true;
+        GameObject piece = Instantiate(_warriorPrefeb, position, Quaternion.identity);
+        piece.GetComponent<Piece>().InifalPiece();
     }
-
+    /*
     private IEnumerator SetupPieceStandby(GameObject prefeb)
     {
         var newPiece = Instantiate(prefeb);
@@ -40,4 +36,5 @@ public class PieceSpawner : MonoBehaviour
             yield return _delay;
         }
     }
+    */
 }

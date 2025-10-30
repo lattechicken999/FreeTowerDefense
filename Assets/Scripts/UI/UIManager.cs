@@ -113,8 +113,8 @@ public partial class UIManager : Singleton<UIManager>, ICashObserver
         StageManager.Instance.SubscribeStageInfo(this);
 
         //버튼이벤트 연결
-        _buyUiWarrior.onClick.AddListener(PlaceablePointsCheck.Instance.CommandChackPlaceable);
-        _buyUiWizard.onClick.AddListener(PlaceablePointsCheck.Instance.CommandChackPlaceable);
+        _buyUiWarrior?.onClick.AddListener(() => PlaceablePointsCheck.Instance.CommandChackPlaceable(UnitEnum.Warrior));
+        _buyUiWizard?.onClick.AddListener(() => PlaceablePointsCheck.Instance.CommandChackPlaceable(UnitEnum.Wizard));
     }
     private void Update()
     {

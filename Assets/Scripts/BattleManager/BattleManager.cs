@@ -115,31 +115,37 @@ public class BattleManager : MonoBehaviour
     /// unit에서 공격을 요청했을때 사거리 내에 적이 있다면 데미지 계산
     /// </summary>
     /// <param name="unitAttack">유닛 공격력</param>
-    /// <returns></returns>
-    public int UnitAttack(int unitAttack)
+    /// <param name="range">유닛 사거리</param>
+    public void UnitAttack(float unitAttack, float range)
     {
+        GameObject target = Target(range);
         // 사거리 내에 적이 없을 때
-        if (_shortEnemy == null)
+        if (target == null)
         {
-            return 0;
+            return;
         }
-        Monster monster = _shortEnemy.GetComponent<Monster>();
+        Monster monster = target.GetComponent<Monster>();
+
+        if (monster == null)
+        {
+            return;
+        }
         // 지금 몬스터는 실수형, 유닛은 정수형이라 일단 정수형으로 바꾸고 나중에 상의후 변경 예정
-        int monsterDefense = (int)monster._DefensePoint;
-        int damage = Damage(unitAttack, monsterDefense);
-        
-        return damage;
+        float monsterDefense = monster._DefensePoint;
+        float damage = Damage(unitAttack, monsterDefense);
+
+        monster.TakenDamage(damage);
     }
 
     /// <summary>
-    /// 
+    /// 데미지 계산 로직
     /// </summary>
     /// <param name="attack">유닛 공격력</param>
     /// <param name="defense">몬스터 방어력</param>
     /// <returns></returns>
-    public int Damage(int attack, int defense)
+    public float Damage(float attack, float defense)
     {
-        int damage = attack - defense;
+        float damage = attack - defense;
         return damage;
     }
 

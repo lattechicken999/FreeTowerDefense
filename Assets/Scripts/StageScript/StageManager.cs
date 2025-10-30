@@ -7,6 +7,8 @@ using UnityEngine.SceneManagement;
 
 public class StageManager : Singleton<StageManager>
 {
+    [SerializeField] private List<StageDataSO> _stageDataList;
+    private List<GoldManager.MonsterNameEnum> _stageMonsterList;
     public IStageInfo _notifyStageInfoForUI; //UIManager 에서 스테이지 정보 얻어올수 있게 추가
 
     private int _stageNum = 1;
@@ -28,6 +30,14 @@ public class StageManager : Singleton<StageManager>
     {
         get { return _unitCastleHp; }
         set { _unitCastleHp = value; }
+    }
+
+    protected override void Awake()
+    {
+        base.Awake(); //부모 Awake호출 (싱글톤 객체인지 확인 위해)
+
+        //시작하자마자 스테이지 1번값 가져오고, 몬스터 매니저에 해당 정보 Set
+        _stageMonsterList = GetStageData(_stageNum);
     }
 
     /// <summary>
@@ -54,7 +64,10 @@ public class StageManager : Singleton<StageManager>
     {
         string msg = $"현재 스테이지: {StageNum}";
         _notifyStageInfoForUI?.NotifyStageInfo(msg); //UI에 스테이지 정보 알림
+        MonsterManager._instance.StartMonsterRun();
 
+        /*
+        
         if (UnitCastleHp > 0)    //만약 성 체력이 0초과면
         {
             StageSuccess(2);
@@ -63,6 +76,12 @@ public class StageManager : Singleton<StageManager>
         {
             StageFail();
         }
+        */
+    }
+    private void Start()
+    {
+        SetMonsterManagerMonsterList(); //몬스터 매니저에 넣기
+        StageStart();
     }
 
     /// <summary>
@@ -86,6 +105,29 @@ public class StageManager : Singleton<StageManager>
         {
             SceneManager.LoadScene("MainMenu");
         }
+    }
+
+    /// <summary>
+    /// ScriptableObject에 담겨있는 스테이지 Index와 맞는것을 찾아서 가져옴
+    /// </summary>
+    /// <param name="stageIndex">스테이지 번호</param>
+    /// <returns>스테이지의 몬스터 타입 리스트 반환</returns>
+    public List<GoldManager.MonsterNameEnum> GetStageData(int stageIndex)
+    {
+        foreach(var item in _stageDataList)
+        {
+            if(item.stageNumber == stageIndex)
+            {
+                _sponDelay = item.spawnDelay;
+                return item.monsterInfoList; //찾으면 찾은스테이지 보냄
+            }
+        }
+        return new List<GoldManager.MonsterNameEnum>(); //못찾으면 새로 생성해서 보냄
+    }
+    public void SetMonsterManagerMonsterList()
+    {
+        _sponNum = _stageMonsterList.Count;
+        MonsterManager._instance.SetMonstersFromStageManager(_sponNum, _stageMonsterList, _sponDelay);
     }
     
 }

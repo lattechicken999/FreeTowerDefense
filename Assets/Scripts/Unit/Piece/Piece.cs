@@ -73,8 +73,9 @@ public class Piece : Unit
             GoldManager.Instance.UnitSell(_unitName);
         }
         
-        */
+        
         Destroy(gameObject);
+        */
         // °ñµå Áö±Þ
         GoldManager goldManager = FindObjectOfType<GoldManager>();
         if (goldManager != null)

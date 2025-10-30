@@ -32,6 +32,8 @@ public partial class PlaceablePointsCheck : Singleton<PlaceablePointsCheck>
     [SerializeField] private LayerMask _placeLayerMask;
     //배치 가능한 장소가 맞으면 표시하는 이펙트
     [SerializeField] private GameObject _placeEffect;
+    //배치 이펙트 위치 살짝 위로 올리기 용 갭
+    [SerializeField] private Vector3 _effectGap;
 
     protected override void Awake()
     {
@@ -87,7 +89,7 @@ public partial class PlaceablePointsCheck : Singleton<PlaceablePointsCheck>
         {
             if(_placeableStates[_childsDict[hit.transform]])
             {
-                _effect.transform.position = hit.transform.position;
+                _effect.transform.position = hit.transform.position + _effectGap;
                 _effect.SetActive(true);
                 _selectedPlaceablPoint = _childsDict[hit.transform];
             }

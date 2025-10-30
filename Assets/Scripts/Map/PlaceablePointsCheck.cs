@@ -25,10 +25,15 @@ public partial class PlaceablePointsCheck : Singleton<PlaceablePointsCheck>
     //마우스를 올려둔 곳이 배치 가능한 곳이라면, 가져올 인덱스 정보
     private int _selectedPlaceablPoint;
 
+    //생성 요청한 타입 저장 용도
+    private UnitEnum _pieceType;
+
     //place 만 레이케스트 될수 있도록 레이어 마스트
     [SerializeField] private LayerMask _placeLayerMask;
     //배치 가능한 장소가 맞으면 표시하는 이펙트
     [SerializeField] private GameObject _placeEffect;
+    //배치 이펙트 위치 살짝 위로 올리기 용 갭
+    [SerializeField] private Vector3 _effectGap;
 
     protected override void Awake()
     {
@@ -65,9 +70,16 @@ public partial class PlaceablePointsCheck : Singleton<PlaceablePointsCheck>
 
     }
 
-    public void CommandChackPlaceable()
+    public void CommandChackPlaceable(UnitEnum type)
     {
         _isPlaceState = true;
+        _pieceType = type;
+    }
+    private void ComplateChackPlaceable()
+    {
+        _isPlaceState = false;
+        _pieceType = UnitEnum._None;
+
     }
     private void CheckPlaceable()
     {
@@ -77,7 +89,7 @@ public partial class PlaceablePointsCheck : Singleton<PlaceablePointsCheck>
         {
             if(_placeableStates[_childsDict[hit.transform]])
             {
-                _effect.transform.position = hit.transform.position;
+                _effect.transform.position = hit.transform.position + _effectGap;
                 _effect.SetActive(true);
                 _selectedPlaceablPoint = _childsDict[hit.transform];
             }
@@ -108,6 +120,7 @@ public partial class PlaceablePointsCheck : Singleton<PlaceablePointsCheck>
 
             //이펙트 종료
             _effect.SetActive(false);
+            ComplateChackPlaceable();
         }
     }
 }
@@ -122,7 +135,7 @@ public partial class PlaceablePointsCheck : Singleton<PlaceablePointsCheck>
     }
     private void Update()
     {
-        //if (_isPlaceState) 
+        if (_isPlaceState) 
         {
             CheckPlaceable();
             SendToCreatePieceCommand();

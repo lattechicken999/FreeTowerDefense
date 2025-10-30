@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5434183055448478803}
   - component: {fileID: 3495304698559431312}
   - component: {fileID: 2366556694964206595}
+  - component: {fileID: 5654051861064721459}
   m_Layer: 0
   m_Name: Monster_Turtle
   m_TagString: Untagged
@@ -77,6 +78,28 @@ MonoBehaviour:
   _initHp: 2
   _initAttackPoint: 1
   _initDefensePoint: 1
+  _rotationSpeed: 5
+--- !u!65 &5654051861064721459
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 542658871316454454}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.1555314, y: 1.0777099, z: 1.1565472}
+  m_Center: {x: -0.015606761, y: 0.5128859, z: -0.078273594}
 --- !u!1 &3935835039523051100
 GameObject:
   m_ObjectHideFlags: 0

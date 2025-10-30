@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
@@ -8,6 +9,7 @@ using UnityEngine.SceneManagement;
 public class StageManager : Singleton<StageManager>, IMonsterCount, IMonsterWaveEnd
 {
     [SerializeField] private List<StageDataSO> _stageDataList;
+    //[SerializeField] private MonsterTarget _monsterTarget;
     private List<GoldManager.MonsterNameEnum> _stageMonsterList;
     public IStageInfo _notifyStageInfoForUI; //UIManager 에서 스테이지 정보 얻어올수 있게 추가
 
@@ -37,8 +39,7 @@ public class StageManager : Singleton<StageManager>, IMonsterCount, IMonsterWave
         base.Awake(); //부모 Awake호출 (싱글톤 객체인지 확인 위해)
 
         //시작하자마자 스테이지 1번값 가져오고, 몬스터 매니저에 해당 정보 Set
-        _stageMonsterList = GetStageData(_stageNum);
-        MonsterManager.Instance.SubScribeMonsterCount(this);
+
     }
 
     /// <summary>
@@ -49,7 +50,6 @@ public class StageManager : Singleton<StageManager>, IMonsterCount, IMonsterWave
     {
         _notifyStageInfoForUI = subscriber;
     }
-
     /// <summary>
     /// 알림받을 객체 해제
     /// </summary>
@@ -57,6 +57,21 @@ public class StageManager : Singleton<StageManager>, IMonsterCount, IMonsterWave
     {
         _notifyStageInfoForUI = null;
     }
+    /// <summary>
+    /// monsterTarget에서 사용하는 구독 설정 이벤트
+    /// </summary>
+    public void SubscribeMonsterTargetEvent(MonsterTarget monsterTarget)
+    {
+        monsterTarget._gameFailNotify += StageFail;
+    }
+    /// <summary>
+    /// monsterTarget에서 사용하는 구독 설정 이벤트
+    /// </summary>
+    public void UnSubscribeMonsterTargetEvent(MonsterTarget monsterTarget)
+    {
+        monsterTarget._gameFailNotify -= StageFail;
+    }
+
     /// <summary>
     /// 스테이지 시작과 성공 실패
     /// </summary>
@@ -68,8 +83,10 @@ public class StageManager : Singleton<StageManager>, IMonsterCount, IMonsterWave
     }
     private void Start()
     {
+        MonsterManager.Instance.SubScribeMonsterCount(this);
+        _stageMonsterList = GetStageData(_stageNum);
         SetMonsterManagerMonsterList(); //몬스터 매니저에 넣기
-        StageStart();
+        //StageStart();
     }
 
     /// <summary>
@@ -121,15 +138,6 @@ public class StageManager : Singleton<StageManager>, IMonsterCount, IMonsterWave
     {
         string msg = $"현재 스테이지: {StageNum}, 남은 몬스터: {count}";
         _notifyStageInfoForUI?.NotifyStageInfo(msg); //UI에 스테이지 정보 알림
-    }
-
-    public void RegisterStageFailEvent(MonsterTarget monsterTarget)
-    {
-        monsterTarget._gameFailNotify += StageManager.Instance.StageFail;
-    }
-    public void UnRegisterStageFailEvent(MonsterTarget monsterTarget)
-    {
-        monsterTarget._gameFailNotify -= StageManager.Instance.StageFail;
     }
     private void CheckStageClear()
     {

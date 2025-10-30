@@ -25,12 +25,11 @@ public class MonsterManager : Singleton<MonsterManager>
     private Coroutine _coroutine; //코루틴 중복실행때문에 쓸까 하는데 안써도될듯? 좀 생각해봐야함
     List<Monster> _aliveMonsters; //살아있는 몬스터 배열 (스테이지에서 몇마리 살아있는지 알아야하기때문에)
     //▼웨이포인트용 필드
-    [SerializeField] private GameObject _wayPointParent; //웨이포인트 정보를 자식으로 가지고있는 부모 게임 오브젝트
-    private List<Transform> _wayPointChilds = new List<Transform>(); //_wayPointParent에 있는 자식정보를 꺼내서 저장한 필드
+    private MonsterWayPoint _wayPointParent; //웨이포인트 정보를 자식으로 가지고있는 부모 게임 오브젝트
+    private List<Transform> _wayPointChilds; //_wayPointParent에 있는 자식정보를 꺼내서 저장한 필드
     //▼몬스터 타겟
-    [SerializeField] private MonsterTarget _mosterAttackTarget;
-    //▼배틀매니저
-    [SerializeField] private BattleManager _battleManager;
+    //[SerializeField] private MonsterTarget _mosterAttackTarget;
+    private MonsterTarget _monsterTarget;
 
     public void SubScribeMonsterCount(IMonsterCount subscriber)
     {
@@ -44,10 +43,9 @@ public class MonsterManager : Singleton<MonsterManager>
     protected override void Awake()
     {
         base.Awake(); //싱글톤 체크
-
         _monsterMap = new Dictionary<GoldManager.MonsterNameEnum, GameObject>();
         SetPositionByMonsterId(); //몬스터에 대한 정보를 enum값으로 ID형식으로 Set
-        SetWaypointChilds();
+
     }
     /// <summary>
     /// 부모(_wayPointParent)에 담겨있는 자식정보를 Set
@@ -56,6 +54,7 @@ public class MonsterManager : Singleton<MonsterManager>
     private void SetWaypointChilds()
     {
         //GetComponentsInChildren는 부모까지 포함한 배열이므로 자식만 남겨야함
+        _wayPointChilds = new List<Transform>();
         Transform[] trs = _wayPointParent.GetComponentsInChildren<Transform>(); //부모+자식정보가 trs에 저장
         foreach (var item in trs)
         {
@@ -67,6 +66,7 @@ public class MonsterManager : Singleton<MonsterManager>
     }
     private void Start()
     {
+        
         //ForSummonTest(); //테스트용 메서드
     }
     /// <summary>
@@ -94,6 +94,8 @@ public class MonsterManager : Singleton<MonsterManager>
     private void SetPositionByMonsterId()
     {
         //Check 몬스터ID가 존재하는 위치찾기 (딕셔너리로)
+        if (_monsterPrefabs == null) Debug.Log("Prefab Null");
+        if (_monsterMap == null) Debug.Log("_monsterMap Null");
         for (int i = 0; i < _monsterPrefabs.Count; i++)
         {
             Monster monster = _monsterPrefabs[i].GetComponent<Monster>();
@@ -127,8 +129,13 @@ public class MonsterManager : Singleton<MonsterManager>
     /// </summary>
     public void StartMonsterRun()
     {
+        StartCoroutine(DelayedStartMonsterRun()); //바로 실행하면 FindTag가 null이 떠서 지연으로 타이밍 맞춰야함
+    }
+    IEnumerator DelayedStartMonsterRun()
+    {
+        yield return null;
         _aliveMonsters = new List<Monster>(); //받으면 일단 초기화
-        StartCoroutine(SummonMonsterCoroutine(_spawnCount, _currentStageMonstersInfo));
+        StartCoroutine(SummonMonsterCoroutine(_spawnCount, _currentStageMonstersInfo)); //실행
     }
     /// <summary>
     /// 코루틴에서 사용할 메서드 (몬스터 소환)
@@ -187,10 +194,10 @@ public class MonsterManager : Singleton<MonsterManager>
     private void MonsterAttackTarget(int attackValue) //몬스터가 성벽을 공격. 배틀매니저한테 보냄
     {
         //BattleManager한테 보냄 (아래 주석내용 다른곳에서 작업 완료된 이후 할수있음)
-        //int defence = _mosterAttackTarget._defensePoint; //이거 protected라 접근불가. 프로퍼티 작업 필요함
-        //int hp = _mosterAttackTarget._hp; //이거 protected라 접근불가. 프로퍼티 작업 필요함
-        //int resultDamage = _battleManager.MonsterAttack(attackValue,defence,hp); 
-
+        int defence = _monsterTarget.DefensePoint; //이거 protected라 접근불가. 프로퍼티 작업 필요함
+        int hp = (int)_monsterTarget.Hp; //이거 protected라 접근불가. 프로퍼티 작업 필요함
+        int resultDamage = BattleManager.Instance.MonsterAttack(attackValue, defence, hp);
+        _monsterTarget.TakenDamage(resultDamage);
     }
     
     /// <summary>
@@ -265,6 +272,26 @@ public class MonsterManager : Singleton<MonsterManager>
         if (tagged != null)
             return tagged.transform;
 
+        Debug.Log("태그 안잡힘. 몬스터 생성안되었습니다");
         return null;
+    }
+
+    //▼ 아래는 각각의 스크립트들이 Awake될때 자동으로 MonsterManager에 정보를 주도록 동적으로 설정
+    public void SetMonsterTargetInfo(MonsterTarget target)
+    {
+        _monsterTarget = target;
+    }
+    public void UnSetMonsterTargetInfo()
+    {
+        _monsterTarget = null;
+    }
+    public void SetWayPointInfo(MonsterWayPoint wayPoint)
+    {
+        _wayPointParent = wayPoint;
+        SetWaypointChilds();
+    }
+    public void UnSetWayPointInfo()
+    {
+        _wayPointParent = null;
     }
 }

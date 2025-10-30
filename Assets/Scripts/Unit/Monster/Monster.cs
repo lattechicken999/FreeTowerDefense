@@ -106,10 +106,7 @@ public class Monster : Unit
 
     private void Update()
     {
-        //테스트용. 그냥 생성되면 앞으로 이동되게 한다 (몇개 생성됬는지 확인 위해서)
-
         //웨이포인트에 설정된 좌표대로 순서대로 이동
-
         //거리로 판단하기로 결정. 
         float _distance = 0.1f;
         Vector3 direction = (_wayPointPositions[_currentWaypoint] - transform.position).normalized;

@@ -64,7 +64,7 @@ public class StageManager : Singleton<StageManager>
     {
         string msg = $"현재 스테이지: {StageNum}";
         _notifyStageInfoForUI?.NotifyStageInfo(msg); //UI에 스테이지 정보 알림
-        MonsterManager._instance.StartMonsterRun();
+        MonsterManager._instance?.StartMonsterRun();
 
         /*
         
@@ -127,7 +127,7 @@ public class StageManager : Singleton<StageManager>
     public void SetMonsterManagerMonsterList()
     {
         _sponNum = _stageMonsterList.Count;
-        MonsterManager._instance.SetMonstersFromStageManager(_sponNum, _stageMonsterList, _sponDelay);
+        MonsterManager._instance?.SetMonstersFromStageManager(_sponNum, _stageMonsterList, _sponDelay);
     }
     
 }

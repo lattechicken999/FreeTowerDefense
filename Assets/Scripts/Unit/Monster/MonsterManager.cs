@@ -14,7 +14,8 @@ public class MonsterManager : Singleton<MonsterManager>
     [SerializeField] float _hpBarWidthSize = 300.0f; //UI hp바 가로크기 설정
     [SerializeField] float _hpBarHeightSize = 40.0f; //UI hp바 세로크기 설정
     [SerializeField] float _hpBarHeightGap = 1.0f; //UI hp바 아래 위 방향으로 위치 조절
-    public event Action<int> _notifiedMonsterCount; //몬스터의 갯수가 변화했음을 알림
+    public event Action<int> _notifiedMonsterCount; //StageManager에서 사용. 몬스터의 갯수가 변화했음을 알림
+    public event Action<List<Monster>> _notifiedMonsterMake; //BattleManager에서 사용. 몬스터 자체를 넘겨줌
     //코루틴용 private 필드
     private WaitForSeconds _delay; //StageManager에서 Set하면 설정되는 몬스터 생성 딜레이
     private Coroutine _coroutine; //코루틴 중복실행때문에 쓸까 하는데 안써도될듯? 좀 생각해봐야함
@@ -143,7 +144,7 @@ public class MonsterManager : Singleton<MonsterManager>
         Monster mon = monsterInstance.GetComponent<Monster>();
         mon._monsterDeadNotified += RemoveMonster; //몬스터가 죽을때 하는 deleate event 정의
         mon._monsterAttackAction += MonsterAttackTarget; //몬스터가 성벽 공격할때 delegate event
-        _aliveMonsters.Add(mon); //관리하기 위해 리스트에 추가
+        AliveMonsterAdd(mon); //_aliveMonster에 추가
         return monsterInstance;
     }
 
@@ -204,11 +205,30 @@ public class MonsterManager : Singleton<MonsterManager>
         //▼이벤트와 리스트에서 삭제
         monster._monsterDeadNotified -= RemoveMonster; //몬스터에 들어있는 이벤트 제거 (몬스터는 RemoveMonster 끝난후 스스로 Destroy함)
         monster._monsterAttackAction -= MonsterAttackTarget; //몬스터가 성벽 공격할때 delegate event
-        _aliveMonsters.Remove(monster); //리스트에서도 삭제한다
+        AliveMonsterRemove(monster);
         //▼남은 몬스터의 갯수를 StageManager로 전달
         int remainMonster = ReturnCurrentMonsterCount(); 
         //_notifiedMonsterCount.Invoke(remainMonster); //현재 남은 몬스터의 정보를 StageManager에 쏴준다(없어질때마다)
     }
+    /// <summary>
+    /// _aliveMonsters 추가할때는 무조건 이벤트 실행되어야해서 추가
+    /// </summary>
+    /// <param name="mon"></param>
+    private void AliveMonsterAdd(Monster mon)
+    {
+        _aliveMonsters.Add(mon); //관리하기 위해 리스트에 추가
+        _notifiedMonsterMake?.Invoke(_aliveMonsters);
+    }
+    /// <summary>
+    /// _aliveMonsters 삭제할때는 무조건 이벤트 실행되어야해서 추가
+    /// </summary>
+    /// <param name="mon"></param>
+    private void AliveMonsterRemove(Monster mon)
+    {
+        _aliveMonsters.Remove(mon); //리스트에서도 삭제한다
+        _notifiedMonsterMake?.Invoke(_aliveMonsters);
+    }
+
     private void ByPlayerKilled()
     {
         //플레이어가 죽였을때 행동 저장. 돈을 증가시킨다 등

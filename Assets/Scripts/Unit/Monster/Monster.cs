@@ -85,8 +85,10 @@ public class Monster : Unit
             MonsterDeath();
         }
     }
-
-    private void MonsterDeath() //몬스터가 죽을경우 통합 메서드
+    /// <summary>
+    /// 몬스터가 죽을경우 통합 메서드
+    /// </summary>
+    private void MonsterDeath() 
     {
         _monsterDeadNotified?.Invoke(this);
         Destroy(_hpBarGameObject);

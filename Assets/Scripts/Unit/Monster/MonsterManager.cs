@@ -19,7 +19,7 @@ public class MonsterManager : Singleton<MonsterManager>
     //▼이벤트
     public event Action<bool> _notifyAllMonsterSpawn; //StageManager에서 사용. 더 소환할 몬스터가 있는지 알리는 이벤트
     private IMonsterCount _notifyMonsterCount; //StageManager에서 사용. 몬스터 갯수 변경될때마다 알리는 이벤트
-    public event Action<GoldManager.MonsterNameEnum> _monsterDeadNotifiedById; //GoldManager.cs에 죽은 몬스터 ID로 재화관리하기 위해서
+    //public event Action<GoldManager.MonsterNameEnum> _monsterDeadNotifiedById; //GoldManager.cs에 죽은 몬스터 ID로 재화관리하기 위해서
     public event Action<List<Monster>> _notifiedMonsterMake; //BattleManager에서 사용. 몬스터 자체를 넘겨줌
     //코루틴용 private 필드
     private WaitForSeconds _delay; //StageManager에서 Set하면 설정되는 몬스터 생성 딜레이
@@ -232,7 +232,8 @@ public class MonsterManager : Singleton<MonsterManager>
         //▼삭제 전, 어떻게 죽었는지 확인 후, 처리
         if(monster._isKilledByPlayer) //플레이어에 의해 죽었다면?
         {
-            _monsterDeadNotifiedById?.Invoke(monster._monsterId);
+            //_monsterDeadNotifiedById?.Invoke(monster._monsterId);
+            GoldManager.Instance.GoldAdd(monster._monsterId);
         }
 
         //▼이벤트와 리스트에서 삭제

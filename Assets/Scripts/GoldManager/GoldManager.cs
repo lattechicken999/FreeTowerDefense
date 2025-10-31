@@ -23,7 +23,7 @@ public class GoldManager : Singleton<GoldManager>
     /// <summary>
     /// 현재 보유중인 재화
     /// </summary>
-    private int _gold = 0;
+    private int _gold = 100;
 
     private List<ICashObserver> _goldObservers = new List<ICashObserver>();
 
@@ -97,6 +97,7 @@ public class GoldManager : Singleton<GoldManager>
         if (_unitGold.TryGetValue(unitName, out int price))
         {
             Wallet -= price;
+            Debug.Log($"{unitName} 구매");
         }
         else
         {
@@ -125,6 +126,8 @@ public class GoldManager : Singleton<GoldManager>
     {
         // 부모 init 호출
         base.init();
+        //_gold = 100;
+        //NotifyChangeGold();
     }
 
     /// <summary>

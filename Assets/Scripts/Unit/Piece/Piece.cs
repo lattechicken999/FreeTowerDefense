@@ -6,13 +6,14 @@ using UnityEngine;
 public class Piece : Unit
 {
     [SerializeField,Range(0,2)] float _atteckCoolTime;
-    [SerializeField] GoldManager.UnitNameEnum _unitName;
-
+    
     private WaitForSeconds _attackDelay;
     private Coroutine _autoCoroutine;
     private bool _isPlaced = false;
 
-    protected virtual int GetPrice() => 0; 
+    protected virtual int GetPrice() => 0;
+    protected GoldManager.UnitNameEnum _unitName;
+
     private void Awake()
     {
         _attackDelay = new WaitForSeconds(_atteckCoolTime);
@@ -23,7 +24,8 @@ public class Piece : Unit
     /// </summary>
     private void OnEnable()
     {
-        _autoCoroutine = StartCoroutine(AutoAttack());
+        if(_autoCoroutine == null)
+            _autoCoroutine = StartCoroutine(AutoAttack());
     }
 
 
@@ -99,15 +101,15 @@ public class Piece : Unit
     /// <summary>
     /// 기물이 진짜 생성 되었을 때 호출되는 메서드
     /// </summary>
-    public void InifalPiece()
-    {
-        _isPlaced = true;
+    //public void InifalPiece()
+    //{
+    //    _isPlaced = true;
 
-        if (_autoCoroutine == null)
-        {
-            _autoCoroutine = StartCoroutine(AutoAttack());
-        }
-    }
+    //    if (_autoCoroutine == null)
+    //    {
+    //        _autoCoroutine = StartCoroutine(AutoAttack());
+    //    }
+    //}
 
 
 }

@@ -24,6 +24,8 @@ public partial class PlaceablePointsCheck : Singleton<PlaceablePointsCheck>
 
     //마우스를 올려둔 곳이 배치 가능한 곳이라면, 가져올 인덱스 정보
     private int _selectedPlaceablPoint;
+    //선택된 곳의 위치 정보
+    private Transform _selectedPointTransform;
 
     //생성 요청한 타입 저장 용도
     private UnitEnum _pieceType;
@@ -59,7 +61,7 @@ public partial class PlaceablePointsCheck : Singleton<PlaceablePointsCheck>
         _camera = Camera.main;
         _effect = Instantiate(_placeEffect);
         _selectedPlaceablPoint = -1;
-
+        _selectedPointTransform = null;
 
         //하위 모든 자식 가져오기
         for (int i =0;i < transform.childCount;i++)
@@ -92,6 +94,7 @@ public partial class PlaceablePointsCheck : Singleton<PlaceablePointsCheck>
                 _effect.transform.position = hit.transform.position + _effectGap;
                 _effect.SetActive(true);
                 _selectedPlaceablPoint = _childsDict[hit.transform];
+                _selectedPointTransform = hit.transform;
             }
             else
             {
@@ -117,6 +120,18 @@ public partial class PlaceablePointsCheck : Singleton<PlaceablePointsCheck>
             //기물 배치 불가능하게 바꿈
             _placeableStates[_selectedPlaceablPoint] = false;
             //기물 생성 명령을 스포너에게 보냄
+            switch(_pieceType)
+            {
+                case UnitEnum.Warrior:
+                    PieceSpawner.Instance.CreateWarrior(_selectedPointTransform.position);
+                    break;
+                case UnitEnum.Wizard:
+                    PieceSpawner.Instance.CreateWizard(_selectedPointTransform.position);
+                    break;
+                default:
+                    break;
+            }
+            
 
             //이펙트 종료
             _effect.SetActive(false);
@@ -133,9 +148,11 @@ public partial class PlaceablePointsCheck : Singleton<PlaceablePointsCheck>
     {
         _effect.SetActive(false);
     }
-    private void Update()
+
+    private void LateUpdate()
     {
-        if (_isPlaceState) 
+        //오브젝트 생성과 동시에 Sell 버튼 체크가 활성화 되어 생성되는 로직 순서를 맨 뒤로 미룸
+        if (_isPlaceState)
         {
             CheckPlaceable();
             SendToCreatePieceCommand();

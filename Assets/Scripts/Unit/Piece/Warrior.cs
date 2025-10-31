@@ -11,6 +11,7 @@ public class Warrior : Piece
     private void Start()
     {
         _attackPoint = 7;//전사는 공격력 얼마나 할지
+        _unitName = GoldManager.UnitNameEnum.Knight;
     }
     BattleManager battleManager = FindObjectOfType<BattleManager>();
     public override void Attack()

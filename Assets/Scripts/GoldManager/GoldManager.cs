@@ -23,7 +23,7 @@ public class GoldManager : Singleton<GoldManager>
     /// <summary>
     /// 현재 보유중인 재화
     /// </summary>
-    private int _gold = 100;
+    private int _gold = 50;
 
     private List<ICashObserver> _goldObservers = new List<ICashObserver>();
 
@@ -56,10 +56,10 @@ public class GoldManager : Singleton<GoldManager>
     /// </summary>
     private Dictionary<MonsterNameEnum, int> _monsterGold = new Dictionary<MonsterNameEnum, int>()
     {
-        { MonsterNameEnum.Slime, 1 },
-        { MonsterNameEnum.Turtle, 1 },
-        { MonsterNameEnum.Mummy, 2 },
-        { MonsterNameEnum.Ghost, 2 }
+        { MonsterNameEnum.Slime, 5 },
+        { MonsterNameEnum.Turtle, 8 },
+        { MonsterNameEnum.Mummy, 10 },
+        { MonsterNameEnum.Ghost, 15 }
     };
     /// <summary>
     /// 유닛별 구매 비용 정보

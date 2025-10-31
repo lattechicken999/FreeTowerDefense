@@ -21,7 +21,7 @@ public class Wizard : Piece
         {
             if (BattleManager.Instance != null)
             {
-                BattleManager.Instance.UnitAttack(_attackPoint,_attackRange);
+                BattleManager.Instance.UnitAttack(_attackPoint,_attackRange, transform);
             }
         }
     }
@@ -32,7 +32,7 @@ public class Wizard : Piece
     {
         if (BattleManager.Instance != null)
         { 
-         return BattleManager.Instance.Target(_attackRange);
+         return BattleManager.Instance.Target(_attackRange, transform);
         }
             return null;
     }

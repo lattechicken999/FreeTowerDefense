@@ -111,6 +111,7 @@ MonoBehaviour:
   _initAttackPoint: 1
   _initDefensePoint: 1
   _rotationSpeed: 5
+  _hitEffectPrefeb: {fileID: 7177991128484655659, guid: 59a35ab9f68edff40b6e5332bed330f5, type: 3}
   _moveSpeed: 1
 --- !u!65 &6180874083535345651
 BoxCollider:

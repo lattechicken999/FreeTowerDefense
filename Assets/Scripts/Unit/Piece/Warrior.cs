@@ -1,16 +1,16 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Warrior : Piece
 {
-    [SerializeField] private float _attackRange = 1f;
+    [SerializeField] private float _attackRange = 1.5f;
     
 
     protected override void Start()
     {
         
-        _attackPoint = 7;//Àü»ç´Â °ø°Ý·Â ¾ó¸¶³ª ÇÒÁö
+        _attackPoint = 7;//ì „ì‚¬ëŠ” ê³µê²©ë ¥ ì–¼ë§ˆë‚˜ í• ì§€
         _unitName = UnitEnum.Warrior;
         base.Start();
     }
@@ -22,18 +22,18 @@ public class Warrior : Piece
         {
             if (BattleManager.Instance != null)
             {
-                BattleManager.Instance.UnitAttack(_attackPoint, _attackRange);
+                BattleManager.Instance.UnitAttack(_attackPoint, _attackRange,transform);
             }
         }
     }
     /// <summary>
-    /// Ã¹¹øÂ° ¸ó½ºÅÍ¸¦ Å¸°ÙÆÃ
+    /// ì²«ë²ˆì§¸ ëª¬ìŠ¤í„°ë¥¼ íƒ€ê²ŸíŒ…
     /// </summary>
     private GameObject TargetFirstMonster()
     {
         if (BattleManager.Instance != null)
         {
-            return BattleManager.Instance.Target(_attackRange);
+            return BattleManager.Instance.Target(_attackRange,transform);
         }
         return null;
     }

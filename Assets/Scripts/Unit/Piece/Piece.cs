@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -10,6 +10,7 @@ public class Piece : Unit
     private WaitForSeconds _attackDelay;
     private Coroutine _autoCoroutine;
     private bool _isPlaced = false;
+    private Ray _ray;
 
     protected GameObject targetMonster;
     protected virtual int GetPrice() => 0;

@@ -18,6 +18,8 @@ public class Monster : Unit
     [SerializeField] private int _initDefensePoint = 1;
     //▼이동시 회전 속도
     [SerializeField] private float _rotationSpeed = 5.0f;
+    //피격시 이펙트 프리펩
+    [SerializeField] private GameObject _hitEffectPrefeb;
 
     //▼웨이포인트 설정
     [SerializeField] private float _moveSpeed = 1.0f;
@@ -27,7 +29,8 @@ public class Monster : Unit
     public bool _isKilledByPlayer { get; private set; } //MonsterManager에서 플레이어에서 죽은건지 체크하기위해
     //▼몬스터에 붙어있는 HP바 게임오브젝트 (몬스터가 죽으면 HP바도 없어져야해서 추가)
     private GameObject _hpBarGameObject;
-
+    //피격 이펙트 미리 생성해 둠
+    private GameObject _hitEffect;
 
     //Get할수있는 프로퍼티도 만들어준다
     public float _Hp => _hp;
@@ -48,6 +51,8 @@ public class Monster : Unit
         _hp = _initHp;
         _attackPoint = _initAttackPoint;
         _defensePoint = _initDefensePoint;
+        _hitEffect = Instantiate(_hitEffectPrefeb);
+        _hitEffect.SetActive(false);
     }
 
     /// <summary>
@@ -72,6 +77,8 @@ public class Monster : Unit
         if (realDmg <= 0) realDmg = 0;
         _hp -= realDmg;
         InvokeHPChange();
+        _hitEffect.transform.position = transform.position;
+        _hitEffect.SetActive(true);
     }
 
     /// <summary>

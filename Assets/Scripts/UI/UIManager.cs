@@ -62,14 +62,15 @@ public partial class UIManager : Singleton<UIManager>, ICashObserver,IStageInfo
                     _sellUiButtonTransform.position = _camera.WorldToScreenPoint(_selectedUnit.transform.position);
 
                     //온클릭 이벤트에 유닛 판매 명령 전달
-                    //_sellUiButton.onClick = hit.GetComponet()?.sell 
+                    //이전에 등록된 리스너 있다면 삭제
+                    _sellUiButton.onClick.RemoveAllListeners();
+                    _sellUiButton.onClick.AddListener(_selectedUnit.transform.GetComponent<Piece>().SellPiece);
                 }
             }
             else
             {
                 _selectedUnit = null;
-                _sellUiInst.enabled = false;
-                _sellUiButton.onClick = null;
+                //_sellUiInst.enabled = false;
             }
         }
     }

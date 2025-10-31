@@ -107,7 +107,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <_monsterId>k__BackingField: 3
-  _initHp: 2
+  _initHp: 40
   _initAttackPoint: 1
   _initDefensePoint: 1
   _rotationSpeed: 5

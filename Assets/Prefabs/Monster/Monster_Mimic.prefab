@@ -75,9 +75,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <_monsterId>k__BackingField: 2
-  _initHp: 2
+  _initHp: 50
   _initAttackPoint: 1
-  _initDefensePoint: 1
+  _initDefensePoint: 2
   _rotationSpeed: 5
 --- !u!65 &1952537266181173263
 BoxCollider:

@@ -20,16 +20,17 @@ public class Piece : Unit
         _attackDelay = new WaitForSeconds(_atteckCoolTime);
         targetMonster = null;
     }
-    private void Start()
+
+    protected virtual void Start()
     {
         GoldManager.Instance.UnitBuy(_unitName);
     }
-
     /// <summary>
     /// Ȱ��ȭ �� �ڵ� ����
     /// </summary>
     private void OnEnable()
     {
+        
         _isPlaced = true;
         if (_autoCoroutine == null)
             _autoCoroutine = StartCoroutine(AutoAttack());

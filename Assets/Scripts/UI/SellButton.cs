@@ -6,19 +6,10 @@ using UnityEngine.UI;
 
 public class SellButton : MonoBehaviour
 {
-    // 선택된 기물
-    [field:SerializeField] public GameObject SelectedPeice {  get; set; }
-    Button _button;
-
+    private Canvas _canvas;
     private void Awake()
     {
-        _button = GetComponent<Button>();
-    }
-
-    private void OnEnable()
-    {
-        //활성화 시 클릭한 기물의 이름을 가져와서 판매 함수에 등록
-        //_button.onClick.AddListener();
+        _canvas = GetComponent<Canvas>();
     }
     /// <summary>
     /// 기물을 클릭했을 때 판매 버튼의 위치를 조정해주는 메서드
@@ -28,5 +19,8 @@ public class SellButton : MonoBehaviour
     {
         transform.position = position;
     }
-
+    public void ComplateSelling()
+    {
+        _canvas.enabled = false;
+    }
 }

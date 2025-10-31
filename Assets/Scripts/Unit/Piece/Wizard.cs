@@ -6,10 +6,11 @@ public class Wizard : Piece
 {
     [SerializeField] private float _attackRange = 3f;
     
-    private void Start()
+    protected override void Start()
     {
         _attackPoint = 15;//마법사는 공격력 얼마나 할지
         _unitName = UnitEnum.Wizard;
+        base.Start();
     }
     
     public override void Attack()

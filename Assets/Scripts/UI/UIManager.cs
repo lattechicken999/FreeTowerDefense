@@ -22,7 +22,8 @@ public partial class UIManager : Singleton<UIManager>, ICashObserver,IStageInfo
     [SerializeField] private Button _buyUiWizard;
 
     //기물 레이어 (레이캐스트에 사용)
-    [SerializeField] LayerMask _layerMask;
+    [SerializeField] LayerMask _pieceLayerMask;
+    [SerializeField] LayerMask _uiLayerMask;
 
     //메인메뉴로 돌아가기
     [SerializeField] private Button _returnMenuButton;
@@ -32,6 +33,7 @@ public partial class UIManager : Singleton<UIManager>, ICashObserver,IStageInfo
     private Canvas _sellUiInst;
     private Transform _sellUiButtonTransform;
     private Button _sellUiButton;
+    private Ray ray;
 
     public void NotifyChangeGold(int leftWallet)
     {
@@ -50,10 +52,10 @@ public partial class UIManager : Singleton<UIManager>, ICashObserver,IStageInfo
     {
         if (Input.GetMouseButtonDown(0))
         {
+            ray = _camera.ScreenPointToRay(Input.mousePosition);
             if (_selectedUnit == null)
             {
-                Ray ray = _camera.ScreenPointToRay(Input.mousePosition);
-                if (Physics.Raycast(ray, out RaycastHit hit, 100f,_layerMask))
+                if (Physics.Raycast(ray, out RaycastHit hit, 100f,_pieceLayerMask))
                 {
                     _selectedUnit = hit.transform.gameObject;
                     
@@ -69,6 +71,10 @@ public partial class UIManager : Singleton<UIManager>, ICashObserver,IStageInfo
             }
             else
             {
+                //if (Physics.Raycast(ray, 100f, _uiLayerMask))
+                //{
+                //    _sellUiButton.onClick.Invoke();
+                //}
                 _selectedUnit = null;
                 //_sellUiInst.enabled = false;
             }
@@ -125,10 +131,7 @@ public partial class UIManager : Singleton<UIManager>, ICashObserver
     }
     private void Update()
     {
-
         GetSelectUnit();
-
-
     }
     private void OnDisable()
     {

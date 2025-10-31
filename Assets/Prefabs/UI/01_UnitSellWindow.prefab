@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 7955255269434562813}
   - component: {fileID: 968899611667857681}
   - component: {fileID: 7148068048808415983}
+  - component: {fileID: 1794397368289071853}
   m_Layer: 5
   m_Name: Button
   m_TagString: Untagged
@@ -119,7 +120,40 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 968899611667857681}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 925720209429443435}
+        m_TargetAssemblyTypeName: SellButton, Assembly-CSharp
+        m_MethodName: ComplateSelling
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!65 &1794397368289071853
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5268652734515280101}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 98.921104, y: 15.672531, z: 1}
+  m_Center: {x: -0.7429403, y: -0.02242279, z: 0}
 --- !u!1 &6664610023992756302
 GameObject:
   m_ObjectHideFlags: 0
@@ -133,6 +167,7 @@ GameObject:
   - component: {fileID: 5800769623108598957}
   - component: {fileID: 6051896803568441427}
   - component: {fileID: 925720209429443435}
+  - component: {fileID: 2704559182271965582}
   m_Layer: 5
   m_Name: 01_UnitSellWindow
   m_TagString: Untagged
@@ -235,4 +270,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d8ce6d71260a3334185bf8adc370bc94, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <SelectedPeice>k__BackingField: {fileID: 0}
+--- !u!65 &2704559182271965582
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6664610023992756302}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 146.74951, y: 60.58075, z: 1}
+  m_Center: {x: -0.47839355, y: 0.18087769, z: 0}

@@ -20,6 +20,10 @@ public class Piece : Unit
         _attackDelay = new WaitForSeconds(_atteckCoolTime);
         targetMonster = null;
     }
+    private void Start()
+    {
+        GoldManager.Instance.UnitBuy(_unitName);
+    }
 
     /// <summary>
     /// Ȱ��ȭ �� �ڵ� ����
@@ -72,13 +76,8 @@ public class Piece : Unit
     /// </summary>
     public void SellPiece()
     {
-       
-        GoldManager goldManager = GoldManager.Instance;
-        if (goldManager != null)
-        {
-            goldManager.UnitSell(_unitName);
-        }
-       
+
+        GoldManager.Instance.UnitSell(_unitName);
 
         // ���� ����
         Destroy(gameObject);

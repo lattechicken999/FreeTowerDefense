@@ -20,6 +20,7 @@ public class MonsterManager : Singleton<MonsterManager>
     public event Action<bool> _notifyAllMonsterSpawn;
     private IMonsterCount _notifyMonsterCount; //StageManager에서 사용. 몬스터 갯수 변경될때마다 알리는 이벤트
     private IMonsterWaveEnd _notifyWaveEnd;
+    public event Action<GoldManager.MonsterNameEnum> _monsterDeadNotifiedById; //GoldManager.cs에 죽은 몬스터 ID로 재화관리하기 위해서
     public event Action<List<Monster>> _notifiedMonsterMake; //BattleManager에서 사용. 몬스터 자체를 넘겨줌
     //코루틴용 private 필드
     private WaitForSeconds _delay; //StageManager에서 Set하면 설정되는 몬스터 생성 딜레이
@@ -225,12 +226,8 @@ public class MonsterManager : Singleton<MonsterManager>
         if(monster._isKilledByPlayer) //플레이어에 의해 죽었다면?
         {
             ByPlayerKilled();
+            _monsterDeadNotifiedById?.Invoke(monster._monsterId);
         }
-        else //목표지점까지 도달해서 성벽에 자폭했다면?
-        {
-            BySelfKilled();
-        }
-
 
         //▼이벤트와 리스트에서 삭제
         monster._monsterDeadNotified -= RemoveMonster; //몬스터에 들어있는 이벤트 제거 (몬스터는 RemoveMonster 끝난후 스스로 Destroy함)
@@ -265,10 +262,6 @@ public class MonsterManager : Singleton<MonsterManager>
     private void ByPlayerKilled()
     {
         //플레이어가 죽였을때 행동 저장. 돈을 증가시킨다 등
-    }
-    private void BySelfKilled()
-    {
-        //몬스터가 끝지점까지 가서 스스로 파괴했을때 행동 저장. 성벽HP가 감소한다
     }
 
     private Transform FindUiRoot()//캔버스에서 UIRoot라는 태그를 가진 위치에 생성하기 위해 사용

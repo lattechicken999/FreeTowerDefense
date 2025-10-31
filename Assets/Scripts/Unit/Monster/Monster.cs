@@ -10,7 +10,6 @@ public class Monster : Unit
     //▼이벤트
     public event Action<float> _hpValueChange; //UIHpBarMonster.cs에 hp가 변경된걸 알리기 위해서
     public event Action<Monster> _monsterDeadNotified; //MonsterManager.cs와  죽었다고 알리기 위해서
-    public event Action<GoldManager.MonsterNameEnum> _monsterDeadNotifiedById; //GoldManager.cs에 죽은 몬스터 ID로 재화관리하기 위해서
     public event Action<int> _monsterAttackAction; //MonsterManager.cs에 몬스터가 공격한다는 것을 알림 (웨이포인트 끝지점 도달했을때 발동)
 
     //▼상속받은 hp,Attack,Defence에 [SerializeField]없어서 추가. Init()메서드에서 상속된곳에 다시 넣어줌
@@ -90,7 +89,6 @@ public class Monster : Unit
     private void MonsterDeath() //몬스터가 죽을경우 통합 메서드
     {
         _monsterDeadNotified?.Invoke(this);
-        _monsterDeadNotifiedById?.Invoke(_monsterId);
         Destroy(_hpBarGameObject);
         Destroy(gameObject);
     }

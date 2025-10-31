@@ -116,7 +116,8 @@ public class StageManager : Singleton<StageManager>, IMonsterCount
     public void StageFail()
     {
         Debug.Log("StageFail신호 발생");
-        SceneManager.LoadScene("MainMenu");
+        //SceneManager.LoadScene("MainMenu");
+        UIManager.Instance.SetGameFail();
     }
     /// <summary>
     /// 스테이지 성공해서 다음 스테이지로
@@ -131,7 +132,8 @@ public class StageManager : Singleton<StageManager>, IMonsterCount
         else
         {
             Debug.Log($"스테이지번호 {StageNum}으로 최대 스테이지 갯수 초과하여 메인으로 이동");
-            SceneManager.LoadScene("MainMenu");
+            //SceneManager.LoadScene("MainMenu");
+            UIManager.Instance.SetGameClear();
         }
     }
     /// <summary>

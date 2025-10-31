@@ -28,6 +28,9 @@ public partial class UIManager : Singleton<UIManager>, ICashObserver,IStageInfo
 
     //메인메뉴로 돌아가기
     [SerializeField] private Button _returnMenuButton;
+    //게임 클리어, 실패 버튼저장용
+    [SerializeField] private GameObject _clearButton;
+    [SerializeField] private GameObject _failButton;
 
     private GameObject _selectedUnit;
     private Camera _camera;
@@ -39,6 +42,8 @@ public partial class UIManager : Singleton<UIManager>, ICashObserver,IStageInfo
     private int _curWallet;
     private WaitForSeconds _waitSeconds;
     private Coroutine _walletUpdateCuroutine;
+
+
     public void NotifyChangeGold(int leftWallet)
     {
         //UI 가 변경됨
@@ -112,7 +117,16 @@ public partial class UIManager : Singleton<UIManager>, ICashObserver,IStageInfo
             }
             yield return _waitSeconds;
         }
-
+    }
+    public void SetGameClear()
+    {
+        _clearButton.SetActive(true);
+        _clearButton.GetComponent<Button>().onClick.AddListener(GameManager.Instance.MainMenuButton);
+    }
+    public void SetGameFail()
+    {
+        _failButton.SetActive(true);
+        _failButton.GetComponent<Button>().onClick.AddListener(GameManager.Instance.MainMenuButton);
     }
 }
 
@@ -138,7 +152,7 @@ public partial class UIManager : Singleton<UIManager>, ICashObserver
         _camera = Camera.main;
         _curWallet = 0;
         _targetWallet = 0;
-
+        
     }
 
     private void Start()
@@ -156,6 +170,11 @@ public partial class UIManager : Singleton<UIManager>, ICashObserver
         //지갑 업데이트 용 코루틴
         _waitSeconds = new WaitForSeconds(0.02f);
         _walletUpdateCuroutine = StartCoroutine(SlowRigingWallet());
+
+        //_clearButton = transform.Find("GameClearButton").gameObject;
+        //_failButton = transform.Find("GameFailButton").gameObject;
+        _clearButton.SetActive(false);
+        _failButton.SetActive(false);
     }
     private void Update()
     {

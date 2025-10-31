@@ -472,6 +472,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 32
   _returnMenuButton: {fileID: 298325489}
+  _clearButton: {fileID: 1929458100}
+  _failButton: {fileID: 1929458099}
 --- !u!4 &944879309
 Transform:
   m_ObjectHideFlags: 0
@@ -951,6 +953,16 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d8dd9d8e1de81b043b4ff78a41093a89, type: 3}
+--- !u!1 &1929458099 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3234404112846975395, guid: d8dd9d8e1de81b043b4ff78a41093a89, type: 3}
+  m_PrefabInstance: {fileID: 1929458098}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1929458100 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 50981563231554909, guid: d8dd9d8e1de81b043b4ff78a41093a89, type: 3}
+  m_PrefabInstance: {fileID: 1929458098}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1984383742
 GameObject:
   m_ObjectHideFlags: 0

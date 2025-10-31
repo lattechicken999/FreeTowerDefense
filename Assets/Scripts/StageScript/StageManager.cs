@@ -77,6 +77,7 @@ public class StageManager : Singleton<StageManager>, IMonsterCount
     public void StageStart()
     {
         _isSpawnFinished = false;
+        _deathMonsterCount = 0;
         MonsterManager.Instance?.StartMonsterRun();
     }
     private void Start()
@@ -198,7 +199,7 @@ public class StageManager : Singleton<StageManager>, IMonsterCount
     }
     private void CheckStageClear()
     {
-        if (_spawnRemainCount == 0 && _isSpawnFinished && _monsterTarget.Hp != 0)
+        if ((_sponNum - _deathMonsterCount) == 0 && _isSpawnFinished && _monsterTarget.Hp != 0)
         {
             Debug.Log("스테이지 클리어 신호 동작");
             StageSuccess();

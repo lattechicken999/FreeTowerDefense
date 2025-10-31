@@ -1,16 +1,18 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Wizard : Piece
 {
     [SerializeField] private float _attackRange = 3f;
-    
+    private Animator _anima;
+
     protected override void Start()
     {
-        _attackPoint = 15;//¸¶¹ý»ç´Â °ø°Ý·Â ¾ó¸¶³ª ÇÒÁö
+        _attackPoint = 15;//ë§ˆë²•ì‚¬ëŠ” ê³µê²©ë ¥ ì–¼ë§ˆë‚˜ í• ì§€
         _unitName = UnitEnum.Wizard;
         base.Start();
+        _anima = GetComponent<Animator>();
     }
     
     public override void Attack()
@@ -22,11 +24,16 @@ public class Wizard : Piece
             if (BattleManager.Instance != null)
             {
                 BattleManager.Instance.UnitAttack(_attackPoint,_attackRange, transform);
+                _anima?.SetBool("isAttack", true);
             }
+        }
+        else
+        {
+            _anima?.SetBool("isAttack", false);
         }
     }
     /// <summary>
-    /// Ã¹¹øÂ° ¸ó½ºÅÍ¸¦ Å¸°ÙÆÃ
+    /// ì²«ë²ˆì§¸ ëª¬ìŠ¤í„°ë¥¼ íƒ€ê²ŸíŒ…
     /// </summary>
    private GameObject TargetFirstMonster() 
     {

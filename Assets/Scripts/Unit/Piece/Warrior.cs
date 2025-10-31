@@ -5,14 +5,15 @@ using UnityEngine;
 public class Warrior : Piece
 {
     [SerializeField] private float _attackRange = 1.5f;
-    
-
+    private Animator _anima;
     protected override void Start()
     {
         
         _attackPoint = 7;//전사는 공격력 얼마나 할지
         _unitName = UnitEnum.Warrior;
         base.Start();
+
+        _anima = GetComponent<Animator>();
     }
     
     public override void Attack()
@@ -23,7 +24,12 @@ public class Warrior : Piece
             if (BattleManager.Instance != null)
             {
                 BattleManager.Instance.UnitAttack(_attackPoint, _attackRange,transform);
+                _anima?.SetBool("isAttack", true);
             }
+        }
+        else
+        {
+            _anima?.SetBool("isAttack", false);
         }
     }
     /// <summary>

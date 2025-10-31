@@ -120,6 +120,8 @@ public partial class UIManager : Singleton<UIManager>, ICashObserver
         _buyUiWarrior?.onClick.AddListener(() => PlaceablePointsCheck.Instance.CommandChackPlaceable(UnitEnum.Warrior));
         _buyUiWizard?.onClick.AddListener(() => PlaceablePointsCheck.Instance.CommandChackPlaceable(UnitEnum.Wizard));
         _returnMenuButton?.onClick.AddListener(GameManager.Instance.MainMenuButton);
+
+        NotifyChangeGold(GoldManager.Instance.Wallet);
     }
     private void Update()
     {

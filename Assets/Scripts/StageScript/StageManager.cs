@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
@@ -8,34 +8,34 @@ using UnityEngine.SceneManagement;
 
 public class StageManager : Singleton<StageManager>, IMonsterCount
 {
-    [SerializeField] private List<StageDataSO> _stageDataList; //½ºÅ×ÀÌÁö µ¥ÀÌÅÍ ¸®½ºÆ® (ScriptableObject)
-    [SerializeField] private int _startNextStageDelay = 3; //ÄÚ·çÆ¾À¸·Î »ç¿ëÇÏ´Â µô·¹ÀÌ 
-    private MonsterTarget _monsterTarget;   //¸ó½ºÅÍ°¡ µµÂøÁöÁ¡¿¡ µµ´ŞÇØ¼­ °ø°İÇÏ´Â ´ë»ó
-    private List<GoldManager.MonsterNameEnum> _stageMonsterList; //Stage¿¡¼­ ¼ÒÈ¯ÇÒ ¼ö ÀÖ´Â ¸ó½ºÅÍ ½ºÅ©¸³Æ®¿¡¼­ ºÒ·¯¿È
-    public IStageInfo _notifyStageInfoForUI; //UIManager ¿¡¼­ ½ºÅ×ÀÌÁö Á¤º¸ ¾ò¾î¿Ã¼ö ÀÖ°Ô Ãß°¡
-    private bool _isStageClear; //½ºÅ×ÀÌÁö ¼º°ø ¿©ºÎ
-    private WaitForSeconds _stageStartDelay; //´ÙÀ½ ½ºÅ×ÀÌÁö ÁøÇà ½Ã Áö¿¬½Ã°£ ¼³Á¤ À§ÇØ¼­ ¼±¾ğ
+    [SerializeField] private List<StageDataSO> _stageDataList; //ìŠ¤í…Œì´ì§€ ë°ì´í„° ë¦¬ìŠ¤íŠ¸ (ScriptableObject)
+    [SerializeField] private int _startNextStageDelay = 3; //ì½”ë£¨í‹´ìœ¼ë¡œ ì‚¬ìš©í•˜ëŠ” ë”œë ˆì´ 
+    private MonsterTarget _monsterTarget;   //ëª¬ìŠ¤í„°ê°€ ë„ì°©ì§€ì ì— ë„ë‹¬í•´ì„œ ê³µê²©í•˜ëŠ” ëŒ€ìƒ
+    private List<GoldManager.MonsterNameEnum> _stageMonsterList; //Stageì—ì„œ ì†Œí™˜í•  ìˆ˜ ìˆëŠ” ëª¬ìŠ¤í„° ìŠ¤í¬ë¦½íŠ¸ì—ì„œ ë¶ˆëŸ¬ì˜´
+    public IStageInfo _notifyStageInfoForUI; //UIManager ì—ì„œ ìŠ¤í…Œì´ì§€ ì •ë³´ ì–»ì–´ì˜¬ìˆ˜ ìˆê²Œ ì¶”ê°€
+    private bool _isStageClear; //ìŠ¤í…Œì´ì§€ ì„±ê³µ ì—¬ë¶€
+    private WaitForSeconds _stageStartDelay; //ë‹¤ìŒ ìŠ¤í…Œì´ì§€ ì§„í–‰ ì‹œ ì§€ì—°ì‹œê°„ ì„¤ì • ìœ„í•´ì„œ ì„ ì–¸
 
-    private int _stageNum = 1; //ÇöÀç Stage ¹øÈ£
+    private int _stageNum = 1; //í˜„ì¬ Stage ë²ˆí˜¸
     public int StageNum
     {
         get { return _stageNum; }
         set { _stageNum = value; }
     }
 
-    private int _sponNum; //¸ó½ºÅÍ ¼ÒÈ¯ °¹¼ö
-    private int _sponDelay; //¸ó½ºÅÍ ¼ÒÈ¯ Áö¿¬½Ã°£
+    private int _sponNum; //ëª¬ìŠ¤í„° ì†Œí™˜ ê°¯ìˆ˜
+    private int _sponDelay; //ëª¬ìŠ¤í„° ì†Œí™˜ ì§€ì—°ì‹œê°„
 
     protected override void Awake()
     {
-        base.Awake(); //ºÎ¸ğ AwakeÈ£Ãâ (½Ì±ÛÅæ °´Ã¼ÀÎÁö È®ÀÎ À§ÇØ)
+        base.Awake(); //ë¶€ëª¨ Awakeí˜¸ì¶œ (ì‹±ê¸€í†¤ ê°ì²´ì¸ì§€ í™•ì¸ ìœ„í•´)
 
-        //½ÃÀÛÇÏÀÚ¸¶ÀÚ ½ºÅ×ÀÌÁö 1¹ø°ª °¡Á®¿À°í, ¸ó½ºÅÍ ¸Å´ÏÀú¿¡ ÇØ´ç Á¤º¸ Set
+        //ì‹œì‘í•˜ìë§ˆì ìŠ¤í…Œì´ì§€ 1ë²ˆê°’ ê°€ì ¸ì˜¤ê³ , ëª¬ìŠ¤í„° ë§¤ë‹ˆì €ì— í•´ë‹¹ ì •ë³´ Set
         _stageStartDelay = new WaitForSeconds(_startNextStageDelay);
     }
 
     /// <summary>
-    /// ¾Ë¸² ¹ŞÀ» °´Ã¼ ÁöÁ¤
+    /// ì•Œë¦¼ ë°›ì„ ê°ì²´ ì§€ì •
     /// </summary>
     /// <param name="subscriber"></param>
     public void SubscribeStageInfo(IStageInfo subscriber)
@@ -43,21 +43,21 @@ public class StageManager : Singleton<StageManager>, IMonsterCount
         _notifyStageInfoForUI = subscriber;
     }
     /// <summary>
-    /// ¾Ë¸²¹ŞÀ» °´Ã¼ ÇØÁ¦
+    /// ì•Œë¦¼ë°›ì„ ê°ì²´ í•´ì œ
     /// </summary>
     public void UnsubscriberStageInfo()
     {
         _notifyStageInfoForUI = null;
     }
     /// <summary>
-    /// monsterTarget¿¡¼­ »ç¿ëÇÏ´Â ±¸µ¶ ¼³Á¤ ÀÌº¥Æ®
+    /// monsterTargetì—ì„œ ì‚¬ìš©í•˜ëŠ” êµ¬ë… ì„¤ì • ì´ë²¤íŠ¸
     /// </summary>
     public void SubscribeMonsterTargetEvent(MonsterTarget monsterTarget)
     {
         monsterTarget._gameFailNotify += StageFail;
     }
     /// <summary>
-    /// monsterTarget¿¡¼­ »ç¿ëÇÏ´Â ±¸µ¶ ¼³Á¤ ÀÌº¥Æ®
+    /// monsterTargetì—ì„œ ì‚¬ìš©í•˜ëŠ” êµ¬ë… ì„¤ì • ì´ë²¤íŠ¸
     /// </summary>
     public void UnSubscribeMonsterTargetEvent(MonsterTarget monsterTarget)
     {
@@ -69,9 +69,9 @@ public class StageManager : Singleton<StageManager>, IMonsterCount
     }
 
     /// <summary>
-    /// ½ºÅ×ÀÌÁö ½ÃÀÛ°ú ¼º°ø ½ÇÆĞ
+    /// ìŠ¤í…Œì´ì§€ ì‹œì‘ê³¼ ì„±ê³µ ì‹¤íŒ¨
     /// </summary>
-    //¸¸¾à ¸ó½ºÅÍ ±Ô¸ğ°¡ 0ÀÌ µÇ¸é
+    //ë§Œì•½ ëª¬ìŠ¤í„° ê·œëª¨ê°€ 0ì´ ë˜ë©´
     public void StageStart()
     {
         _isStageClear = false;
@@ -87,70 +87,71 @@ public class StageManager : Singleton<StageManager>, IMonsterCount
     private void SetStageData()
     {
         _stageMonsterList = GetStageData(StageNum);
-        SetMonsterManagerMonsterList(); //¸ó½ºÅÍ ¸Å´ÏÀú¿¡ ³Ö±â
+        SetMonsterManagerMonsterList(); //ëª¬ìŠ¤í„° ë§¤ë‹ˆì €ì— ë„£ê¸°
 
     }
-    private void OnDestroy()
+    private void OnDisable()
     {
-        if(Instance == this)
+        if (Instance == this)
         {
-            Debug.Log("StageManager Singleton ÀÎ½ºÅÏ½º¿¡¼­ OnDestroyÈ£ÃâµÊ");
-            MonsterManager.Instance.UnSubScribeMonsterCount();
+            Debug.Log("StageManager Singleton ì¸ìŠ¤í„´ìŠ¤ì—ì„œ OnDestroyí˜¸ì¶œë¨");
+            MonsterManager.Instance?.UnSubScribeMonsterCount();
             MonsterManager.Instance._notifyAllMonsterSpawn -= AllMonsterSpawned;
         }
     }
+
     /// <summary>
-    /// ¸ó½ºÅÍ ¸Å´ÏÀú¿¡¼­ ¸ğµç ¸ó½ºÅÍ°¡ ¼ÒÈ¯µÈ »óÅÂÀÎÁö È®ÀÎ
-    /// ¸ğµç ¸ó½ºÅÍ°¡ ¼ÒÈ¯µÈ »óÅÂÀÌ°í && ³²Àº ¸ó½ºÅÍ °³¼ö°¡ 0ÀÌ¸é Clear ÆÇÁ¤ ³»¸®±â À§ÇØ ¼±¾ğ
+    /// ëª¬ìŠ¤í„° ë§¤ë‹ˆì €ì—ì„œ ëª¨ë“  ëª¬ìŠ¤í„°ê°€ ì†Œí™˜ëœ ìƒíƒœì¸ì§€ í™•ì¸
+    /// ëª¨ë“  ëª¬ìŠ¤í„°ê°€ ì†Œí™˜ëœ ìƒíƒœì´ê³  && ë‚¨ì€ ëª¬ìŠ¤í„° ê°œìˆ˜ê°€ 0ì´ë©´ Clear íŒì • ë‚´ë¦¬ê¸° ìœ„í•´ ì„ ì–¸
     /// </summary>
-    /// <param name="isSpawned">¼ÒÈ¯µÈ »óÅÂÀÎÁö</param>
+    /// <param name="isSpawned">ì†Œí™˜ëœ ìƒíƒœì¸ì§€</param>
     private void AllMonsterSpawned(bool isSpawned)
     {
-        _isStageClear = isSpawned; //½ºÅ×ÀÌÁö Å¬¸®¾î »óÅÂ
+        _isStageClear = isSpawned; //ìŠ¤í…Œì´ì§€ í´ë¦¬ì–´ ìƒíƒœ
     }
 
     /// <summary>
-    /// ½ºÅ×ÀÌÁö ½ÇÆĞÇØ¼­ ¸Ş´º·Î
+    /// ìŠ¤í…Œì´ì§€ ì‹¤íŒ¨í•´ì„œ ë©”ë‰´ë¡œ
     /// </summary>
     public void StageFail()
     {
-        Debug.Log("StageFail½ÅÈ£ ¹ß»ı");
+        Debug.Log("StageFailì‹ í˜¸ ë°œìƒ");
         SceneManager.LoadScene("MainMenu");
     }
     /// <summary>
-    /// ½ºÅ×ÀÌÁö ¼º°øÇØ¼­ ´ÙÀ½ ½ºÅ×ÀÌÁö·Î
+    /// ìŠ¤í…Œì´ì§€ ì„±ê³µí•´ì„œ ë‹¤ìŒ ìŠ¤í…Œì´ì§€ë¡œ
     /// </summary>
     public void StageSuccess()
     {
         StageNum++;
         if (StageNum <= _stageDataList.Count)
         {
-            StartCoroutine(StageStartWithCoroutine()); //µô·¹ÀÌÁØ´ÙÀ½ ½ºÅ×ÀÌÁö ½ÃÀÛ
+            StartCoroutine(StageStartWithCoroutine()); //ë”œë ˆì´ì¤€ë‹¤ìŒ ìŠ¤í…Œì´ì§€ ì‹œì‘
         }
         else
         {
-            Debug.Log($"½ºÅ×ÀÌÁö¹øÈ£ {StageNum}À¸·Î ÃÖ´ë ½ºÅ×ÀÌÁö °¹¼ö ÃÊ°úÇÏ¿© ¸ŞÀÎÀ¸·Î ÀÌµ¿");
+            Debug.Log($"ìŠ¤í…Œì´ì§€ë²ˆí˜¸ {StageNum}ìœ¼ë¡œ ìµœëŒ€ ìŠ¤í…Œì´ì§€ ê°¯ìˆ˜ ì´ˆê³¼í•˜ì—¬ ë©”ì¸ìœ¼ë¡œ ì´ë™");
             SceneManager.LoadScene("MainMenu");
         }
     }
     /// <summary>
-    /// ´ÙÀ½ ½ºÅ×ÀÌÁö·Î ÁøÇàÇÏ±â À§ÇÑ Áö¿¬ ÄÚ·çÆ¾
+    /// ë‹¤ìŒ ìŠ¤í…Œì´ì§€ë¡œ ì§„í–‰í•˜ê¸° ìœ„í•œ ì§€ì—° ì½”ë£¨í‹´
     /// </summary>
     /// <returns></returns>
     IEnumerator StageStartWithCoroutine()
     {
         SetStageData();
-        Debug.Log("ÇöÀç½Ã°¢:"+DateTime.Now);
+        Debug.Log("í˜„ì¬ì‹œê°:"+DateTime.Now);
         yield return _stageStartDelay;
-        Debug.Log("´ë±âÈÄ½Ã°¢:"+DateTime.Now);
+        Debug.Log("ëŒ€ê¸°í›„ì‹œê°:"+DateTime.Now);
         StageStart();
     }
 
     /// <summary>
-    /// ScriptableObject¿¡ ´ã°ÜÀÖ´Â ½ºÅ×ÀÌÁö Index¿Í ¸Â´Â°ÍÀ» Ã£¾Æ¼­ °¡Á®¿È
+    /// ScriptableObjectì— ë‹´ê²¨ìˆëŠ” ìŠ¤í…Œì´ì§€ Indexì™€ ë§ëŠ”ê²ƒì„ ì°¾ì•„ì„œ ê°€ì ¸ì˜´
     /// </summary>
-    /// <param name="stageIndex">½ºÅ×ÀÌÁö ¹øÈ£</param>
-    /// <returns>½ºÅ×ÀÌÁöÀÇ ¸ó½ºÅÍ Å¸ÀÔ ¸®½ºÆ® ¹İÈ¯</returns>
+    /// <param name="stageIndex">ìŠ¤í…Œì´ì§€ ë²ˆí˜¸</param>
+    /// <returns>ìŠ¤í…Œì´ì§€ì˜ ëª¬ìŠ¤í„° íƒ€ì… ë¦¬ìŠ¤íŠ¸ ë°˜í™˜</returns>
     public List<GoldManager.MonsterNameEnum> GetStageData(int stageIndex)
     {
         foreach(var item in _stageDataList)
@@ -158,14 +159,14 @@ public class StageManager : Singleton<StageManager>, IMonsterCount
             if(item.stageNumber == stageIndex)
             {
                 _sponDelay = item.spawnDelay;
-                return item.monsterInfoList; //Ã£À¸¸é Ã£Àº½ºÅ×ÀÌÁö º¸³¿
+                return item.monsterInfoList; //ì°¾ìœ¼ë©´ ì°¾ì€ìŠ¤í…Œì´ì§€ ë³´ëƒ„
             }
         }
-        return new List<GoldManager.MonsterNameEnum>(); //¸øÃ£À¸¸é »õ·Î »ı¼ºÇØ¼­ º¸³¿
+        return new List<GoldManager.MonsterNameEnum>(); //ëª»ì°¾ìœ¼ë©´ ìƒˆë¡œ ìƒì„±í•´ì„œ ë³´ëƒ„
     }
 
     /// <summary>
-    /// ¸ó½ºÅÍ ¸Å´ÏÀú¿¡ ÇöÀç ½ºÅ×ÀÌÁöÀÇ ¼ÒÈ¯ÇÒ ¸ó½ºÅÍ Á¤º¸¸¦ º¸³¿
+    /// ëª¬ìŠ¤í„° ë§¤ë‹ˆì €ì— í˜„ì¬ ìŠ¤í…Œì´ì§€ì˜ ì†Œí™˜í•  ëª¬ìŠ¤í„° ì •ë³´ë¥¼ ë³´ëƒ„
     /// </summary>
     public void SetMonsterManagerMonsterList()
     {
@@ -173,18 +174,18 @@ public class StageManager : Singleton<StageManager>, IMonsterCount
         MonsterManager._instance?.SetMonstersFromStageManager(_sponNum, _stageMonsterList, _sponDelay);
     }
     /// <summary>
-    /// ÇØ´ç ÇÔ¼ö¿¡¼­ ÇöÀç ¸ó½ºÅÍÀÇ °³¼ö¸¦ MonsterMager¿¡¼­ ¹Ş¾Æ¿È
-    /// ³²Àº ¸ó½ºÅÍ¿Í ½ºÅ×ÀÌÁö Å¬¸®¾î ¿©ºÎ¸¦ Ã¼Å©ÇØ¼­ Å¬¸®¾î ¿©ºÎ¸¦ Ã¼Å©ÇÑ´Ù
+    /// í•´ë‹¹ í•¨ìˆ˜ì—ì„œ í˜„ì¬ ëª¬ìŠ¤í„°ì˜ ê°œìˆ˜ë¥¼ MonsterMagerì—ì„œ ë°›ì•„ì˜´
+    /// ë‚¨ì€ ëª¬ìŠ¤í„°ì™€ ìŠ¤í…Œì´ì§€ í´ë¦¬ì–´ ì—¬ë¶€ë¥¼ ì²´í¬í•´ì„œ í´ë¦¬ì–´ ì—¬ë¶€ë¥¼ ì²´í¬í•œë‹¤
     /// </summary>
-    /// <param name="count">³²Àº ¸ó½ºÅÍ °³¼ö</param>
+    /// <param name="count">ë‚¨ì€ ëª¬ìŠ¤í„° ê°œìˆ˜</param>
     public void NotifieyRemainMonsterCount(int count)
     {
         string msg = $"Stage: {StageNum}, remain Monster: {count}";
-        _notifyStageInfoForUI?.NotifyStageInfo(msg); //UI¿¡ ½ºÅ×ÀÌÁö Á¤º¸ ¾Ë¸²
+        _notifyStageInfoForUI?.NotifyStageInfo(msg); //UIì— ìŠ¤í…Œì´ì§€ ì •ë³´ ì•Œë¦¼
         
         if(count == 0 && _isStageClear && _monsterTarget.Hp != 0)
         {
-            Debug.Log("½ºÅ×ÀÌÁö Å¬¸®¾î ½ÅÈ£ µ¿ÀÛ");
+            Debug.Log("ìŠ¤í…Œì´ì§€ í´ë¦¬ì–´ ì‹ í˜¸ ë™ì‘");
             StageSuccess();
         }
     }

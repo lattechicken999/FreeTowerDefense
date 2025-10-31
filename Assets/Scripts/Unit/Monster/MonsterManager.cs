@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
@@ -6,35 +6,35 @@ using UnityEngine;
 
 public class MonsterManager : Singleton<MonsterManager>
 {   
-    private int _spawnCount = 5; //¸ó½ºÅÍ ¸î¸¶¸® ¼ÒÈ¯ÇÏ´ÂÁö
-    private int _remainSpawnCount; //¼ÒÈ¯ÇÒ¶§ ¸ó½ºÅÍ°¡ ¸î¸¶¸® ³²¾ÆÀÖ´ÂÁö (waveÁ¾·áµÇ¾ú´ÂÁö ÆÇ´ÜÇÏ±â À§ÇØ »ç¿ë)
+    private int _spawnCount = 5; //ëª¬ìŠ¤í„° ëª‡ë§ˆë¦¬ ì†Œí™˜í•˜ëŠ”ì§€
+    private int _remainSpawnCount; //ì†Œí™˜í• ë•Œ ëª¬ìŠ¤í„°ê°€ ëª‡ë§ˆë¦¬ ë‚¨ì•„ìˆëŠ”ì§€ (waveì¢…ë£Œë˜ì—ˆëŠ”ì§€ íŒë‹¨í•˜ê¸° ìœ„í•´ ì‚¬ìš©)
     private List<GoldManager.MonsterNameEnum> _currentStageMonstersInfo;
-    [SerializeField] private List<GameObject> _monsterPrefabs; //¸ó½ºÅÍµéÀÌ ´ã±ä ÇÁ¸®ÆÕ
-    private Dictionary<GoldManager.MonsterNameEnum, GameObject> _monsterMap; //µñ¼Å³Ê¸®°ªÀ¸·Î ¸ó½ºÅÍ Ã£±â
-    [SerializeField] GameObject _hpBarPrefab; //UI hp¹Ù ÇÁ¸®ÆÕ(MonsterÀ§¿¡ Ç¥½ÃÇÏ±â À§ÇØ)
-    [SerializeField] float _hpBarWidthSize = 300.0f; //UI hp¹Ù °¡·ÎÅ©±â ¼³Á¤
-    [SerializeField] float _hpBarHeightSize = 40.0f; //UI hp¹Ù ¼¼·ÎÅ©±â ¼³Á¤
-    [SerializeField] float _hpBarHeightGap = 1.0f; //UI hp¹Ù ¾Æ·¡ À§ ¹æÇâÀ¸·Î À§Ä¡ Á¶Àı
+    [SerializeField] private List<GameObject> _monsterPrefabs; //ëª¬ìŠ¤í„°ë“¤ì´ ë‹´ê¸´ í”„ë¦¬íŒ¹
+    private Dictionary<GoldManager.MonsterNameEnum, GameObject> _monsterMap; //ë”•ì…”ë„ˆë¦¬ê°’ìœ¼ë¡œ ëª¬ìŠ¤í„° ì°¾ê¸°
+    [SerializeField] GameObject _hpBarPrefab; //UI hpë°” í”„ë¦¬íŒ¹(Monsterìœ„ì— í‘œì‹œí•˜ê¸° ìœ„í•´)
+    [SerializeField] float _hpBarWidthSize = 300.0f; //UI hpë°” ê°€ë¡œí¬ê¸° ì„¤ì •
+    [SerializeField] float _hpBarHeightSize = 40.0f; //UI hpë°” ì„¸ë¡œí¬ê¸° ì„¤ì •
+    [SerializeField] float _hpBarHeightGap = 1.0f; //UI hpë°” ì•„ë˜ ìœ„ ë°©í–¥ìœ¼ë¡œ ìœ„ì¹˜ ì¡°ì ˆ
 
-    //¡åÀÌº¥Æ®
-    public event Action<bool> _notifyAllMonsterSpawn; //StageManager¿¡¼­ »ç¿ë. ´õ ¼ÒÈ¯ÇÒ ¸ó½ºÅÍ°¡ ÀÖ´ÂÁö ¾Ë¸®´Â ÀÌº¥Æ®
-    private IMonsterCount _notifyMonsterCount; //StageManager¿¡¼­ »ç¿ë. ¸ó½ºÅÍ °¹¼ö º¯°æµÉ¶§¸¶´Ù ¾Ë¸®´Â ÀÌº¥Æ®
-    //public event Action<GoldManager.MonsterNameEnum> _monsterDeadNotifiedById; //GoldManager.cs¿¡ Á×Àº ¸ó½ºÅÍ ID·Î ÀçÈ­°ü¸®ÇÏ±â À§ÇØ¼­
-    public event Action<List<Monster>> _notifiedMonsterMake; //BattleManager¿¡¼­ »ç¿ë. ¸ó½ºÅÍ ÀÚÃ¼¸¦ ³Ñ°ÜÁÜ
+    //â–¼ì´ë²¤íŠ¸
+    public event Action<bool> _notifyAllMonsterSpawn; //StageManagerì—ì„œ ì‚¬ìš©. ë” ì†Œí™˜í•  ëª¬ìŠ¤í„°ê°€ ìˆëŠ”ì§€ ì•Œë¦¬ëŠ” ì´ë²¤íŠ¸
+    private IMonsterCount _notifyMonsterCount; //StageManagerì—ì„œ ì‚¬ìš©. ëª¬ìŠ¤í„° ê°¯ìˆ˜ ë³€ê²½ë ë•Œë§ˆë‹¤ ì•Œë¦¬ëŠ” ì´ë²¤íŠ¸
+    //public event Action<GoldManager.MonsterNameEnum> _monsterDeadNotifiedById; //GoldManager.csì— ì£½ì€ ëª¬ìŠ¤í„° IDë¡œ ì¬í™”ê´€ë¦¬í•˜ê¸° ìœ„í•´ì„œ
+    public event Action<List<Monster>> _notifiedMonsterMake; //BattleManagerì—ì„œ ì‚¬ìš©. ëª¬ìŠ¤í„° ìì²´ë¥¼ ë„˜ê²¨ì¤Œ
     
-    //ÄÚ·çÆ¾¿ë private ÇÊµå
-    private WaitForSeconds _delay; //StageManager¿¡¼­ SetÇÏ¸é ¼³Á¤µÇ´Â ¸ó½ºÅÍ »ı¼º µô·¹ÀÌ
-    private Coroutine _coroutine; //ÄÚ·çÆ¾ Áßº¹½ÇÇà¶§¹®¿¡ ¾µ±î ÇÏ´Âµ¥ ¾È½áµµµÉµí? Á» »ı°¢ÇØºÁ¾ßÇÔ
-    List<Monster> _aliveMonsters; //»ì¾ÆÀÖ´Â ¸ó½ºÅÍ ¹è¿­ (½ºÅ×ÀÌÁö¿¡¼­ ¸î¸¶¸® »ì¾ÆÀÖ´ÂÁö ¾Ë¾Æ¾ßÇÏ±â¶§¹®¿¡)
-    //¡å¿şÀÌÆ÷ÀÎÆ®¿ë ÇÊµå
-    private MonsterWayPoint _wayPointParent; //¿şÀÌÆ÷ÀÎÆ® Á¤º¸¸¦ ÀÚ½ÄÀ¸·Î °¡Áö°íÀÖ´Â ºÎ¸ğ °ÔÀÓ ¿ÀºêÁ§Æ®
-    private List<Transform> _wayPointChilds; //_wayPointParent¿¡ ÀÖ´Â ÀÚ½ÄÁ¤º¸¸¦ ²¨³»¼­ ÀúÀåÇÑ ÇÊµå
-    //¡å¸ó½ºÅÍ Å¸°Ù
+    //ì½”ë£¨í‹´ìš© private í•„ë“œ
+    private WaitForSeconds _delay; //StageManagerì—ì„œ Setí•˜ë©´ ì„¤ì •ë˜ëŠ” ëª¬ìŠ¤í„° ìƒì„± ë”œë ˆì´
+    private Coroutine _coroutine; //ì½”ë£¨í‹´ ì¤‘ë³µì‹¤í–‰ë•Œë¬¸ì— ì“¸ê¹Œ í•˜ëŠ”ë° ì•ˆì¨ë„ë ë“¯? ì¢€ ìƒê°í•´ë´ì•¼í•¨
+    List<Monster> _aliveMonsters; //ì‚´ì•„ìˆëŠ” ëª¬ìŠ¤í„° ë°°ì—´ (ìŠ¤í…Œì´ì§€ì—ì„œ ëª‡ë§ˆë¦¬ ì‚´ì•„ìˆëŠ”ì§€ ì•Œì•„ì•¼í•˜ê¸°ë•Œë¬¸ì—)
+    //â–¼ì›¨ì´í¬ì¸íŠ¸ìš© í•„ë“œ
+    private MonsterWayPoint _wayPointParent; //ì›¨ì´í¬ì¸íŠ¸ ì •ë³´ë¥¼ ìì‹ìœ¼ë¡œ ê°€ì§€ê³ ìˆëŠ” ë¶€ëª¨ ê²Œì„ ì˜¤ë¸Œì íŠ¸
+    private List<Transform> _wayPointChilds; //_wayPointParentì— ìˆëŠ” ìì‹ì •ë³´ë¥¼ êº¼ë‚´ì„œ ì €ì¥í•œ í•„ë“œ
+    //â–¼ëª¬ìŠ¤í„° íƒ€ê²Ÿ
     //[SerializeField] private MonsterTarget _mosterAttackTarget;
     private MonsterTarget _monsterTarget;
 
     /// <summary>
-    /// StageManager¿¡¼­ ±¸µ¶ÇÒ ¼ö ÀÖµµ·Ï ¸Ş¼­µå Ãß°¡. ¸ó½ºÅÍ °³¼ö¸¦ º¸³»ÁÖ±â À§ÇØ »ç¿ë.
+    /// StageManagerì—ì„œ êµ¬ë…í•  ìˆ˜ ìˆë„ë¡ ë©”ì„œë“œ ì¶”ê°€. ëª¬ìŠ¤í„° ê°œìˆ˜ë¥¼ ë³´ë‚´ì£¼ê¸° ìœ„í•´ ì‚¬ìš©.
     /// </summary>
     /// <param name="subscriber"></param>
     public void SubScribeMonsterCount(IMonsterCount subscriber)
@@ -42,7 +42,7 @@ public class MonsterManager : Singleton<MonsterManager>
         _notifyMonsterCount = subscriber;
     }
     /// <summary>
-    /// StageManager¿¡¼­ ±¸µ¶ÇÑ ³»¿ëÀ» ²÷´Â´Ù.
+    /// StageManagerì—ì„œ êµ¬ë…í•œ ë‚´ìš©ì„ ëŠëŠ”ë‹¤.
     /// </summary>
     public void UnSubScribeMonsterCount()
     {
@@ -50,38 +50,38 @@ public class MonsterManager : Singleton<MonsterManager>
     }
     protected override void Awake()
     {
-        base.Awake(); //½Ì±ÛÅæ Ã¼Å©
+        base.Awake(); //ì‹±ê¸€í†¤ ì²´í¬
         _monsterMap = new Dictionary<GoldManager.MonsterNameEnum, GameObject>();
         
 
     }
     /// <summary>
-    /// ºÎ¸ğ(_wayPointParent)¿¡ ´ã°ÜÀÖ´Â ÀÚ½ÄÁ¤º¸¸¦ Set
-    /// GetComponentsInChildren·Î °¡Á®¿À°í ³­´ÙÀ½ ÀÚ½Ä¸¸ ³²°Ü¾ßÇÑ´Ù
+    /// ë¶€ëª¨(_wayPointParent)ì— ë‹´ê²¨ìˆëŠ” ìì‹ì •ë³´ë¥¼ Set
+    /// GetComponentsInChildrenë¡œ ê°€ì ¸ì˜¤ê³  ë‚œë‹¤ìŒ ìì‹ë§Œ ë‚¨ê²¨ì•¼í•œë‹¤
     /// </summary>
     private void SetWaypointChilds()
     {
-        //GetComponentsInChildren´Â ºÎ¸ğ±îÁö Æ÷ÇÔÇÑ ¹è¿­ÀÌ¹Ç·Î ÀÚ½Ä¸¸ ³²°Ü¾ßÇÔ
+        //GetComponentsInChildrenëŠ” ë¶€ëª¨ê¹Œì§€ í¬í•¨í•œ ë°°ì—´ì´ë¯€ë¡œ ìì‹ë§Œ ë‚¨ê²¨ì•¼í•¨
         _wayPointChilds = new List<Transform>();
-        Transform[] trs = _wayPointParent.GetComponentsInChildren<Transform>(); //ºÎ¸ğ+ÀÚ½ÄÁ¤º¸°¡ trs¿¡ ÀúÀå
+        Transform[] trs = _wayPointParent.GetComponentsInChildren<Transform>(); //ë¶€ëª¨+ìì‹ì •ë³´ê°€ trsì— ì €ì¥
         foreach (var item in trs)
         {
             if (item != _wayPointParent.transform)
             {
-                _wayPointChilds.Add(item); //_wayPointChilds¿¡ ÀÚ½Ä¸¸ ³²±è
+                _wayPointChilds.Add(item); //_wayPointChildsì— ìì‹ë§Œ ë‚¨ê¹€
             }
         }
     }
     private void Start()
     {
-        //ÀÎ½ºÅÏ½º »ı¼º ¿Ï·á ÈÄ µ¿ÀÛ ÇÏµµ·Ï ¼öÁ¤
-        SetPositionByMonsterId(); //¸ó½ºÅÍ¿¡ ´ëÇÑ Á¤º¸¸¦ enum°ªÀ¸·Î IDÇü½ÄÀ¸·Î Set
-        //ForSummonTest(); //Å×½ºÆ®¿ë ¸Ş¼­µå
+        //ì¸ìŠ¤í„´ìŠ¤ ìƒì„± ì™„ë£Œ í›„ ë™ì‘ í•˜ë„ë¡ ìˆ˜ì •
+        SetPositionByMonsterId(); //ëª¬ìŠ¤í„°ì— ëŒ€í•œ ì •ë³´ë¥¼ enumê°’ìœ¼ë¡œ IDí˜•ì‹ìœ¼ë¡œ Set
+        //ForSummonTest(); //í…ŒìŠ¤íŠ¸ìš© ë©”ì„œë“œ
     }
     /// <summary>
-    /// (»èÁ¦¿¹Á¤)Å×½ºÆ®¿ë ÄÚµå. StageManager¿¡¼­ event¹Ş¾ÒÀ»¶§ ¾î¶»°Ô µ¿ÀÛµÉÁö È®ÀÎ
+    /// (ì‚­ì œì˜ˆì •)í…ŒìŠ¤íŠ¸ìš© ì½”ë“œ. StageManagerì—ì„œ eventë°›ì•˜ì„ë•Œ ì–´ë–»ê²Œ ë™ì‘ë ì§€ í™•ì¸
     /// </summary>
-    private void ForSummonTest() //(»èÁ¦¿¹Á¤)
+    private void ForSummonTest() //(ì‚­ì œì˜ˆì •)
     {
         int spawnCnt = 6;
         List<GoldManager.MonsterNameEnum> monsterIds = new List<GoldManager.MonsterNameEnum>();
@@ -92,17 +92,17 @@ public class MonsterManager : Singleton<MonsterManager>
         monsterIds.Add(GoldManager.MonsterNameEnum.Mummy);
         monsterIds.Add(GoldManager.MonsterNameEnum.Ghost);
         int spawnDelay = 2;
-        SetMonstersFromStageManager(spawnCnt, monsterIds, spawnDelay); //½ºÅ×ÀÌÁö ¸Å´ÏÀú¿¡¼­ ºÒ·¶´ÙÄ¡°í ÇØº¸±â
-        StartMonsterRun(); //½ºÅ×ÀÌÁö ¸Å´ÏÀú¿¡¼­ ºÒ·¶´ÙÄ¡°í ÇØº¸±â
+        SetMonstersFromStageManager(spawnCnt, monsterIds, spawnDelay); //ìŠ¤í…Œì´ì§€ ë§¤ë‹ˆì €ì—ì„œ ë¶ˆë €ë‹¤ì¹˜ê³  í•´ë³´ê¸°
+        StartMonsterRun(); //ìŠ¤í…Œì´ì§€ ë§¤ë‹ˆì €ì—ì„œ ë¶ˆë €ë‹¤ì¹˜ê³  í•´ë³´ê¸°
     }
 
     /// <summary>
-    /// enum°ú Dictionary¸¦ ÀÌ¿ëÇØ¼­ ÇØ´ç ¸ó½ºÅÍ¿¡ ´ëÇÑ Á¤º¸¸¦ °¡Áö°íÀÖ´Â 
-    /// GameObject¸¦ ¹İÈ¯ÇÏµµ·ÏÇÏ±âÀ§ÇØ Dictionary¸¦ Set
+    /// enumê³¼ Dictionaryë¥¼ ì´ìš©í•´ì„œ í•´ë‹¹ ëª¬ìŠ¤í„°ì— ëŒ€í•œ ì •ë³´ë¥¼ ê°€ì§€ê³ ìˆëŠ” 
+    /// GameObjectë¥¼ ë°˜í™˜í•˜ë„ë¡í•˜ê¸°ìœ„í•´ Dictionaryë¥¼ Set
     /// </summary>
     private void SetPositionByMonsterId()
     {
-        //Check ¸ó½ºÅÍID°¡ Á¸ÀçÇÏ´Â À§Ä¡Ã£±â (µñ¼Å³Ê¸®·Î)
+        //Check ëª¬ìŠ¤í„°IDê°€ ì¡´ì¬í•˜ëŠ” ìœ„ì¹˜ì°¾ê¸° (ë”•ì…”ë„ˆë¦¬ë¡œ)
         if (_monsterPrefabs == null) Debug.Log("Prefab Null");
         if (_monsterMap == null) Debug.Log("_monsterMap Null");
         for (int i = 0; i < _monsterPrefabs.Count; i++)
@@ -119,70 +119,70 @@ public class MonsterManager : Singleton<MonsterManager>
     }
 
     /// <summary>
-    /// StageManager¿¡¼­ »ç¿ëÇÏ´Â ½ºÅ×ÀÌÁö Á¤º¸¸¦ SetÇØÁÖ´Â ¸Ş¼­µå
+    /// StageManagerì—ì„œ ì‚¬ìš©í•˜ëŠ” ìŠ¤í…Œì´ì§€ ì •ë³´ë¥¼ Setí•´ì£¼ëŠ” ë©”ì„œë“œ
     /// </summary>
-    /// <param name="spawnCount">¼ÒÈ¯ °³¼ö</param>
-    /// <param name="monstersInfo">»ı¼ºÇÒ¸ó½ºÅÍÅ¸ÀÔ¸®½ºÆ®</param>
-    /// <param name="coolDown">»ı¼º ÁÖ±â</param>
+    /// <param name="spawnCount">ì†Œí™˜ ê°œìˆ˜</param>
+    /// <param name="monstersInfo">ìƒì„±í• ëª¬ìŠ¤í„°íƒ€ì…ë¦¬ìŠ¤íŠ¸</param>
+    /// <param name="coolDown">ìƒì„± ì£¼ê¸°</param>
     public void SetMonstersFromStageManager(int spawnCnt, List<GoldManager.MonsterNameEnum> monstersInfo, int coolDown)
     {
         _spawnCount = spawnCnt;
-        _currentStageMonstersInfo = new List<GoldManager.MonsterNameEnum>(monstersInfo); //±íÀºº¹»ç·Î °¡Á®¿È
+        _currentStageMonstersInfo = new List<GoldManager.MonsterNameEnum>(monstersInfo); //ê¹Šì€ë³µì‚¬ë¡œ ê°€ì ¸ì˜´
         _delay = new WaitForSeconds(coolDown);
     }
 
-    //(Get)½ºÅ×ÀÌÁö °ü¸®ÀÚ¿¡¼­ ½ºÅ×ÀÌÁöº° ¾î´À ¸ó½ºÅÍ¸¦ ¾î´À ±Ô¸ğ·Î ¼ÒÈ¯ÇÒÁö ¹Ş¾Æ¿Í¾ßÇÔ (¸î¸¶¸®?, ¾î´À¸ó½ºÅÍ?[ÀÎµ¦½º³Ñ°ÜÁÙ°Å¾ß?],ÄğÅ¸ÀÓÀº?
+    //(Get)ìŠ¤í…Œì´ì§€ ê´€ë¦¬ìì—ì„œ ìŠ¤í…Œì´ì§€ë³„ ì–´ëŠ ëª¬ìŠ¤í„°ë¥¼ ì–´ëŠ ê·œëª¨ë¡œ ì†Œí™˜í• ì§€ ë°›ì•„ì™€ì•¼í•¨ (ëª‡ë§ˆë¦¬?, ì–´ëŠëª¬ìŠ¤í„°?[ì¸ë±ìŠ¤ë„˜ê²¨ì¤„ê±°ì•¼?],ì¿¨íƒ€ì„ì€?
     /// <summary>
-    /// StageManager¿¡¼­ »ç¿ëÇÏ´Â ½ºÅ×ÀÌÁö¸¦ ½ÇÇà½ÃÅ°´Â ¸Ş¼­µå
-    /// SetMonstersFromStageManager ·Î Á¤º¸°¡ SetµÈ »óÅÂ¿¡¼­ ½ÇÇàÇÑ´Ù
+    /// StageManagerì—ì„œ ì‚¬ìš©í•˜ëŠ” ìŠ¤í…Œì´ì§€ë¥¼ ì‹¤í–‰ì‹œí‚¤ëŠ” ë©”ì„œë“œ
+    /// SetMonstersFromStageManager ë¡œ ì •ë³´ê°€ Setëœ ìƒíƒœì—ì„œ ì‹¤í–‰í•œë‹¤
     /// </summary>
     public void StartMonsterRun()
     {
-        StartCoroutine(DelayedStartMonsterRun()); //¹Ù·Î ½ÇÇàÇÏ¸é FindTag°¡ nullÀÌ ¶°¼­ Áö¿¬À¸·Î Å¸ÀÌ¹Ö ¸ÂÃç¾ßÇÔ
+        StartCoroutine(DelayedStartMonsterRun()); //ë°”ë¡œ ì‹¤í–‰í•˜ë©´ FindTagê°€ nullì´ ë– ì„œ ì§€ì—°ìœ¼ë¡œ íƒ€ì´ë° ë§ì¶°ì•¼í•¨
     }
     IEnumerator DelayedStartMonsterRun()
     {
         yield return null;
-        _aliveMonsters = new List<Monster>(); //¹ŞÀ¸¸é ÀÏ´Ü ÃÊ±âÈ­
-        StartCoroutine(SummonMonsterCoroutine(_spawnCount, _currentStageMonstersInfo)); //½ÇÇà
+        _aliveMonsters = new List<Monster>(); //ë°›ìœ¼ë©´ ì¼ë‹¨ ì´ˆê¸°í™”
+        StartCoroutine(SummonMonsterCoroutine(_spawnCount, _currentStageMonstersInfo)); //ì‹¤í–‰
     }
     /// <summary>
-    /// ÄÚ·çÆ¾¿¡¼­ »ç¿ëÇÒ ¸Ş¼­µå (¸ó½ºÅÍ ¼ÒÈ¯)
+    /// ì½”ë£¨í‹´ì—ì„œ ì‚¬ìš©í•  ë©”ì„œë“œ (ëª¬ìŠ¤í„° ì†Œí™˜)
     /// </summary>
-    /// <param name="spawnCount">¼ÒÈ¯ °¹¼ö</param>
-    /// <param name="monsterType">¼ÒÈ¯µÉ ¸ó½ºÅÍ Á¾·ù</param>
+    /// <param name="spawnCount">ì†Œí™˜ ê°¯ìˆ˜</param>
+    /// <param name="monsterType">ì†Œí™˜ë  ëª¬ìŠ¤í„° ì¢…ë¥˜</param>
     /// <returns></returns>
     IEnumerator SummonMonsterCoroutine(int spawnCount, List<GoldManager.MonsterNameEnum> monstersInfo)
     {
-        _remainSpawnCount = spawnCount; //³²Àº ¸ó½ºÅÍ Ã¼Å©ÇØ¼­ waveÁ¾·áµÇ¾ú´ÂÁö ÆÄ¾Ç
-        _notifyAllMonsterSpawn.Invoke(false); //³²Àº ¸ó½ºÅÍ ÀÖÀ½
+        _remainSpawnCount = spawnCount; //ë‚¨ì€ ëª¬ìŠ¤í„° ì²´í¬í•´ì„œ waveì¢…ë£Œë˜ì—ˆëŠ”ì§€ íŒŒì•…
+        _notifyAllMonsterSpawn.Invoke(false); //ë‚¨ì€ ëª¬ìŠ¤í„° ìˆìŒ
         StageManager.Instance.NotifieyRemainMonsterCount();
         for (int index = 0; index < spawnCount; index++)
         {
             _remainSpawnCount--;
-            //¡åMonster »ı¼º (ÇöÀç ¼±ÅÃµÈ ¸ó½ºÅÍ Å¸ÀÔÀ¸·Î Prefab¿¡¼­ Ã£¾Æ¼­ ¼³Á¤
+            //â–¼Monster ìƒì„± (í˜„ì¬ ì„ íƒëœ ëª¬ìŠ¤í„° íƒ€ì…ìœ¼ë¡œ Prefabì—ì„œ ì°¾ì•„ì„œ ì„¤ì •
             GameObject makedMonster = CreateMonster(monstersInfo, index);
-            //¡åMonser¿¡ wayPoint¸¦ ¼³Á¤ÇÑ´Ù.
+            //â–¼Monserì— wayPointë¥¼ ì„¤ì •í•œë‹¤.
             Monster mon = makedMonster.GetComponent<Monster>();
             mon.SetWayPoints(_wayPointChilds);
-            //¡åMonster¸¦ µû¶ó´Ù´Ï´Â Ã¼·Â¹Ùµµ »ı¼º;
+            //â–¼Monsterë¥¼ ë”°ë¼ë‹¤ë‹ˆëŠ” ì²´ë ¥ë°”ë„ ìƒì„±;
             CreateMonsterFollowHpBar(makedMonster, mon,index);
             yield return _delay;
         }
         if(_remainSpawnCount == 0)
         {
-            _notifyAllMonsterSpawn.Invoke(true); //³¡³²
+            _notifyAllMonsterSpawn.Invoke(true); //ëë‚¨
         }
     }
     private GameObject CreateMonster(List<GoldManager.MonsterNameEnum> monstersInfo,int index)
     {
-        GoldManager.MonsterNameEnum currentMonsterType = monstersInfo[index]; //ÇöÀç ¼±ÅÃµÈ ¸ó½ºÅÍ Å¸ÀÔ
+        GoldManager.MonsterNameEnum currentMonsterType = monstersInfo[index]; //í˜„ì¬ ì„ íƒëœ ëª¬ìŠ¤í„° íƒ€ì…
         GameObject monsterInstance = Instantiate(_monsterMap[currentMonsterType], _wayPointChilds[0].position, transform.rotation);
-        monsterInstance.name += index; //ÀÌ¸§ ÀÓ½Ã º¯°æ
+        monsterInstance.name += index; //ì´ë¦„ ì„ì‹œ ë³€ê²½
         Monster mon = monsterInstance.GetComponent<Monster>();
-        mon._monsterDeadNotified += RemoveMonster; //¸ó½ºÅÍ°¡ Á×À»¶§ ÇÏ´Â deleate event Á¤ÀÇ
-        mon._monsterAttackAction += MonsterAttackTarget; //¸ó½ºÅÍ°¡ ¼ºº® °ø°İÇÒ¶§ delegate event
-        AliveMonsterAdd(mon); //_aliveMonster¿¡ Ãß°¡
+        mon._monsterDeadNotified += RemoveMonster; //ëª¬ìŠ¤í„°ê°€ ì£½ì„ë•Œ í•˜ëŠ” deleate event ì •ì˜
+        mon._monsterAttackAction += MonsterAttackTarget; //ëª¬ìŠ¤í„°ê°€ ì„±ë²½ ê³µê²©í• ë•Œ delegate event
+        AliveMonsterAdd(mon); //_aliveMonsterì— ì¶”ê°€
         return monsterInstance;
     }
 
@@ -193,7 +193,7 @@ public class MonsterManager : Singleton<MonsterManager>
         obj.name += index;
         UIHpBarMonster uiHealthBar = obj.GetComponent<UIHpBarMonster>();
         uiHealthBar.SetGapPos(_hpBarHeightGap);
-        //¡åuiHealthBarÀÇ Å©±â º¯°æ
+        //â–¼uiHealthBarì˜ í¬ê¸° ë³€ê²½
         RectTransform hpBarRectTransform = obj.GetComponent<RectTransform>();
         hpBarRectTransform.sizeDelta = new Vector2(_hpBarWidthSize, _hpBarHeightSize);
         uiHealthBar.SetUIPos(mon);
@@ -202,21 +202,21 @@ public class MonsterManager : Singleton<MonsterManager>
     }
 
     /// <summary>
-    /// ¸ó½ºÅÍ°¡ ¿şÀÌÆ÷ÀÎÆ® ³¡ÁöÁ¡¿¡ µµ´ŞÇßÀ»¶§ °ø°İÇÏ´Â ¸Ş¼­µå
-    /// BattleManager¿¡¼­ Ã³¸®ÇÏµµ·Ï Å¸°Ù°ú °ø°İ·ÂÀ» º¸³»ÁÖ±â¸¸ ÇÑ´Ù. 
+    /// ëª¬ìŠ¤í„°ê°€ ì›¨ì´í¬ì¸íŠ¸ ëì§€ì ì— ë„ë‹¬í–ˆì„ë•Œ ê³µê²©í•˜ëŠ” ë©”ì„œë“œ
+    /// BattleManagerì—ì„œ ì²˜ë¦¬í•˜ë„ë¡ íƒ€ê²Ÿê³¼ ê³µê²©ë ¥ì„ ë³´ë‚´ì£¼ê¸°ë§Œ í•œë‹¤. 
     /// </summary>
     /// <param name="attackValue"></param>
-    private void MonsterAttackTarget(int attackValue) //¸ó½ºÅÍ°¡ ¼ºº®À» °ø°İ. ¹èÆ²¸Å´ÏÀúÇÑÅ× º¸³¿
+    private void MonsterAttackTarget(int attackValue) //ëª¬ìŠ¤í„°ê°€ ì„±ë²½ì„ ê³µê²©. ë°°í‹€ë§¤ë‹ˆì €í•œí…Œ ë³´ëƒ„
     {
-        //BattleManagerÇÑÅ× º¸³¿ (¾Æ·¡ ÁÖ¼®³»¿ë ´Ù¸¥°÷¿¡¼­ ÀÛ¾÷ ¿Ï·áµÈ ÀÌÈÄ ÇÒ¼öÀÖÀ½)
-        int defence = _monsterTarget.DefensePoint; //ÀÌ°Å protected¶ó Á¢±ÙºÒ°¡. ÇÁ·ÎÆÛÆ¼ ÀÛ¾÷ ÇÊ¿äÇÔ
-        int hp = (int)_monsterTarget.Hp; //ÀÌ°Å protected¶ó Á¢±ÙºÒ°¡. ÇÁ·ÎÆÛÆ¼ ÀÛ¾÷ ÇÊ¿äÇÔ
+        //BattleManagerí•œí…Œ ë³´ëƒ„ (ì•„ë˜ ì£¼ì„ë‚´ìš© ë‹¤ë¥¸ê³³ì—ì„œ ì‘ì—… ì™„ë£Œëœ ì´í›„ í• ìˆ˜ìˆìŒ)
+        int defence = _monsterTarget.DefensePoint; //ì´ê±° protectedë¼ ì ‘ê·¼ë¶ˆê°€. í”„ë¡œí¼í‹° ì‘ì—… í•„ìš”í•¨
+        int hp = (int)_monsterTarget.Hp; //ì´ê±° protectedë¼ ì ‘ê·¼ë¶ˆê°€. í”„ë¡œí¼í‹° ì‘ì—… í•„ìš”í•¨
         int resultDamage = BattleManager.Instance.MonsterAttack(attackValue, defence, hp);
         _monsterTarget.TakenDamage(resultDamage);
     }
     
     /// <summary>
-    /// StageManager¿¡¼­ ÇöÀç ³²¾ÆÀÖ´Â ¸ó½ºÅÍ °¹¼ö¸¦ ¾Ë±âÀ§ÇØ »ç¿ëÇÏ´Â ÇÔ¼ö
+    /// StageManagerì—ì„œ í˜„ì¬ ë‚¨ì•„ìˆëŠ” ëª¬ìŠ¤í„° ê°¯ìˆ˜ë¥¼ ì•Œê¸°ìœ„í•´ ì‚¬ìš©í•˜ëŠ” í•¨ìˆ˜
     /// </summary>
     /// <returns></returns>
     public int ReturnCurrentMonsterCount()
@@ -225,67 +225,68 @@ public class MonsterManager : Singleton<MonsterManager>
     }
 
     /// <summary>
-    /// Monster°¡ »èÁ¦µÉ¶§ È£ÃâµÇ´Â ÇÔ¼ö
+    /// Monsterê°€ ì‚­ì œë ë•Œ í˜¸ì¶œë˜ëŠ” í•¨ìˆ˜
     /// </summary>
     /// <param name="monster"></param>
-    private void RemoveMonster(Monster monster) //¼öÁ¤ÇÊ¿ä, Áö¿ì°í ÀÌº¥Æ® Ã³¸®ÇÏ´ÂºÎºĞ ÀÌ»óÇÔ
+    private void RemoveMonster(Monster monster) //ìˆ˜ì •í•„ìš”, ì§€ìš°ê³  ì´ë²¤íŠ¸ ì²˜ë¦¬í•˜ëŠ”ë¶€ë¶„ ì´ìƒí•¨
     {
-        //¡å»èÁ¦ Àü, ¾î¶»°Ô Á×¾ú´ÂÁö È®ÀÎ ÈÄ, Ã³¸®
-        if(monster._isKilledByPlayer) //ÇÃ·¹ÀÌ¾î¿¡ ÀÇÇØ Á×¾ú´Ù¸é?
+
+        //â–¼ì‚­ì œ ì „, ì–´ë–»ê²Œ ì£½ì—ˆëŠ”ì§€ í™•ì¸ í›„, ì²˜ë¦¬
+        if(monster._isKilledByPlayer) //í”Œë ˆì´ì–´ì— ì˜í•´ ì£½ì—ˆë‹¤ë©´?
         {
             //_monsterDeadNotifiedById?.Invoke(monster._monsterId);
             GoldManager.Instance.GoldAdd(monster._monsterId);
         }
 
-        //¡åÀÌº¥Æ®¿Í ¸®½ºÆ®¿¡¼­ »èÁ¦
-        monster._monsterDeadNotified -= RemoveMonster; //¸ó½ºÅÍ¿¡ µé¾îÀÖ´Â ÀÌº¥Æ® Á¦°Å (¸ó½ºÅÍ´Â RemoveMonster ³¡³­ÈÄ ½º½º·Î DestroyÇÔ)
-        monster._monsterAttackAction -= MonsterAttackTarget; //¸ó½ºÅÍ°¡ ¼ºº® °ø°İÇÒ¶§ delegate event
+        //â–¼ì´ë²¤íŠ¸ì™€ ë¦¬ìŠ¤íŠ¸ì—ì„œ ì‚­ì œ
+        monster._monsterDeadNotified -= RemoveMonster; //ëª¬ìŠ¤í„°ì— ë“¤ì–´ìˆëŠ” ì´ë²¤íŠ¸ ì œê±° (ëª¬ìŠ¤í„°ëŠ” RemoveMonster ëë‚œí›„ ìŠ¤ìŠ¤ë¡œ Destroyí•¨)
+        monster._monsterAttackAction -= MonsterAttackTarget; //ëª¬ìŠ¤í„°ê°€ ì„±ë²½ ê³µê²©í• ë•Œ delegate event
         AliveMonsterRemove(monster);
 
-        //¡åStageManager¿¡ ³²Àº ¸ó½ºÅÍ °¹¼ö¸¦ ³Ñ°ÜÁØ´Ù
+        //â–¼StageManagerì— ë‚¨ì€ ëª¬ìŠ¤í„° ê°¯ìˆ˜ë¥¼ ë„˜ê²¨ì¤€ë‹¤
         NotifyChangeMonsterCount();
     }
     /// <summary>
-    /// StageManager¿¡ ³²Àº ¸ó½ºÅÍ °¹¼ö¸¦ ³Ñ°ÜÁØ´Ù
+    /// StageManagerì— ë‚¨ì€ ëª¬ìŠ¤í„° ê°¯ìˆ˜ë¥¼ ë„˜ê²¨ì¤€ë‹¤
     /// </summary>
     private void NotifyChangeMonsterCount()
     {
-        //¡å³²Àº ¸ó½ºÅÍÀÇ °¹¼ö¸¦ StageManager·Î Àü´Ş
+        //â–¼ë‚¨ì€ ëª¬ìŠ¤í„°ì˜ ê°¯ìˆ˜ë¥¼ StageManagerë¡œ ì „ë‹¬
         //int remainMonster = ReturnCurrentMonsterCount();
-        //_notifiedMonsterCount.Invoke(remainMonster); //ÇöÀç ³²Àº ¸ó½ºÅÍÀÇ Á¤º¸¸¦ StageManager¿¡ ½÷ÁØ´Ù(¾ø¾îÁú¶§¸¶´Ù)
+        //_notifiedMonsterCount.Invoke(remainMonster); //í˜„ì¬ ë‚¨ì€ ëª¬ìŠ¤í„°ì˜ ì •ë³´ë¥¼ StageManagerì— ì´ì¤€ë‹¤(ì—†ì–´ì§ˆë•Œë§ˆë‹¤)
         _notifyMonsterCount?.NotifieyRemainMonsterCount();
     }
     /// <summary>
-    /// _aliveMonsters Ãß°¡ÇÒ¶§´Â ¹«Á¶°Ç ÀÌº¥Æ® ½ÇÇàµÇ¾î¾ßÇØ¼­ Ãß°¡
+    /// _aliveMonsters ì¶”ê°€í• ë•ŒëŠ” ë¬´ì¡°ê±´ ì´ë²¤íŠ¸ ì‹¤í–‰ë˜ì–´ì•¼í•´ì„œ ì¶”ê°€
     /// </summary>
     /// <param name="mon"></param>
     private void AliveMonsterAdd(Monster mon)
     {
-        _aliveMonsters.Add(mon); //°ü¸®ÇÏ±â À§ÇØ ¸®½ºÆ®¿¡ Ãß°¡
+        _aliveMonsters.Add(mon); //ê´€ë¦¬í•˜ê¸° ìœ„í•´ ë¦¬ìŠ¤íŠ¸ì— ì¶”ê°€
         _notifiedMonsterMake?.Invoke(_aliveMonsters);
     }
     /// <summary>
-    /// _aliveMonsters »èÁ¦ÇÒ¶§´Â ¹«Á¶°Ç ÀÌº¥Æ® ½ÇÇàµÇ¾î¾ßÇØ¼­ Ãß°¡
+    /// _aliveMonsters ì‚­ì œí• ë•ŒëŠ” ë¬´ì¡°ê±´ ì´ë²¤íŠ¸ ì‹¤í–‰ë˜ì–´ì•¼í•´ì„œ ì¶”ê°€
     /// </summary>
     /// <param name="mon"></param>
     private void AliveMonsterRemove(Monster mon)
     {
-        _aliveMonsters.Remove(mon); //¸®½ºÆ®¿¡¼­µµ »èÁ¦ÇÑ´Ù
+        _aliveMonsters.Remove(mon); //ë¦¬ìŠ¤íŠ¸ì—ì„œë„ ì‚­ì œí•œë‹¤
         _notifiedMonsterMake?.Invoke(_aliveMonsters);
     }
 
-    private Transform FindUiRoot()//Äµ¹ö½º¿¡¼­ UIRoot¶ó´Â ÅÂ±×¸¦ °¡Áø À§Ä¡¿¡ »ı¼ºÇÏ±â À§ÇØ »ç¿ë
+    private Transform FindUiRoot()//ìº”ë²„ìŠ¤ì—ì„œ UIRootë¼ëŠ” íƒœê·¸ë¥¼ ê°€ì§„ ìœ„ì¹˜ì— ìƒì„±í•˜ê¸° ìœ„í•´ ì‚¬ìš©
     {
-        //ÅÂ±×·Î Ã£±â -> ¾À¿¡¼­ "UIRoot" ÅÂ±×¸¦ ºÙ¿©µÎ¸é °¡Àå ºü¸§
+        //íƒœê·¸ë¡œ ì°¾ê¸° -> ì”¬ì—ì„œ "UIRoot" íƒœê·¸ë¥¼ ë¶™ì—¬ë‘ë©´ ê°€ì¥ ë¹ ë¦„
         GameObject tagged = GameObject.FindWithTag("UIRoot");
         if (tagged != null)
             return tagged.transform;
 
-        Debug.Log("ÅÂ±× ¾ÈÀâÈû. ¸ó½ºÅÍ »ı¼º¾ÈµÇ¾ú½À´Ï´Ù");
+        Debug.Log("íƒœê·¸ ì•ˆì¡í˜. ëª¬ìŠ¤í„° ìƒì„±ì•ˆë˜ì—ˆìŠµë‹ˆë‹¤");
         return null;
     }
 
-    //¡å ¾Æ·¡´Â °¢°¢ÀÇ ½ºÅ©¸³Æ®µéÀÌ AwakeµÉ¶§ ÀÚµ¿À¸·Î MonsterManager¿¡ Á¤º¸¸¦ ÁÖµµ·Ï µ¿ÀûÀ¸·Î ¼³Á¤
+    //â–¼ ì•„ë˜ëŠ” ê°ê°ì˜ ìŠ¤í¬ë¦½íŠ¸ë“¤ì´ Awakeë ë•Œ ìë™ìœ¼ë¡œ MonsterManagerì— ì •ë³´ë¥¼ ì£¼ë„ë¡ ë™ì ìœ¼ë¡œ ì„¤ì •
     public void SetMonsterTargetInfo(MonsterTarget target)
     {
         _monsterTarget = target;

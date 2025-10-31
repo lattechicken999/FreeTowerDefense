@@ -1,4 +1,5 @@
-﻿using TMPro;
+﻿using System.Collections;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
@@ -34,11 +35,15 @@ public partial class UIManager : Singleton<UIManager>, ICashObserver,IStageInfo
     private Transform _sellUiButtonTransform;
     private Button _sellUiButton;
     private Ray ray;
-
+    private int _targetWallet;
+    private int _curWallet;
+    private WaitForSeconds _waitSeconds;
+    private Coroutine _walletUpdateCuroutine;
     public void NotifyChangeGold(int leftWallet)
     {
         //UI 가 변경됨
-        _WalletInfo.text = leftWallet.ToString();
+        //_WalletInfo.text = leftWallet.ToString();
+        _targetWallet = leftWallet;
     }
 
     public void NotifyStageInfo(string Text)
@@ -87,6 +92,28 @@ public partial class UIManager : Singleton<UIManager>, ICashObserver,IStageInfo
         _sellUiButtonTransform = _sellUiInst.transform.GetChild(0);
         _sellUiButton = _sellUiButtonTransform.GetComponent<Button>();
     }
+
+    /// <summary>
+    /// 1단위씩 오르고 내리게 수정
+    /// </summary>
+    IEnumerator SlowRigingWallet()
+    {
+        while (true)
+        {
+            if (_curWallet > _targetWallet)
+            {
+                _curWallet--;
+                _WalletInfo.text = (_curWallet).ToString();
+            }
+            else if (_curWallet < _targetWallet)
+            {
+                _curWallet++;
+                _WalletInfo.text = (_curWallet).ToString();
+            }
+            yield return _waitSeconds;
+        }
+
+    }
 }
 
 public partial class UIManager : Singleton<UIManager>, ICashObserver
@@ -109,7 +136,8 @@ public partial class UIManager : Singleton<UIManager>, ICashObserver
         }
         InitSellUiCanvas();
         _camera = Camera.main;
-
+        _curWallet = 0;
+        _targetWallet = 0;
 
     }
 
@@ -125,15 +153,22 @@ public partial class UIManager : Singleton<UIManager>, ICashObserver
         _returnMenuButton?.onClick.AddListener(GameManager.Instance.MainMenuButton);
 
         NotifyChangeGold(GoldManager.Instance.Wallet);
+        //지갑 업데이트 용 코루틴
+        _waitSeconds = new WaitForSeconds(0.02f);
+        _walletUpdateCuroutine = StartCoroutine(SlowRigingWallet());
     }
     private void Update()
     {
         GetSelectUnit();
+        SlowRigingWallet();
     }
     private void OnDisable()
     {
         //골드메니저 구독 해제 필요
         GoldManager.Instance.UnregisterObserver(this);
         _sellUiInst = null;
+
+        //코루틴 해제
+        StopCoroutine(_walletUpdateCuroutine);
     }
 }

@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -28,7 +28,7 @@ public class SoundManager : Singleton<SoundManager>
     }
 
     /// <summary>
-    /// È£Ãâ½Ã¸¶´Ù ¹İÀüµÊ
+    /// í˜¸ì¶œì‹œë§ˆë‹¤ ë°˜ì „ë¨
     /// </summary>
     public void MuteBackgroundSound()
     {
@@ -39,15 +39,15 @@ public class SoundManager : Singleton<SoundManager>
     }
 
     /// <summary>
-    /// UI »ç¿îµå µğ½ºÇÃ·¹ÀÌ¿ë ¸Ş¼­µå
-    /// UISoundClipEnum ÀÇ °ªÀ» ¹ŞÀ¸¸é ÀúÀåµÇ¾î ÀÖ´Â ¹è¿­ÀÇ Å¬¸³À» ÇÃ·¹ÀÌÇØÁÜ
+    /// UI ì‚¬ìš´ë“œ ë””ìŠ¤í”Œë ˆì´ìš© ë©”ì„œë“œ
+    /// UISoundClipEnum ì˜ ê°’ì„ ë°›ìœ¼ë©´ ì €ì¥ë˜ì–´ ìˆëŠ” ë°°ì—´ì˜ í´ë¦½ì„ í”Œë ˆì´í•´ì¤Œ
     /// </summary>
-    /// <param name="selUiClip">UISoundClipEnum.cs Çü½Ä Âü°í</param>
+    /// <param name="selUiClip">UISoundClipEnum.cs í˜•ì‹ ì°¸ê³ </param>
     public void PlayUiSound(UISoundClipEnum selUiClip)
     {
         ChageUiAudioClip(selUiClip);
         _uiAudioSource.Play();
-        ResetUiAudioClip();
+        
     }
 
     private void ChageUiAudioClip(UISoundClipEnum selUiClip)
@@ -58,9 +58,5 @@ public class SoundManager : Singleton<SoundManager>
             return;
         }
         _uiAudioSource.clip =  _uiClips[(int)selUiClip]; ;
-    }
-    private void ResetUiAudioClip()
-    {
-        _uiAudioSource.clip = null;
     }
 }

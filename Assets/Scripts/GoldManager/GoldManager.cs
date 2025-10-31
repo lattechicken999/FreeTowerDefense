@@ -1,16 +1,16 @@
-using System;
+ï»¿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-// ¼öÁ¤ ÇÊ¿ä »çÇ× enum¾È¿¡ À¯´Ö°ú ¸ó½ºÅÍ ´Ù¸¥ csÆÄÀÏ ¸¸µé°í »èÁ¦, µñ¼Å³Ê¸®¿¡ º¸»ó ¼öÁ¤, ÆÇ¸Å ±İ¾× Á¶Á¤
+// ìˆ˜ì • í•„ìš” ì‚¬í•­ enumì•ˆì— ìœ ë‹›ê³¼ ëª¬ìŠ¤í„° ë‹¤ë¥¸ csíŒŒì¼ ë§Œë“¤ê³  ì‚­ì œ, ë”•ì…”ë„ˆë¦¬ì— ë³´ìƒ ìˆ˜ì •, íŒë§¤ ê¸ˆì•¡ ì¡°ì •
 /// <summary>
-/// ÀçÈ­¸¦ °ü¸®ÇÏ´Â ¸Å´ÏÀú Å¬·¡½º, ¸ó½ºÅÍ Ã³Ä¡ º¸»ó, À¯´Ö ±¸¸Å ¹× ÆÇ¸Å½Ã ÀçÈ­ º¯°æ
+/// ì¬í™”ë¥¼ ê´€ë¦¬í•˜ëŠ” ë§¤ë‹ˆì € í´ë˜ìŠ¤, ëª¬ìŠ¤í„° ì²˜ì¹˜ ë³´ìƒ, ìœ ë‹› êµ¬ë§¤ ë° íŒë§¤ì‹œ ì¬í™” ë³€ê²½
 /// </summary>
 public class GoldManager : Singleton<GoldManager>
 {
     /// <summary>
-    /// ¸ó½ºÅÍ ÀÌ¸§ ¿­°ÅÇü
+    /// ëª¬ìŠ¤í„° ì´ë¦„ ì—´ê±°í˜•
     /// </summary>
     public enum MonsterNameEnum
     {
@@ -21,15 +21,15 @@ public class GoldManager : Singleton<GoldManager>
         _End
     }
     /// <summary>
-    /// ÇöÀç º¸À¯ÁßÀÎ ÀçÈ­
+    /// í˜„ì¬ ë³´ìœ ì¤‘ì¸ ì¬í™”
     /// </summary>
     private int _gold = 100;
 
     private List<ICashObserver> _goldObservers = new List<ICashObserver>();
 
     /// <summary>
-    /// ¸ŞÀÎ ÀçÈ­ÀÎ °ñµå ÇÁ·ÎÆÛÆ¼
-    /// °ªÀÌ 0 ¾Æ·¡°¡ µÇÁö ¾Êµµ·Ï if¹® »ç¿ë
+    /// ë©”ì¸ ì¬í™”ì¸ ê³¨ë“œ í”„ë¡œí¼í‹°
+    /// ê°’ì´ 0 ì•„ë˜ê°€ ë˜ì§€ ì•Šë„ë¡ ifë¬¸ ì‚¬ìš©
     /// </summary>
     public int Wallet
     {
@@ -52,7 +52,7 @@ public class GoldManager : Singleton<GoldManager>
     }
 
     /// <summary>
-    /// ¸ó½ºÅÍ Ã³Ä¡ º¸»ó Á¤º¸
+    /// ëª¬ìŠ¤í„° ì²˜ì¹˜ ë³´ìƒ ì •ë³´
     /// </summary>
     private Dictionary<MonsterNameEnum, int> _monsterGold = new Dictionary<MonsterNameEnum, int>()
     {
@@ -62,7 +62,7 @@ public class GoldManager : Singleton<GoldManager>
         { MonsterNameEnum.Ghost, 2 }
     };
     /// <summary>
-    /// À¯´Öº° ±¸¸Å ºñ¿ë Á¤º¸
+    /// ìœ ë‹›ë³„ êµ¬ë§¤ ë¹„ìš© ì •ë³´
     /// </summary>
     private Dictionary<UnitEnum, int> _unitGold = new Dictionary<UnitEnum, int>()
     {
@@ -73,43 +73,44 @@ public class GoldManager : Singleton<GoldManager>
 
 
     /// <summary>
-    /// ¸ó½ºÅÍ Ã³Ä¡ ½Ã ÀçÈ­¸¦ Ãß°¡ÇÏ´Â ¸Ş¼­µå
+    /// ëª¬ìŠ¤í„° ì²˜ì¹˜ ì‹œ ì¬í™”ë¥¼ ì¶”ê°€í•˜ëŠ” ë©”ì„œë“œ
     /// </summary>
-    /// <param name="monsterName">»ç¸ÁÇÑ ¸ó½ºÅÍÀÇ ÀÌ¸§</param>
+    /// <param name="monsterName">ì‚¬ë§í•œ ëª¬ìŠ¤í„°ì˜ ì´ë¦„</param>
     public void GoldAdd(MonsterNameEnum monsterName)
     {
         if (_monsterGold.TryGetValue(monsterName, out int reward))
         {
+            SoundManager.Instance.PlayUiSound(UISoundClipEnum.Cash);
             Wallet += reward;
         }
         else
         {
-            Debug.Log("µî·ÏµÇÁö ¾ÊÀº ¸ó½ºÅÍ");
+            Debug.Log("ë“±ë¡ë˜ì§€ ì•Šì€ ëª¬ìŠ¤í„°");
         }
     }
 
     /// <summary>
-    /// À¯´Ö ±¸¸Å½Ã ¸ŞÀÎ ÀçÈ­¸¦ Â÷°¨ÇÏ´Â ¸Ş¼­µå
+    /// ìœ ë‹› êµ¬ë§¤ì‹œ ë©”ì¸ ì¬í™”ë¥¼ ì°¨ê°í•˜ëŠ” ë©”ì„œë“œ
     /// </summary>
-    /// <param name="unitName">±¸¸ÅÇÑ À¯´Ö ÀÌ¸§</param>
+    /// <param name="unitName">êµ¬ë§¤í•œ ìœ ë‹› ì´ë¦„</param>
     public void UnitBuy(UnitEnum unitName)
     {
         if (_unitGold.TryGetValue(unitName, out int price))
         {
             Wallet -= price;
-            Debug.Log($"{unitName} ±¸¸Å");
+            Debug.Log($"{unitName} êµ¬ë§¤");
         }
         else
         {
-            Debug.Log("µî·ÏµÇÁö ¾ÊÀº À¯´Ö");
+            Debug.Log("ë“±ë¡ë˜ì§€ ì•Šì€ ìœ ë‹›");
         }
     }
 
     /// <summary>
-    /// À¯´Ö ÆÇ¸Å½Ã ¸ŞÀÎ ÀçÈ­ Ãß°¡
-    /// Áö±İÀº ÆÇ¸Å ±İ¾×Àº ¿ø·¡ °¡°İÀÇ 80%, ¼Ò¼öÁ¡Àº ¹İ¿Ã¸²ÇØ¼­ °è»ê
+    /// ìœ ë‹› íŒë§¤ì‹œ ë©”ì¸ ì¬í™” ì¶”ê°€
+    /// ì§€ê¸ˆì€ íŒë§¤ ê¸ˆì•¡ì€ ì›ë˜ ê°€ê²©ì˜ 80%, ì†Œìˆ˜ì ì€ ë°˜ì˜¬ë¦¼í•´ì„œ ê³„ì‚°
     /// </summary>
-    /// <param name="unitName">ÆÇ¸ÅÇÒ À¯´Ö ÀÌ¸§</param>
+    /// <param name="unitName">íŒë§¤í•  ìœ ë‹› ì´ë¦„</param>
     public void UnitSell(UnitEnum unitName)
     {
         if (_unitGold.TryGetValue(unitName, out int price))
@@ -120,18 +121,18 @@ public class GoldManager : Singleton<GoldManager>
     }
 
     /// <summary>
-    /// ÃÊ±âÈ­½Ã È£Ãâ
+    /// ì´ˆê¸°í™”ì‹œ í˜¸ì¶œ
     /// </summary>
     protected override void init()
     {
-        // ºÎ¸ğ init È£Ãâ
+        // ë¶€ëª¨ init í˜¸ì¶œ
         base.init();
         //_gold = 100;
         //NotifyChangeGold();
     }
 
     /// <summary>
-    /// ±¸µ¶
+    /// êµ¬ë…
     /// </summary>
     public void RegistrationObserver(ICashObserver cashObserver)
     {
@@ -139,14 +140,14 @@ public class GoldManager : Singleton<GoldManager>
     }
 
     /// <summary>
-    /// ±¸µ¶ ÇØÁ¦
+    /// êµ¬ë… í•´ì œ
     /// </summary>
     public void UnregisterObserver(ICashObserver cashObserver)
     {
         _goldObservers.Remove(cashObserver);
     }
     /// <summary>
-    /// Áö°©ÀÌ ¹Ù²ğ ¶§¸¶´Ù ¾Ë¸² ¿ªÇÒ
+    /// ì§€ê°‘ì´ ë°”ë€” ë•Œë§ˆë‹¤ ì•Œë¦¼ ì—­í• 
     /// </summary>
     private void NotifyChangeGold()
     {

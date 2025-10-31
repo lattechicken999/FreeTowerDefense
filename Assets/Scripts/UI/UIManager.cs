@@ -127,7 +127,7 @@ public partial class UIManager : Singleton<UIManager>, ICashObserver
 
 
     }
-    private void OnDestroy()
+    private void OnDisable()
     {
         //골드메니저 구독 해제 필요
         GoldManager.Instance.UnregisterObserver(this);

@@ -9,7 +9,7 @@ public class Wizard : Piece
 
     protected override void Start()
     {
-        _attackPoint = 15;//마법사는 공격력 얼마나 할지
+        _attackPoint = 9;//마법사는 공격력 얼마나 할지
         _unitName = UnitEnum.Wizard;
         base.Start();
         _anima = GetComponent<Animator>();

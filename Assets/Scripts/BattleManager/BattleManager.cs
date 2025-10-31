@@ -146,6 +146,10 @@ public class BattleManager : Singleton<BattleManager>
     public float Damage(float attack, float defense)
     {
         float damage = attack - defense;
+        if (damage < 0)
+        {
+            damage = 0;
+        }
         return damage;
     }
 
@@ -158,9 +162,11 @@ public class BattleManager : Singleton<BattleManager>
     /// <returns></returns>
     public int MonsterAttack(int attack, int defense, int hp)
     {
-        hp -= attack - defense;
-        int wallHp = hp;
-
+        int wallHp = hp -(attack - defense);
+        if(wallHp<0)
+        {
+            wallHp = 0;
+        }
         return wallHp;
     }
 }

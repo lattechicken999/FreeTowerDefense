@@ -180,7 +180,7 @@ public class StageManager : Singleton<StageManager>, IMonsterCount
     /// <param name="count">남은 몬스터 개수</param>
     public void NotifieyRemainMonsterCount(int count)
     {
-        string msg = $"Stage: {StageNum}, remain Monster: {count}";
+        string msg = $"Stage: {StageNum}, Monster: ({count}/{_sponNum})";
         _notifyStageInfoForUI?.NotifyStageInfo(msg); //UI에 스테이지 정보 알림
         
         if(count == 0 && _isStageClear && _monsterTarget.Hp != 0)

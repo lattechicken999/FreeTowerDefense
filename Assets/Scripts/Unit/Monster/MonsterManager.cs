@@ -181,6 +181,7 @@ public class MonsterManager : Singleton<MonsterManager>
         mon._monsterDeadNotified += RemoveMonster; //몬스터가 죽을때 하는 deleate event 정의
         mon._monsterAttackAction += MonsterAttackTarget; //몬스터가 성벽 공격할때 delegate event
         AliveMonsterAdd(mon); //_aliveMonster에 추가
+        NotifyChangeMonsterCount(); //스테이지에 몬스터 갯수 알려줌
         return monsterInstance;
     }
 
@@ -238,6 +239,15 @@ public class MonsterManager : Singleton<MonsterManager>
         monster._monsterDeadNotified -= RemoveMonster; //몬스터에 들어있는 이벤트 제거 (몬스터는 RemoveMonster 끝난후 스스로 Destroy함)
         monster._monsterAttackAction -= MonsterAttackTarget; //몬스터가 성벽 공격할때 delegate event
         AliveMonsterRemove(monster);
+
+        //▼StageManager에 남은 몬스터 갯수를 넘겨준다
+        NotifyChangeMonsterCount();
+    }
+    /// <summary>
+    /// StageManager에 남은 몬스터 갯수를 넘겨준다
+    /// </summary>
+    private void NotifyChangeMonsterCount()
+    {
         //▼남은 몬스터의 갯수를 StageManager로 전달
         int remainMonster = ReturnCurrentMonsterCount();
         //_notifiedMonsterCount.Invoke(remainMonster); //현재 남은 몬스터의 정보를 StageManager에 쏴준다(없어질때마다)

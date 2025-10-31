@@ -13,7 +13,7 @@ public class StageManager : Singleton<StageManager>, IMonsterCount
     private MonsterTarget _monsterTarget;   //몬스터가 도착지점에 도달해서 공격하는 대상
     private List<GoldManager.MonsterNameEnum> _stageMonsterList; //Stage에서 소환할 수 있는 몬스터 스크립트에서 불러옴
     public IStageInfo _notifyStageInfoForUI; //UIManager 에서 스테이지 정보 얻어올수 있게 추가
-    private bool _isStageClear; //스테이지 성공 여부
+    private bool _isSpawnFinished; //스테이지 성공 여부
     private WaitForSeconds _stageStartDelay; //다음 스테이지 진행 시 지연시간 설정 위해서 선언
 
     private int _stageNum = 1; //현재 Stage 번호
@@ -25,6 +25,8 @@ public class StageManager : Singleton<StageManager>, IMonsterCount
 
     private int _sponNum; //몬스터 소환 갯수
     private int _sponDelay; //몬스터 소환 지연시간
+    private int _spawnRemainCount; // 현재 stage에 남은 몬스터 개수
+    private int _deathMonsterCount = -1; // 현재 stage에서 죽은 몬스터 개수
 
     protected override void Awake()
     {
@@ -74,7 +76,7 @@ public class StageManager : Singleton<StageManager>, IMonsterCount
     //만약 몬스터 규모가 0이 되면
     public void StageStart()
     {
-        _isStageClear = false;
+        _isSpawnFinished = false;
         MonsterManager.Instance?.StartMonsterRun();
     }
     private void Start()
@@ -107,7 +109,12 @@ public class StageManager : Singleton<StageManager>, IMonsterCount
     /// <param name="isSpawned">소환된 상태인지</param>
     private void AllMonsterSpawned(bool isSpawned)
     {
-        _isStageClear = isSpawned; //스테이지 클리어 상태
+        _isSpawnFinished = isSpawned; //스테이지 클리어 상태
+        CheckStageClear();
+    }
+    private void GetDeathMonsterCount(int count)
+    {
+
     }
 
     /// <summary>
@@ -180,12 +187,18 @@ public class StageManager : Singleton<StageManager>, IMonsterCount
     /// 남은 몬스터와 스테이지 클리어 여부를 체크해서 클리어 여부를 체크한다
     /// </summary>
     /// <param name="count">남은 몬스터 개수</param>
-    public void NotifieyRemainMonsterCount(int count)
+    public void NotifieyRemainMonsterCount()
     {
-        string msg = $"Stage: {StageNum}, Monster: ({count}/{_sponNum})";
+        _deathMonsterCount++;
+
+        string msg = $"Stage: {StageNum}, ReMain Monster: {_sponNum - _deathMonsterCount}";
         _notifyStageInfoForUI?.NotifyStageInfo(msg); //UI에 스테이지 정보 알림
-        
-        if(count == 0 && _isStageClear && _monsterTarget.Hp != 0)
+        CheckStageClear();
+
+    }
+    private void CheckStageClear()
+    {
+        if (_spawnRemainCount == 0 && _isSpawnFinished && _monsterTarget.Hp != 0)
         {
             Debug.Log("스테이지 클리어 신호 동작");
             StageSuccess();

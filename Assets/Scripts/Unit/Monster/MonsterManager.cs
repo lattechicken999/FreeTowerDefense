@@ -226,7 +226,7 @@ public class MonsterManager : Singleton<MonsterManager>
         //▼삭제 전, 어떻게 죽었는지 확인 후, 처리
         if(monster._isKilledByPlayer) //플레이어에 의해 죽었다면?
         {
-            ByPlayerKilled();
+            ByPlayerKilled(monster);
             _monsterDeadNotifiedById?.Invoke(monster._monsterId);
         }
 
@@ -260,8 +260,10 @@ public class MonsterManager : Singleton<MonsterManager>
         _notifiedMonsterMake?.Invoke(_aliveMonsters);
     }
 
-    private void ByPlayerKilled()
+    private void ByPlayerKilled(Monster monster)
     {
+        // 적 처치시 골드 증가
+        GoldManager.Instance.GoldAdd(monster._monsterId);
         //플레이어가 죽였을때 행동 저장. 돈을 증가시킨다 등
     }
 

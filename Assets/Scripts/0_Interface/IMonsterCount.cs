@@ -4,5 +4,5 @@ using UnityEngine;
 
 public interface IMonsterCount
 {
-    public void NotifieyRemainMonsterCount(int count);
+    public void NotifieyRemainMonsterCount();
 }

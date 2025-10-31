@@ -17,9 +17,8 @@ public class MonsterManager : Singleton<MonsterManager>
     [SerializeField] float _hpBarHeightGap = 1.0f; //UI hp바 아래 위 방향으로 위치 조절
 
     //▼이벤트
-    public event Action<bool> _notifyAllMonsterSpawn;
+    public event Action<bool> _notifyAllMonsterSpawn; //StageManager에서 사용. 더 소환할 몬스터가 있는지 알리는 이벤트
     private IMonsterCount _notifyMonsterCount; //StageManager에서 사용. 몬스터 갯수 변경될때마다 알리는 이벤트
-    private IMonsterWaveEnd _notifyWaveEnd;
     public event Action<GoldManager.MonsterNameEnum> _monsterDeadNotifiedById; //GoldManager.cs에 죽은 몬스터 ID로 재화관리하기 위해서
     public event Action<List<Monster>> _notifiedMonsterMake; //BattleManager에서 사용. 몬스터 자체를 넘겨줌
     //코루틴용 private 필드
@@ -33,15 +32,21 @@ public class MonsterManager : Singleton<MonsterManager>
     //[SerializeField] private MonsterTarget _mosterAttackTarget;
     private MonsterTarget _monsterTarget;
 
+    /// <summary>
+    /// StageManager에서 구독할 수 있도록 메서드 추가. 몬스터 개수를 보내주기 위해 사용.
+    /// </summary>
+    /// <param name="subscriber"></param>
     public void SubScribeMonsterCount(IMonsterCount subscriber)
     {
         _notifyMonsterCount = subscriber;
     }
+    /// <summary>
+    /// StageManager에서 구독한 내용을 끊는다.
+    /// </summary>
     public void UnSubScribeMonsterCount()
     {
         _notifyMonsterCount = null;
     }
-    //(안될듯)오브젝트풀로 생성하려 했으나.. 몬스터가 하나만 생성되는것이 아닌 여러개가 생성되기때문에 그러면 List를 Prefab갯수만큼 들고있어야함. 
     protected override void Awake()
     {
         base.Awake(); //싱글톤 체크
@@ -226,7 +231,6 @@ public class MonsterManager : Singleton<MonsterManager>
         //▼삭제 전, 어떻게 죽었는지 확인 후, 처리
         if(monster._isKilledByPlayer) //플레이어에 의해 죽었다면?
         {
-            ByPlayerKilled(monster);
             _monsterDeadNotifiedById?.Invoke(monster._monsterId);
         }
 
@@ -238,8 +242,6 @@ public class MonsterManager : Singleton<MonsterManager>
         int remainMonster = ReturnCurrentMonsterCount();
         //_notifiedMonsterCount.Invoke(remainMonster); //현재 남은 몬스터의 정보를 StageManager에 쏴준다(없어질때마다)
         _notifyMonsterCount?.NotifieyRemainMonsterCount(remainMonster);
-        //▼만약 몬스터갯수가 0이고, 더이상 소환할 몬스터가 없으면 wave종료를 StageManager에 쏴준다
-        _notifyWaveEnd?.MonsterWaveEnd();
     }
     /// <summary>
     /// _aliveMonsters 추가할때는 무조건 이벤트 실행되어야해서 추가
@@ -258,13 +260,6 @@ public class MonsterManager : Singleton<MonsterManager>
     {
         _aliveMonsters.Remove(mon); //리스트에서도 삭제한다
         _notifiedMonsterMake?.Invoke(_aliveMonsters);
-    }
-
-    private void ByPlayerKilled(Monster monster)
-    {
-        // 적 처치시 골드 증가
-        GoldManager.Instance.GoldAdd(monster._monsterId);
-        //플레이어가 죽였을때 행동 저장. 돈을 증가시킨다 등
     }
 
     private Transform FindUiRoot()//캔버스에서 UIRoot라는 태그를 가진 위치에 생성하기 위해 사용

@@ -11,7 +11,6 @@ public class PieceSpawner : MonoBehaviour
     [SerializeField] GameObject _wizardPrefeb;
    
 
-    private WaitForNextFrameUnit _delay;
     public void CreateWarrior(Vector3 position,int level=1)
     {
         GameObject piece = Instantiate(_warriorPrefeb, position, Quaternion.identity);
@@ -21,7 +20,7 @@ public class PieceSpawner : MonoBehaviour
 
     public void CreateWizard(Vector3 position, int level = 1)
     {
-        GameObject piece = Instantiate(_warriorPrefeb, position, Quaternion.identity);
+        GameObject piece = Instantiate(_wizardPrefeb, position, Quaternion.identity);
         piece.GetComponent<Piece>().InifalPiece();
     }
    

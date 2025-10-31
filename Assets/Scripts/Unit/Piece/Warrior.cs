@@ -29,7 +29,7 @@ public class Warrior : Piece
     /// </summary>
     private GameObject TargetFirstMonster()
     {
-        if (BattleManager.Instance == null)
+        if (BattleManager.Instance != null)
         {
             return BattleManager.Instance.Target(_attackRange);
         }

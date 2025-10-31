@@ -21,6 +21,7 @@ public class MonsterManager : Singleton<MonsterManager>
     private IMonsterCount _notifyMonsterCount; //StageManager에서 사용. 몬스터 갯수 변경될때마다 알리는 이벤트
     //public event Action<GoldManager.MonsterNameEnum> _monsterDeadNotifiedById; //GoldManager.cs에 죽은 몬스터 ID로 재화관리하기 위해서
     public event Action<List<Monster>> _notifiedMonsterMake; //BattleManager에서 사용. 몬스터 자체를 넘겨줌
+    
     //코루틴용 private 필드
     private WaitForSeconds _delay; //StageManager에서 Set하면 설정되는 몬스터 생성 딜레이
     private Coroutine _coroutine; //코루틴 중복실행때문에 쓸까 하는데 안써도될듯? 좀 생각해봐야함
@@ -155,6 +156,7 @@ public class MonsterManager : Singleton<MonsterManager>
     {
         _remainSpawnCount = spawnCount; //남은 몬스터 체크해서 wave종료되었는지 파악
         _notifyAllMonsterSpawn.Invoke(false); //남은 몬스터 있음
+        StageManager.Instance.NotifieyRemainMonsterCount();
         for (int index = 0; index < spawnCount; index++)
         {
             _remainSpawnCount--;
@@ -181,7 +183,6 @@ public class MonsterManager : Singleton<MonsterManager>
         mon._monsterDeadNotified += RemoveMonster; //몬스터가 죽을때 하는 deleate event 정의
         mon._monsterAttackAction += MonsterAttackTarget; //몬스터가 성벽 공격할때 delegate event
         AliveMonsterAdd(mon); //_aliveMonster에 추가
-        NotifyChangeMonsterCount(); //스테이지에 몬스터 갯수 알려줌
         return monsterInstance;
     }
 
@@ -250,9 +251,9 @@ public class MonsterManager : Singleton<MonsterManager>
     private void NotifyChangeMonsterCount()
     {
         //▼남은 몬스터의 갯수를 StageManager로 전달
-        int remainMonster = ReturnCurrentMonsterCount();
+        //int remainMonster = ReturnCurrentMonsterCount();
         //_notifiedMonsterCount.Invoke(remainMonster); //현재 남은 몬스터의 정보를 StageManager에 쏴준다(없어질때마다)
-        _notifyMonsterCount?.NotifieyRemainMonsterCount(remainMonster);
+        _notifyMonsterCount?.NotifieyRemainMonsterCount();
     }
     /// <summary>
     /// _aliveMonsters 추가할때는 무조건 이벤트 실행되어야해서 추가

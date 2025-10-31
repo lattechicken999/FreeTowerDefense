@@ -110,14 +110,15 @@ public partial class UIManager : Singleton<UIManager>, ICashObserver
         InitSellUiCanvas();
         _camera = Camera.main;
 
-        //골드메니저에 ICashObserver 구독 필요
-        GoldManager.Instance.RegistrationObserver(this);
-        //스테이지 인포 구독 필요
-        StageManager.Instance.SubscribeStageInfo(this);
+
     }
 
     private void Start()
     {
+        //골드메니저에 ICashObserver 구독 필요
+        GoldManager.Instance.RegistrationObserver(this);
+        //스테이지 인포 구독 필요
+        StageManager.Instance.SubscribeStageInfo(this);
         //버튼이벤트 연결
         _buyUiWarrior?.onClick.AddListener(() => PlaceablePointsCheck.Instance.CommandChackPlaceable(UnitEnum.Warrior));
         _buyUiWizard?.onClick.AddListener(() => PlaceablePointsCheck.Instance.CommandChackPlaceable(UnitEnum.Wizard));

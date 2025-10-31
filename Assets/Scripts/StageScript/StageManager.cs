@@ -25,7 +25,6 @@ public class StageManager : Singleton<StageManager>, IMonsterCount
 
     private int _sponNum; //몬스터 소환 갯수
     private int _sponDelay; //몬스터 소환 지연시간
-    private int _spawnRemainCount; // 현재 stage에 남은 몬스터 개수
     private int _deathMonsterCount = -1; // 현재 stage에서 죽은 몬스터 개수
 
     protected override void Awake()
@@ -77,7 +76,7 @@ public class StageManager : Singleton<StageManager>, IMonsterCount
     public void StageStart()
     {
         _isSpawnFinished = false;
-        _deathMonsterCount = 0;
+        _deathMonsterCount = -1;
         MonsterManager.Instance?.StartMonsterRun();
     }
     private void Start()
@@ -183,6 +182,7 @@ public class StageManager : Singleton<StageManager>, IMonsterCount
         _sponNum = _stageMonsterList.Count;
         MonsterManager._instance?.SetMonstersFromStageManager(_sponNum, _stageMonsterList, _sponDelay);
     }
+
     /// <summary>
     /// 해당 함수에서 현재 몬스터의 개수를 MonsterMager에서 받아옴
     /// 남은 몬스터와 스테이지 클리어 여부를 체크해서 클리어 여부를 체크한다
@@ -191,15 +191,13 @@ public class StageManager : Singleton<StageManager>, IMonsterCount
     public void NotifieyRemainMonsterCount()
     {
         _deathMonsterCount++;
-
         string msg = $"Stage: {StageNum}, ReMain Monster: {_sponNum - _deathMonsterCount}";
         _notifyStageInfoForUI?.NotifyStageInfo(msg); //UI에 스테이지 정보 알림
         CheckStageClear();
-
     }
     private void CheckStageClear()
     {
-        if ((_sponNum - _deathMonsterCount) == 0 && _isSpawnFinished && _monsterTarget.Hp != 0)
+        if ((_sponNum - _deathMonsterCount) == 0  && _monsterTarget.Hp != 0)
         {
             Debug.Log("스테이지 클리어 신호 동작");
             StageSuccess();

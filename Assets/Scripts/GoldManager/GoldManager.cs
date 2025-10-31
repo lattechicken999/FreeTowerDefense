@@ -106,6 +106,14 @@ public class GoldManager : Singleton<GoldManager>
         }
     }
 
+    public bool IsPossibleUnitBuy(UnitEnum unitName)
+    {
+        if (_unitGold.TryGetValue(unitName, out int price))
+        {
+            return (Wallet - price) >= 0;
+        }
+        return false;
+    }
     /// <summary>
     /// 유닛 판매시 메인 재화 추가
     /// 지금은 판매 금액은 원래 가격의 80%, 소수점은 반올림해서 계산

@@ -1,40 +1,40 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// ±â¹° ¹èÄ¡¿¡¼­ ±â¹°ÀÌ ¹èÄ¡ °¡´ÉÇÑÁö ¾Ë·ÁÁÖ´Â ±â´É
+/// ê¸°ë¬¼ ë°°ì¹˜ì—ì„œ ê¸°ë¬¼ì´ ë°°ì¹˜ ê°€ëŠ¥í•œì§€ ì•Œë ¤ì£¼ëŠ” ê¸°ëŠ¥
 /// </summary>
 public partial class PlaceablePointsCheck : Singleton<PlaceablePointsCheck>
 {
 
     private Dictionary<Transform,int> _childsDict;
 
-    //¹èÄ¡ °¡´ÉÇÑÁö ÀúÀåÇÏ´Â »óÅÂ ¹è¿­
+    //ë°°ì¹˜ ê°€ëŠ¥í•œì§€ ì €ì¥í•˜ëŠ” ìƒíƒœ ë°°ì—´
     private List<bool> _placeableStates;
 
-    //¼±ÅÃÁßÀÎ »óÅÂÀÎÁö È®ÀÎÇÏ´Â »óÅÂ °ª
+    //ì„ íƒì¤‘ì¸ ìƒíƒœì¸ì§€ í™•ì¸í•˜ëŠ” ìƒíƒœ ê°’
     private bool _isPlaceState;
 
-    //¸ŞÀÎ Ä«¸Ş¶ó¿ë
+    //ë©”ì¸ ì¹´ë©”ë¼ìš©
     private Camera _camera;
 
-    //¹èÄ¡ °¡´ÉÇÑ Àå¼Ò¿¡ ÀÌÆåÆ® Ç¥½Ã¿ë
+    //ë°°ì¹˜ ê°€ëŠ¥í•œ ì¥ì†Œì— ì´í™íŠ¸ í‘œì‹œìš©
     private GameObject _effect;
 
-    //¸¶¿ì½º¸¦ ¿Ã·ÁµĞ °÷ÀÌ ¹èÄ¡ °¡´ÉÇÑ °÷ÀÌ¶ó¸é, °¡Á®¿Ã ÀÎµ¦½º Á¤º¸
+    //ë§ˆìš°ìŠ¤ë¥¼ ì˜¬ë ¤ë‘” ê³³ì´ ë°°ì¹˜ ê°€ëŠ¥í•œ ê³³ì´ë¼ë©´, ê°€ì ¸ì˜¬ ì¸ë±ìŠ¤ ì •ë³´
     private int _selectedPlaceablPoint;
-    //¼±ÅÃµÈ °÷ÀÇ À§Ä¡ Á¤º¸
+    //ì„ íƒëœ ê³³ì˜ ìœ„ì¹˜ ì •ë³´
     private Transform _selectedPointTransform;
 
-    //»ı¼º ¿äÃ»ÇÑ Å¸ÀÔ ÀúÀå ¿ëµµ
+    //ìƒì„± ìš”ì²­í•œ íƒ€ì… ì €ì¥ ìš©ë„
     private UnitEnum _pieceType;
 
-    //place ¸¸ ·¹ÀÌÄÉ½ºÆ® µÉ¼ö ÀÖµµ·Ï ·¹ÀÌ¾î ¸¶½ºÆ®
+    //place ë§Œ ë ˆì´ì¼€ìŠ¤íŠ¸ ë ìˆ˜ ìˆë„ë¡ ë ˆì´ì–´ ë§ˆìŠ¤íŠ¸
     [SerializeField] private LayerMask _placeLayerMask;
-    //¹èÄ¡ °¡´ÉÇÑ Àå¼Ò°¡ ¸ÂÀ¸¸é Ç¥½ÃÇÏ´Â ÀÌÆåÆ®
+    //ë°°ì¹˜ ê°€ëŠ¥í•œ ì¥ì†Œê°€ ë§ìœ¼ë©´ í‘œì‹œí•˜ëŠ” ì´í™íŠ¸
     [SerializeField] private GameObject _placeEffect;
-    //¹èÄ¡ ÀÌÆåÆ® À§Ä¡ »ìÂ¦ À§·Î ¿Ã¸®±â ¿ë °¸
+    //ë°°ì¹˜ ì´í™íŠ¸ ìœ„ì¹˜ ì‚´ì§ ìœ„ë¡œ ì˜¬ë¦¬ê¸° ìš© ê°­
     [SerializeField] private Vector3 _effectGap;
 
     protected override void Awake()
@@ -63,7 +63,7 @@ public partial class PlaceablePointsCheck : Singleton<PlaceablePointsCheck>
         _selectedPlaceablPoint = -1;
         _selectedPointTransform = null;
 
-        //ÇÏÀ§ ¸ğµç ÀÚ½Ä °¡Á®¿À±â
+        //í•˜ìœ„ ëª¨ë“  ìì‹ ê°€ì ¸ì˜¤ê¸°
         for (int i =0;i < transform.childCount;i++)
         {
             _childsDict.Add(transform.GetChild(i), i);
@@ -114,26 +114,26 @@ public partial class PlaceablePointsCheck : Singleton<PlaceablePointsCheck>
         {
             if(_selectedPlaceablPoint < 0 )
             {
-                //¼±ÅÃµÈ °÷ÀÌ ¾øÀ¸¸é ±×³É Á¾·á
+                //ì„ íƒëœ ê³³ì´ ì—†ìœ¼ë©´ ê·¸ëƒ¥ ì¢…ë£Œ
                 return;
             }
-            //±â¹° ¹èÄ¡ ºÒ°¡´ÉÇÏ°Ô ¹Ù²Ş
+            //ê¸°ë¬¼ ë°°ì¹˜ ë¶ˆê°€ëŠ¥í•˜ê²Œ ë°”ê¿ˆ
             _placeableStates[_selectedPlaceablPoint] = false;
-            //±â¹° »ı¼º ¸í·ÉÀ» ½ºÆ÷³Ê¿¡°Ô º¸³¿
+            //ê¸°ë¬¼ ìƒì„± ëª…ë ¹ì„ ìŠ¤í¬ë„ˆì—ê²Œ ë³´ëƒ„
             switch(_pieceType)
             {
                 case UnitEnum.Warrior:
-                    PieceSpawner.Instance.CreateWarrior(_selectedPointTransform.position);
+                    _placeableStates[_selectedPlaceablPoint] = !PieceSpawner.Instance.CreateWarrior(_selectedPointTransform.position);
                     break;
                 case UnitEnum.Wizard:
-                    PieceSpawner.Instance.CreateWizard(_selectedPointTransform.position);
+                    _placeableStates[_selectedPlaceablPoint] = !PieceSpawner.Instance.CreateWizard(_selectedPointTransform.position);
                     break;
                 default:
                     break;
             }
             
 
-            //ÀÌÆåÆ® Á¾·á
+            //ì´í™íŠ¸ ì¢…ë£Œ
             _effect.SetActive(false);
             ComplateChackPlaceable();
         }
@@ -151,7 +151,7 @@ public partial class PlaceablePointsCheck : Singleton<PlaceablePointsCheck>
 
     private void LateUpdate()
     {
-        //¿ÀºêÁ§Æ® »ı¼º°ú µ¿½Ã¿¡ Sell ¹öÆ° Ã¼Å©°¡ È°¼ºÈ­ µÇ¾î »ı¼ºµÇ´Â ·ÎÁ÷ ¼ø¼­¸¦ ¸Ç µÚ·Î ¹Ì·ë
+        //ì˜¤ë¸Œì íŠ¸ ìƒì„±ê³¼ ë™ì‹œì— Sell ë²„íŠ¼ ì²´í¬ê°€ í™œì„±í™” ë˜ì–´ ìƒì„±ë˜ëŠ” ë¡œì§ ìˆœì„œë¥¼ ë§¨ ë’¤ë¡œ ë¯¸ë£¸
         if (_isPlaceState)
         {
             CheckPlaceable();

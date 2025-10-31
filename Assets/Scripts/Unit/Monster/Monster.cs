@@ -21,7 +21,7 @@ public class Monster : Unit
     [SerializeField] private float _rotationSpeed = 5.0f;
 
     //▼웨이포인트 설정
-    private float _moveSpeed = 1.0f;
+    [SerializeField] private float _moveSpeed = 1.0f;
     private Vector3[] _wayPointPositions; //웨이포인트는 Z축방향만 알면되니까 회전을 저장하자
     private int _currentWaypoint = 1; //현재 웨이포인트가 몇번째인지, 하나씩 지날때마다 +1
     //▼몬스터가 어떤 방식으로 죽었는지 (플레이어한테 죽었으면 돈줘야하는 등 차별점이 있어야해서 추가)

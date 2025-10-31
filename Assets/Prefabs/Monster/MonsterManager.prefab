@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6793539136268978780}
   - component: {fileID: 4212165105559548831}
-  - component: {fileID: 5868238094613569324}
   m_Layer: 0
   m_Name: MonsterManager
   m_TagString: Untagged
@@ -54,17 +53,3 @@ MonoBehaviour:
   _hpBarWidthSize: 250
   _hpBarHeightSize: 40
   _hpBarHeightGap: 0.5
-  _wayPointParent: {fileID: 0}
-  _mosterAttackTarget: {fileID: 0}
---- !u!114 &5868238094613569324
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 269679326858436582}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0aa2e5eb6982a71499f37da34d9dfd8d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

@@ -9,6 +9,9 @@ public class MonsterTarget : Unit
     public event Action _gameFailNotify; //StageManager에 전달. 성벽HP 0이되면 실패.
     public event Action<float> _monsterTargetHpChanged; //UIManager에 전달. 체력이 바뀌면 UI체력바에 전달
 
+    [SerializeField] private float _hpInit = 5.0f;
+    [SerializeField] private int _defenceInit;
+
     //▼상속받은 필드들 Get만 가능하도록 프로퍼티로
     public float Hp => _hp;
     public int DefensePoint => _defensePoint;
@@ -50,13 +53,22 @@ public class MonsterTarget : Unit
     private void SetThisForMonsterManager()
     {
         MonsterManager.Instance.SetMonsterTargetInfo(this);
+        StageManager.Instance.SetMonsterTargetInfo(this);
     }
     private void UnSetThisForMonsterManager()
     {
         MonsterManager.Instance.UnSetMonsterTargetInfo();
     }
     #endregion
-
+    private void Init()
+    {
+        _hp = _hpInit;
+        _defensePoint = _defenceInit;
+    }
+    private void Awake()
+    {
+        Init();
+    }
     private void Start()
     {
         SubScribeEvent(); //이벤트 구독시킴 (동적)

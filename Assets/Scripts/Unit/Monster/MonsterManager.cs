@@ -17,6 +17,7 @@ public class MonsterManager : Singleton<MonsterManager>
     [SerializeField] float _hpBarHeightGap = 1.0f; //UI hp바 아래 위 방향으로 위치 조절
 
     //▼이벤트
+    public event Action<bool> _notifyAllMonsterSpawn;
     private IMonsterCount _notifyMonsterCount; //StageManager에서 사용. 몬스터 갯수 변경될때마다 알리는 이벤트
     private IMonsterWaveEnd _notifyWaveEnd;
     public event Action<List<Monster>> _notifiedMonsterMake; //BattleManager에서 사용. 몬스터 자체를 넘겨줌
@@ -146,6 +147,7 @@ public class MonsterManager : Singleton<MonsterManager>
     IEnumerator SummonMonsterCoroutine(int spawnCount, List<GoldManager.MonsterNameEnum> monstersInfo)
     {
         _remainSpawnCount = spawnCount; //남은 몬스터 체크해서 wave종료되었는지 파악
+        _notifyAllMonsterSpawn.Invoke(false); //남은 몬스터 있음
         for (int index = 0; index < spawnCount; index++)
         {
             _remainSpawnCount--;
@@ -157,6 +159,10 @@ public class MonsterManager : Singleton<MonsterManager>
             //▼Monster를 따라다니는 체력바도 생성;
             CreateMonsterFollowHpBar(makedMonster, mon,index);
             yield return _delay;
+        }
+        if(_remainSpawnCount == 0)
+        {
+            _notifyAllMonsterSpawn.Invoke(true); //끝남
         }
     }
     private GameObject CreateMonster(List<GoldManager.MonsterNameEnum> monstersInfo,int index)

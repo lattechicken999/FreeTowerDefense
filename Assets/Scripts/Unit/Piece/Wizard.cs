@@ -4,17 +4,17 @@ using UnityEngine;
 
 public class Wizard : Piece
 {
-    [SerializeField] private List<GameObject> _monsterList;
     [SerializeField] private float _attackRange = 3f;
     
     private void Start()
     {
-              _attackPoint = 7;//마법사는 공격력 얼마나 할지
+        _attackPoint = 15;//마법사는 공격력 얼마나 할지
+        _unitName = UnitEnum.Wizard;
     }
     
     public override void Attack()
     {     
-       GameObject targetMonster = TargetFirstMonster();
+       targetMonster = TargetFirstMonster();
 
         if (targetMonster != null)
         {

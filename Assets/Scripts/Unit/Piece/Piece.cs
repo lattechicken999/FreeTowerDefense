@@ -7,18 +7,18 @@ public class Piece : Unit
 {
     [SerializeField,Range(0,2)] float _atteckCoolTime;
     
-    [SerializeField] UnitEnum _unitName;
-
     private WaitForSeconds _attackDelay;
     private Coroutine _autoCoroutine;
     private bool _isPlaced = false;
 
+    protected GameObject targetMonster;
     protected virtual int GetPrice() => 0;
-    protected GoldManager.UnitNameEnum _unitName;
+    protected UnitEnum _unitName;
 
     private void Awake()
     {
         _attackDelay = new WaitForSeconds(_atteckCoolTime);
+        targetMonster = null;
     }
 
     /// <summary>
@@ -26,7 +26,8 @@ public class Piece : Unit
     /// </summary>
     private void OnEnable()
     {
-        if(_autoCoroutine == null)
+        _isPlaced = true;
+        if (_autoCoroutine == null)
             _autoCoroutine = StartCoroutine(AutoAttack());
     }
 
@@ -83,26 +84,13 @@ public class Piece : Unit
         Destroy(gameObject);
     }
 
-    /// <summary>
-    /// UI���� �⹰�� ���׷��̵� ��ư Ŭ���� ȣ��Ǵ� �޼���
-    /// </summary>
-    public void Upgrade()
+    private void Update()
     {
-
+        if(targetMonster  != null)
+        {
+            transform.rotation = Quaternion.Lerp(transform.rotation,
+                                                                   Quaternion.LookRotation(targetMonster.transform.position - transform.position),
+                                                                   Time.deltaTime * 2f);
+        }
     }
-
-    /// <summary>
-    /// �⹰�� ��¥ ���� �Ǿ��� �� ȣ��Ǵ� �޼���
-    /// </summary>
-    //public void InifalPiece()
-    //{
-    //    _isPlaced = true;
-
-    //    if (_autoCoroutine == null)
-    //    {
-    //        _autoCoroutine = StartCoroutine(AutoAttack());
-    //    }
-    //}
-
-
 }

@@ -44,7 +44,7 @@ public class MonsterManager : Singleton<MonsterManager>
     {
         base.Awake(); //싱글톤 체크
         _monsterMap = new Dictionary<GoldManager.MonsterNameEnum, GameObject>();
-        SetPositionByMonsterId(); //몬스터에 대한 정보를 enum값으로 ID형식으로 Set
+        
 
     }
     /// <summary>
@@ -66,7 +66,8 @@ public class MonsterManager : Singleton<MonsterManager>
     }
     private void Start()
     {
-        
+        //인스턴스 생성 완료 후 동작 하도록 수정
+        SetPositionByMonsterId(); //몬스터에 대한 정보를 enum값으로 ID형식으로 Set
         //ForSummonTest(); //테스트용 메서드
     }
     /// <summary>

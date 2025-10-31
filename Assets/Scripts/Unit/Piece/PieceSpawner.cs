@@ -21,8 +21,6 @@ public class PieceSpawner : Singleton<PieceSpawner>
     public void CreateWizard(Vector3 position, int level = 1)
     {
         GameObject piece = Instantiate(_wizardPrefeb, position, Quaternion.identity);
-        piece.GetComponent<Piece>().InifalPiece();
-        GameObject piece = Instantiate(_wizardPrefeb, position, Quaternion.identity);
         //piece.GetComponent<Piece>().InifalPiece();
     }
    

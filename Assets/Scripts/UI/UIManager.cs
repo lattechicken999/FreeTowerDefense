@@ -1,31 +1,31 @@
-using TMPro;
+ï»¿using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
-/// ½ºÅ×ÀÌÁö Á¤º¸ ¹× HP Á¤º¸, Áö°© Á¤º¸ ¾÷µ¥ÀÌÆ®
-/// À¯´Ö ÆÇ¸Å½Ã ÆÇ¸Å UI ¶ç¿ò
+/// ìŠ¤í…Œì´ì§€ ì •ë³´ ë° HP ì •ë³´, ì§€ê°‘ ì •ë³´ ì—…ë°ì´íŠ¸
+/// ìœ ë‹› íŒë§¤ì‹œ íŒë§¤ UI ë„ì›€
 /// </summary>
 public partial class UIManager : Singleton<UIManager>, ICashObserver,IStageInfo
 {
-    //¸ó½ºÅÍ Å¸°Ù HP ¿ë UI
+    //ëª¬ìŠ¤í„° íƒ€ê²Ÿ HP ìš© UI
     [SerializeField] private Image _monsterTargetHpImage;
-    //½ºÅ×ÀÌÁö ÀÎÆ÷ Ç¥½Ã¿ë (¸î ½ºÅ×ÀÌÁö, ³²Àº ¸ó½ºÅÍ, Èå¸¥ ½Ã°£)
+    //ìŠ¤í…Œì´ì§€ ì¸í¬ í‘œì‹œìš© (ëª‡ ìŠ¤í…Œì´ì§€, ë‚¨ì€ ëª¬ìŠ¤í„°, íë¥¸ ì‹œê°„)
     [SerializeField] private TextMeshProUGUI _stageInfo;
-    //³²Àº °ñµå °¹¼ö È®ÀÎ ¿ë
+    //ë‚¨ì€ ê³¨ë“œ ê°¯ìˆ˜ í™•ì¸ ìš©
     [SerializeField] private TextMeshProUGUI _WalletInfo;
     [SerializeField] private Canvas _sellUiPrefeb;
 
-    //À¯´Ğ ±¸¸Å ¹öÆ°
+    //ìœ ë‹‰ êµ¬ë§¤ ë²„íŠ¼
     [SerializeField] private Button _buyUiWarrior;
     [SerializeField] private Button _buyUiWizard;
 
-    //±â¹° ·¹ÀÌ¾î (·¹ÀÌÄ³½ºÆ®¿¡ »ç¿ë)
+    //ê¸°ë¬¼ ë ˆì´ì–´ (ë ˆì´ìºìŠ¤íŠ¸ì— ì‚¬ìš©)
     [SerializeField] LayerMask _pieceLayerMask;
     [SerializeField] LayerMask _uiLayerMask;
 
-    //¸ŞÀÎ¸Ş´º·Î µ¹¾Æ°¡±â
+    //ë©”ì¸ë©”ë‰´ë¡œ ëŒì•„ê°€ê¸°
     [SerializeField] private Button _returnMenuButton;
 
     private GameObject _selectedUnit;
@@ -37,7 +37,7 @@ public partial class UIManager : Singleton<UIManager>, ICashObserver,IStageInfo
 
     public void NotifyChangeGold(int leftWallet)
     {
-        //UI °¡ º¯°æµÊ
+        //UI ê°€ ë³€ê²½ë¨
         _WalletInfo.text = leftWallet.ToString();
     }
 
@@ -47,7 +47,7 @@ public partial class UIManager : Singleton<UIManager>, ICashObserver,IStageInfo
     }
 
 
-    //·¹ÀÌ·Î À¯´Ö ¼±ÅÃ ½Ã Sell UI ¹öÆ°ÀÌ º¸ÀÌ°Ô ÇÏ´Â ±â´É ÇÊ¿ä
+    //ë ˆì´ë¡œ ìœ ë‹› ì„ íƒ ì‹œ Sell UI ë²„íŠ¼ì´ ë³´ì´ê²Œ í•˜ëŠ” ê¸°ëŠ¥ í•„ìš”
     private void GetSelectUnit()
     {
         if (Input.GetMouseButtonDown(0))
@@ -63,18 +63,14 @@ public partial class UIManager : Singleton<UIManager>, ICashObserver,IStageInfo
 
                     _sellUiButtonTransform.position = _camera.WorldToScreenPoint(_selectedUnit.transform.position);
 
-                    //¿ÂÅ¬¸¯ ÀÌº¥Æ®¿¡ À¯´Ö ÆÇ¸Å ¸í·É Àü´Ş
-                    //ÀÌÀü¿¡ µî·ÏµÈ ¸®½º³Ê ÀÖ´Ù¸é »èÁ¦
+                    //ì˜¨í´ë¦­ ì´ë²¤íŠ¸ì— ìœ ë‹› íŒë§¤ ëª…ë ¹ ì „ë‹¬
+                    //ì´ì „ì— ë“±ë¡ëœ ë¦¬ìŠ¤ë„ˆ ìˆë‹¤ë©´ ì‚­ì œ
                     _sellUiButton.onClick.RemoveAllListeners();
                     _sellUiButton.onClick.AddListener(_selectedUnit.transform.GetComponent<Piece>().SellPiece);
                 }
             }
             else
             {
-                //if (Physics.Raycast(ray, 100f, _uiLayerMask))
-                //{
-                //    _sellUiButton.onClick.Invoke();
-                //}
                 _selectedUnit = null;
                 //_sellUiInst.enabled = false;
             }
@@ -82,7 +78,7 @@ public partial class UIManager : Singleton<UIManager>, ICashObserver,IStageInfo
     }
 
     /// <summary>
-    /// sell ¿ë UI Äµ¹ö½º ¹Ì¸® »ı¼ºÇØ µÎ±â
+    /// sell ìš© UI ìº”ë²„ìŠ¤ ë¯¸ë¦¬ ìƒì„±í•´ ë‘ê¸°
     /// </summary>
     private void InitSellUiCanvas()
     {
@@ -100,7 +96,7 @@ public partial class UIManager : Singleton<UIManager>, ICashObserver
         if (_instance == null)
         {
             _instance = this as UIManager;
-            //UIManager´Â ¾À ÀüÈ¯½Ã ÇÊ¿ä ¾øÀ½
+            //UIManagerëŠ” ì”¬ ì „í™˜ì‹œ í•„ìš” ì—†ìŒ
             //DontDestroyOnLoad(gameObject);
             init();
         }
@@ -114,15 +110,15 @@ public partial class UIManager : Singleton<UIManager>, ICashObserver
         InitSellUiCanvas();
         _camera = Camera.main;
 
-        //°ñµå¸Ş´ÏÀú¿¡ ICashObserver ±¸µ¶ ÇÊ¿ä
+        //ê³¨ë“œë©”ë‹ˆì €ì— ICashObserver êµ¬ë… í•„ìš”
         GoldManager.Instance.RegistrationObserver(this);
-        //½ºÅ×ÀÌÁö ÀÎÆ÷ ±¸µ¶ ÇÊ¿ä
+        //ìŠ¤í…Œì´ì§€ ì¸í¬ êµ¬ë… í•„ìš”
         StageManager.Instance.SubscribeStageInfo(this);
     }
 
     private void Start()
     {
-        //¹öÆ°ÀÌº¥Æ® ¿¬°á
+        //ë²„íŠ¼ì´ë²¤íŠ¸ ì—°ê²°
         _buyUiWarrior?.onClick.AddListener(() => PlaceablePointsCheck.Instance.CommandChackPlaceable(UnitEnum.Warrior));
         _buyUiWizard?.onClick.AddListener(() => PlaceablePointsCheck.Instance.CommandChackPlaceable(UnitEnum.Wizard));
         _returnMenuButton?.onClick.AddListener(GameManager.Instance.MainMenuButton);
@@ -135,7 +131,7 @@ public partial class UIManager : Singleton<UIManager>, ICashObserver
     }
     private void OnDisable()
     {
-        //°ñµå¸Ş´ÏÀú ±¸µ¶ ÇØÁ¦ ÇÊ¿ä
+        //ê³¨ë“œë©”ë‹ˆì € êµ¬ë… í•´ì œ í•„ìš”
         GoldManager.Instance.UnregisterObserver(this);
         _sellUiInst = null;
     }

@@ -1,29 +1,29 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class BattleManager : Singleton<BattleManager>
 {
     /// <summary>
-    /// ¸ó½ºÅÍ Á¤º¸¸¦ ÀúÀåÇÏ´Â ¸®½ºÆ®
+    /// ëª¬ìŠ¤í„° ì •ë³´ë¥¼ ì €ì¥í•˜ëŠ” ë¦¬ìŠ¤íŠ¸
     /// </summary>
     public List<GameObject> MonsterObjects;
     /// <summary>
-    /// °¡Àå °¡±î¿î ¿ÀºêÁ§Æ®
+    /// ê°€ì¥ ê°€ê¹Œìš´ ì˜¤ë¸Œì íŠ¸
     /// </summary>
-    public GameObject _shortEnemy = null;
+    public GameObject _targetEnemy = null;
     /// <summary>
-    /// °¡Àå ÂªÀº °Å¸® ÃøÁ¤¿ë
+    /// ê°€ì¥ ì§§ì€ ê±°ë¦¬ ì¸¡ì •ìš©
     /// </summary>
     public float _shortDistance;
 
-    // Å×½ºÆ®¿ë »ç°Å¸® »èÁ¦ ¿¹Á¤
+    // í…ŒìŠ¤íŠ¸ìš© ì‚¬ê±°ë¦¬ ì‚­ì œ ì˜ˆì •
     #region
     //public float _attackRange = 3f;
     #endregion
 
     /// <summary>
-    /// ¸ó½ºÅÍ ¸Å´ÏÀú ±¸µ¶
+    /// ëª¬ìŠ¤í„° ë§¤ë‹ˆì € êµ¬ë…
     /// </summary>
     private void OnEnable()
     {
@@ -31,7 +31,7 @@ public class BattleManager : Singleton<BattleManager>
     }
 
     /// <summary>
-    ///  ¸ó½ºÅÍ ¸Å´ÏÀú ±¸µ¶ ÇØÁ¦
+    ///  ëª¬ìŠ¤í„° ë§¤ë‹ˆì € êµ¬ë… í•´ì œ
     /// </summary>
     private void OnDisable()
     {
@@ -39,7 +39,7 @@ public class BattleManager : Singleton<BattleManager>
     }
 
     /// <summary>
-    /// ±¸µ¶¿¡¼­ ¸ó½ºÅÍ ¸®½ºÆ®¸¦ ¹Ş¾Æ¿Í¼­ ÀúÀå
+    /// êµ¬ë…ì—ì„œ ëª¬ìŠ¤í„° ë¦¬ìŠ¤íŠ¸ë¥¼ ë°›ì•„ì™€ì„œ ì €ì¥
     /// </summary>
     /// <param name="aliveMonsters"></param>
     private void OnMonstersUpdated(List<Monster> addMonster)
@@ -56,70 +56,74 @@ public class BattleManager : Singleton<BattleManager>
 
 
     /// <summary>
-    /// »ç°Å¸® ³»¿¡ °¡Àå °¡±î¿î ÀûÀ» Ã£´Â ¸Ş¼­µå
+    /// ì‚¬ê±°ë¦¬ ë‚´ì— ê°€ì¥ ê°€ê¹Œìš´ ì ì„ ì°¾ëŠ” ë©”ì„œë“œ
     /// </summary>
-    /// <param name="range">À¯´Ö »ç°Å¸®</param>
+    /// <param name="range">ìœ ë‹› ì‚¬ê±°ë¦¬</param>
     /// <returns></returns>
-    public GameObject Target(float range)
+    public GameObject Target(float range,Transform piecePoint)
     {
-        // Å×½ºÆ®¿ë ¸ó½ºÅÍ ¸®½ºÆ® »èÁ¦ ¿¹Á¤ ÁÖ¼® Ã³¸® ÇØµÒ
+        // í…ŒìŠ¤íŠ¸ìš© ëª¬ìŠ¤í„° ë¦¬ìŠ¤íŠ¸ ì‚­ì œ ì˜ˆì • ì£¼ì„ ì²˜ë¦¬ í•´ë‘ 
         #region
-        //// Å×½ºÆ®¿ë ¿ÀºêÁ§Æ® 3°³ »ı¼º-----------
+        //// í…ŒìŠ¤íŠ¸ìš© ì˜¤ë¸Œì íŠ¸ 3ê°œ ìƒì„±-----------
         //MonsterObjects = new List<GameObject>();
         //GameObject object1 = new GameObject("Enemy1");
         //GameObject object2 = new GameObject("Enemy2");
         //GameObject object3 = new GameObject("Enemy3");
 
-        //// Å×½ºÆ®¿ë ¿ÀºêÁ§Æ® À§Ä¡ ¼³Á¤------------
+        //// í…ŒìŠ¤íŠ¸ìš© ì˜¤ë¸Œì íŠ¸ ìœ„ì¹˜ ì„¤ì •------------
         //object1.transform.position = new Vector3(0, 0, 0);
         //object2.transform.position = new Vector3(1, 0, 0);
         //object3.transform.position = new Vector3(2, 0, 0);
 
-        //// Å×½ºÆ®¿ë ¸®½ºÆ®¿¡ Ãß°¡-----------
+        //// í…ŒìŠ¤íŠ¸ìš© ë¦¬ìŠ¤íŠ¸ì— ì¶”ê°€-----------
         //MonsterObjects.Add(object1);
         //MonsterObjects.Add(object2);
         //MonsterObjects.Add(object3);
         #endregion
 
-        // Àç»ç¿ë½Ã ¹®Á¦¸¦ ¾ø¾Ö±â À§ÇØ ÃÊ±âÈ­
-        _shortDistance = Mathf.Infinity;
-        _shortEnemy = null;
+        // ì¬ì‚¬ìš©ì‹œ ë¬¸ì œë¥¼ ì—†ì• ê¸° ìœ„í•´ ì´ˆê¸°í™”
+        //_shortDistance = Mathf.Infinity;
+        _targetEnemy = null;
+        float distance;
 
-        // ¸ğµÎ µÑ·¯º¸°í °¡Àå°¡±î¿î °÷ Ã£±â
+        // ëª¨ë‘ ë‘˜ëŸ¬ë³´ê³  ê°€ì¥ê°€ê¹Œìš´ ê³³ ì°¾ê¸°
+        // -> ë¦¬ìŠ¤íŠ¸ ì¤‘ì—ì„œ ìê°• ë¨¼ì € ì‚¬ê±°ë¦¬ ë‹¿ëŠ” ëª¬ìŠ¤í„° ì°¾ê¸°
         foreach (GameObject obj in MonsterObjects)
         {
-            // ÅÍÁö´Â°Å ¹æÁö¿ë
+            // í„°ì§€ëŠ”ê±° ë°©ì§€ìš©
             if (obj == null)
             {
                 continue;
             }
-            float distance = Vector3.Distance(transform.position, obj.transform.position);
-
-            // ´õ ÀÛÀº °ªÀ» Ã£À¸¸é °»½Å
-            if (distance < _shortDistance)
+            //distance = Vector3.Distance(piecePoint.position, obj.transform.position);
+            distance = Vector2.Distance(new Vector2(piecePoint.position.x, piecePoint.position.z),
+                                                      new Vector2(obj.transform.position.x, obj.transform.position.z));
+            // ë” ì‘ì€ ê°’ì„ ì°¾ìœ¼ë©´ ê°±ì‹ 
+            if (distance < range *range)
             {
-                _shortDistance = distance;
-                _shortEnemy = obj;
+                //_shortDistance = distance;
+                _targetEnemy = obj;
+                break;
             }
         }
-        // »ç°Å¸® º¸´Ù ÂªÀ¸¸é 
-        if (_shortEnemy != null && range <= _shortDistance)
-        {
-            return _shortEnemy;
-        }
-        return null;
+        // ì‚¬ê±°ë¦¬ ë³´ë‹¤ ì§§ìœ¼ë©´ 
+        //if (_targetEnemy != null && range <= _shortDistance)
+        //{
+        //    return _targetEnemy;
+        //}
+        return _targetEnemy;
     }
 
 
     /// <summary>
-    /// unit¿¡¼­ °ø°İÀ» ¿äÃ»ÇßÀ»¶§ »ç°Å¸® ³»¿¡ ÀûÀÌ ÀÖ´Ù¸é µ¥¹ÌÁö °è»ê
+    /// unitì—ì„œ ê³µê²©ì„ ìš”ì²­í–ˆì„ë•Œ ì‚¬ê±°ë¦¬ ë‚´ì— ì ì´ ìˆë‹¤ë©´ ë°ë¯¸ì§€ ê³„ì‚°
     /// </summary>
-    /// <param name="unitAttack">À¯´Ö °ø°İ·Â</param>
-    /// <param name="range">À¯´Ö »ç°Å¸®</param>
-    public void UnitAttack(float unitAttack, float range)
+    /// <param name="unitAttack">ìœ ë‹› ê³µê²©ë ¥</param>
+    /// <param name="range">ìœ ë‹› ì‚¬ê±°ë¦¬</param>
+    public void UnitAttack(float unitAttack, float range,Transform piecePoint)
     {
-        GameObject target = Target(range);
-        // »ç°Å¸® ³»¿¡ ÀûÀÌ ¾øÀ» ¶§
+        GameObject target = Target(range, piecePoint);
+        // ì‚¬ê±°ë¦¬ ë‚´ì— ì ì´ ì—†ì„ ë•Œ
         if (target == null)
         {
             return;
@@ -130,7 +134,7 @@ public class BattleManager : Singleton<BattleManager>
         {
             return;
         }
-        // Áö±İ ¸ó½ºÅÍ´Â ½Ç¼öÇü, À¯´ÖÀº Á¤¼öÇüÀÌ¶ó ÀÏ´Ü Á¤¼öÇüÀ¸·Î ¹Ù²Ù°í ³ªÁß¿¡ »óÀÇÈÄ º¯°æ ¿¹Á¤
+        // ì§€ê¸ˆ ëª¬ìŠ¤í„°ëŠ” ì‹¤ìˆ˜í˜•, ìœ ë‹›ì€ ì •ìˆ˜í˜•ì´ë¼ ì¼ë‹¨ ì •ìˆ˜í˜•ìœ¼ë¡œ ë°”ê¾¸ê³  ë‚˜ì¤‘ì— ìƒì˜í›„ ë³€ê²½ ì˜ˆì •
         float monsterDefense = monster._DefensePoint;
         float damage = Damage(unitAttack, monsterDefense);
 
@@ -138,10 +142,10 @@ public class BattleManager : Singleton<BattleManager>
     }
 
     /// <summary>
-    /// µ¥¹ÌÁö °è»ê ·ÎÁ÷
+    /// ë°ë¯¸ì§€ ê³„ì‚° ë¡œì§
     /// </summary>
-    /// <param name="attack">À¯´Ö °ø°İ·Â</param>
-    /// <param name="defense">¸ó½ºÅÍ ¹æ¾î·Â</param>
+    /// <param name="attack">ìœ ë‹› ê³µê²©ë ¥</param>
+    /// <param name="defense">ëª¬ìŠ¤í„° ë°©ì–´ë ¥</param>
     /// <returns></returns>
     public float Damage(float attack, float defense)
     {
@@ -154,11 +158,11 @@ public class BattleManager : Singleton<BattleManager>
     }
 
     /// <summary>
-    /// ¸ó½ºÅÍ°¡ ¼ºº®À» °ø°İÇÒ ¶§
+    /// ëª¬ìŠ¤í„°ê°€ ì„±ë²½ì„ ê³µê²©í•  ë•Œ
     /// </summary>
-    /// <param name="attack">¸ó½ºÅÍ °ø°İ·Â</param>
-    /// <param name="defense">¼ºº® ¹æ¾î·Â</param>
-    /// <param name="hp">¼ºº® °ø°İ·Â</param>
+    /// <param name="attack">ëª¬ìŠ¤í„° ê³µê²©ë ¥</param>
+    /// <param name="defense">ì„±ë²½ ë°©ì–´ë ¥</param>
+    /// <param name="hp">ì„±ë²½ ê³µê²©ë ¥</param>
     /// <returns></returns>
     public int MonsterAttack(int attack, int defense, int hp)
     {

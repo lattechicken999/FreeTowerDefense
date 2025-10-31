@@ -7,6 +7,8 @@ public class Piece : Unit
 {
     [SerializeField,Range(0,2)] float _atteckCoolTime;
     
+    [SerializeField] UnitEnum _unitName;
+
     private WaitForSeconds _attackDelay;
     private Coroutine _autoCoroutine;
     private bool _isPlaced = false;
@@ -20,7 +22,7 @@ public class Piece : Unit
     }
 
     /// <summary>
-    /// È°¼ºÈ­ ½Ã ÀÚµ¿ °ø°Ý
+    /// È°ï¿½ï¿½È­ ï¿½ï¿½ ï¿½Úµï¿½ ï¿½ï¿½ï¿½ï¿½
     /// </summary>
     private void OnEnable()
     {
@@ -30,7 +32,7 @@ public class Piece : Unit
 
 
     /// <summary>
-    /// ºñÈ°¼ºÈ­½Ã °ø°Ý ÁßÁö
+    /// ï¿½ï¿½È°ï¿½ï¿½È­ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     /// </summary>
     private void OnDisable()
     {
@@ -38,7 +40,7 @@ public class Piece : Unit
     }
 
     /// <summary>
-    /// ÀÚµ¿°ø°Ý¿ë ÄÚ·çÆ¾ ÇÔ¼ö
+    /// ï¿½Úµï¿½ï¿½ï¿½ï¿½Ý¿ï¿½ ï¿½Ú·ï¿½Æ¾ ï¿½Ô¼ï¿½
     /// </summary>
     /// <returns></returns>
     IEnumerator AutoAttack()
@@ -56,7 +58,7 @@ public class Piece : Unit
 
     public override void Attack()
     {
-        //»ç°Å¸®³ª À¯´Ö °ø°Ý Æ¯¼ºÀÌ ´Þ¶ó ÇÏÀ§ Å¬·¡½º¿¡¼­ ÀçÁ¤ÀÇ ÇÊ¿ä
+        //ï¿½ï¿½Å¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Æ¯ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¶ï¿½ ï¿½ï¿½ï¿½ï¿½ Å¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¿ï¿½
     }
     public override void TakenDamage(float Damage)
     {
@@ -65,33 +67,24 @@ public class Piece : Unit
 
 
     /// <summary>
-    /// UI¿¡¼­ ÆÇ¸Å Å¬¸¯½Ã È£ÃâµÇ´Â ¸Þ¼­µå
+    /// UIï¿½ï¿½ï¿½ï¿½ ï¿½Ç¸ï¿½ Å¬ï¿½ï¿½ï¿½ï¿½ È£ï¿½ï¿½Ç´ï¿½ ï¿½Þ¼ï¿½ï¿½ï¿½
     /// </summary>
     public void SellPiece()
     {
-        /*
-        if (GoldManager.Instance != null)
-        {
-            GoldManager.Instance.UnitSell(_unitName);
-        }
-        
-        
-        Destroy(gameObject);
-        */
-        // °ñµå Áö±Þ
-        GoldManager goldManager = FindObjectOfType<GoldManager>();
+       
+        GoldManager goldManager = GoldManager.Instance;
         if (goldManager != null)
         {
             goldManager.UnitSell(_unitName);
         }
        
 
-        // À¯´Ö Á¦°Å
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         Destroy(gameObject);
     }
 
     /// <summary>
-    /// UI¿¡¼­ ±â¹°ÀÇ ¾÷±×·¹ÀÌµå ¹öÆ° Å¬¸¯½Ã È£ÃâµÇ´Â ¸Þ¼­µå
+    /// UIï¿½ï¿½ï¿½ï¿½ ï¿½â¹°ï¿½ï¿½ ï¿½ï¿½ï¿½×·ï¿½ï¿½Ìµï¿½ ï¿½ï¿½Æ° Å¬ï¿½ï¿½ï¿½ï¿½ È£ï¿½ï¿½Ç´ï¿½ ï¿½Þ¼ï¿½ï¿½ï¿½
     /// </summary>
     public void Upgrade()
     {
@@ -99,7 +92,7 @@ public class Piece : Unit
     }
 
     /// <summary>
-    /// ±â¹°ÀÌ ÁøÂ¥ »ý¼º µÇ¾úÀ» ¶§ È£ÃâµÇ´Â ¸Þ¼­µå
+    /// ï¿½â¹°ï¿½ï¿½ ï¿½ï¿½Â¥ ï¿½ï¿½ï¿½ï¿½ ï¿½Ç¾ï¿½ï¿½ï¿½ ï¿½ï¿½ È£ï¿½ï¿½Ç´ï¿½ ï¿½Þ¼ï¿½ï¿½ï¿½
     /// </summary>
     //public void InifalPiece()
     //{

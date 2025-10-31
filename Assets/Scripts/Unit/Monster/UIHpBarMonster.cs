@@ -39,13 +39,16 @@ public class UIHpBarMonster : MonoBehaviour
     }
     void Update()
     {
-        //MoveHpVar();
+        MoveHpVar();
     }
 
     private void MoveHpVar()
     {
-        Vector3 movePos = _monsterInfo.transform.position + _gapPos;
-        transform.position = _camera.WorldToScreenPoint(movePos);
+        if(_monsterInfo != null)
+        {
+            Vector3 movePos = _monsterInfo.transform.position + _gapPos;
+            transform.position = _camera.WorldToScreenPoint(movePos);
+        }
     }
 
     private void SetUIValue(float currentHp)

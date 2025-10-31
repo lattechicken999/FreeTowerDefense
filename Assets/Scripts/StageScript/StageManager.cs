@@ -9,9 +9,12 @@ using UnityEngine.SceneManagement;
 public class StageManager : Singleton<StageManager>, IMonsterCount, IMonsterWaveEnd
 {
     [SerializeField] private List<StageDataSO> _stageDataList;
-    //[SerializeField] private MonsterTarget _monsterTarget;
+    [SerializeField] private int _startNextStageDelay = 3;
+    private MonsterTarget _monsterTarget;
     private List<GoldManager.MonsterNameEnum> _stageMonsterList;
     public IStageInfo _notifyStageInfoForUI; //UIManager 에서 스테이지 정보 얻어올수 있게 추가
+    private bool _isStageClear;
+    private WaitForSeconds _stageStartDelay;
 
     private int _stageNum = 1;
     public int StageNum
@@ -39,7 +42,7 @@ public class StageManager : Singleton<StageManager>, IMonsterCount, IMonsterWave
         base.Awake(); //부모 Awake호출 (싱글톤 객체인지 확인 위해)
 
         //시작하자마자 스테이지 1번값 가져오고, 몬스터 매니저에 해당 정보 Set
-
+        _stageStartDelay = new WaitForSeconds(_startNextStageDelay);
     }
 
     /// <summary>
@@ -71,6 +74,10 @@ public class StageManager : Singleton<StageManager>, IMonsterCount, IMonsterWave
     {
         monsterTarget._gameFailNotify -= StageFail;
     }
+    public void SetMonsterTargetInfo(MonsterTarget target)
+    {
+        _monsterTarget = target;
+    }
 
     /// <summary>
     /// 스테이지 시작과 성공 실패
@@ -78,15 +85,34 @@ public class StageManager : Singleton<StageManager>, IMonsterCount, IMonsterWave
     //만약 몬스터 규모가 0이 되면
     public void StageStart()
     {
-        
+        _isStageClear = false;
         MonsterManager.Instance?.StartMonsterRun();
     }
     private void Start()
     {
         MonsterManager.Instance.SubScribeMonsterCount(this);
-        _stageMonsterList = GetStageData(_stageNum);
-        SetMonsterManagerMonsterList(); //몬스터 매니저에 넣기
+        MonsterManager.Instance._notifyAllMonsterSpawn += AllMonsterDefeat;
+        SetStageData();
         //StageStart();
+    }
+    private void SetStageData()
+    {
+        _stageMonsterList = GetStageData(StageNum);
+        SetMonsterManagerMonsterList(); //몬스터 매니저에 넣기
+
+    }
+    private void OnDestroy()
+    {
+        if(Instance == this)
+        {
+            Debug.Log("StageManager Singleton 인스턴스에서 OnDestroy호출됨");
+            MonsterManager.Instance.UnSubScribeMonsterCount();
+            MonsterManager.Instance._notifyAllMonsterSpawn -= AllMonsterDefeat;
+        }
+    }
+    private void AllMonsterDefeat(bool isClear)
+    {
+        _isStageClear = isClear; //스테이지 클리어 상태
     }
 
     /// <summary>
@@ -94,21 +120,32 @@ public class StageManager : Singleton<StageManager>, IMonsterCount, IMonsterWave
     /// </summary>
     public void StageFail()
     {
+        Debug.Log("StageFail신호 발생");
         SceneManager.LoadScene("MainMenu");
     }
     /// <summary>
     /// 스테이지 성공해서 다음 스테이지로
     /// </summary>
-    public void StageSuccess(int stage)
+    public void StageSuccess()
     {
-        if (StageNum < stage)
+        StageNum++;
+        if (StageNum <= _stageDataList.Count)
         {
-            StageNum++;
+            StartCoroutine(StageStartWithCoroutine()); //딜레이준다음 스테이지 시작
         }
         else
         {
+            Debug.Log($"스테이지번호 {StageNum}으로 최대 스테이지 갯수 초과하여 메인으로 이동");
             SceneManager.LoadScene("MainMenu");
         }
+    }
+    IEnumerator StageStartWithCoroutine()
+    {
+        SetStageData();
+        Debug.Log("현재시각:"+DateTime.Now);
+        yield return _stageStartDelay;
+        Debug.Log("대기후시각:"+DateTime.Now);
+        StageStart();
     }
 
     /// <summary>
@@ -138,6 +175,12 @@ public class StageManager : Singleton<StageManager>, IMonsterCount, IMonsterWave
     {
         string msg = $"현재 스테이지: {StageNum}, 남은 몬스터: {count}";
         _notifyStageInfoForUI?.NotifyStageInfo(msg); //UI에 스테이지 정보 알림
+        
+        if(count == 0 && _isStageClear && _monsterTarget.Hp != 0)
+        {
+            Debug.Log("스테이지 클리어 신호 동작");
+            StageSuccess();
+        }
     }
     private void CheckStageClear()
     {

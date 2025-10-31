@@ -79,6 +79,7 @@ MonoBehaviour:
   _initAttackPoint: 1
   _initDefensePoint: 2
   _rotationSpeed: 5
+  _moveSpeed: 1
 --- !u!65 &1952537266181173263
 BoxCollider:
   m_ObjectHideFlags: 0

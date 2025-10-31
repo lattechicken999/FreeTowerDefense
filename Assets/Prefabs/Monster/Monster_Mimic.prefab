@@ -76,7 +76,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <_monsterId>k__BackingField: 2
   _initHp: 50
-  _initAttackPoint: 1
+  _initAttackPoint: 3
   _initDefensePoint: 2
   _rotationSpeed: 5
   _hitEffectPrefeb: {fileID: 7177991128484655659, guid: 59a35ab9f68edff40b6e5332bed330f5, type: 3}

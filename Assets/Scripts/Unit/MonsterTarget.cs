@@ -1,35 +1,35 @@
-using System;
+ï»¿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class MonsterTarget : Unit
 {
-    //¡åÀÌº¥Æ®
-    public event Action _gameFailNotify; //StageManager¿¡ Àü´Ş. ¼ºº®HP 0ÀÌµÇ¸é ½ÇÆĞ.
-    public event Action<float> _monsterTargetHpChanged; //UIManager¿¡ Àü´Ş. Ã¼·ÂÀÌ ¹Ù²î¸é UIÃ¼·Â¹Ù¿¡ Àü´Ş
+    //â–¼ì´ë²¤íŠ¸
+    public event Action _gameFailNotify; //StageManagerì— ì „ë‹¬. ì„±ë²½HP 0ì´ë˜ë©´ ì‹¤íŒ¨.
+    public event Action<float> _monsterTargetHpChanged; //UIManagerì— ì „ë‹¬. ì²´ë ¥ì´ ë°”ë€Œë©´ UIì²´ë ¥ë°”ì— ì „ë‹¬
 
     [SerializeField] private float _hpInit = 5.0f;
     [SerializeField] private int _defenceInit;
 
-    //¡å»ó¼Ó¹ŞÀº ÇÊµåµé Get¸¸ °¡´ÉÇÏµµ·Ï ÇÁ·ÎÆÛÆ¼·Î
+    //â–¼ìƒì†ë°›ì€ í•„ë“œë“¤ Getë§Œ ê°€ëŠ¥í•˜ë„ë¡ í”„ë¡œí¼í‹°ë¡œ
     public float Hp => _hp;
     public int DefensePoint => _defensePoint;
     /// <summary>
-    /// Á×Àº ±â´É
+    /// ì£½ì€ ê¸°ëŠ¥
     /// </summary>
     public override void Attack()
     {
         return;
     }
     /// <summary>
-    /// UIManager¿¡ µ¥¹ÌÁö ¹ŞÀ¸¸é º¯°æ hp Àü´Ş
-    /// StageManager¿¡ hp°¡ 0ÀÌ¸é °ÔÀÓ Á¾·á Àü´Ş
+    /// UIManagerì— ë°ë¯¸ì§€ ë°›ìœ¼ë©´ ë³€ê²½ hp ì „ë‹¬
+    /// StageManagerì— hpê°€ 0ì´ë©´ ê²Œì„ ì¢…ë£Œ ì „ë‹¬
     /// </summary>
     /// <param name="_currentHp"></param>
     public override void TakenDamage(float _currentHp)
     {
-        //TakeDamage ÀÌÁö¸¸ ½ÇÁ¦·Î ¸Å°³º¯¼ö¿¡´Â ÇöÀç HP°¡ µé¾î¿È
+        //TakeDamage ì´ì§€ë§Œ ì‹¤ì œë¡œ ë§¤ê°œë³€ìˆ˜ì—ëŠ” í˜„ì¬ HPê°€ ë“¤ì–´ì˜´
         _hp = _currentHp;
         if(_hp <= 0)
         {
@@ -39,8 +39,8 @@ public class MonsterTarget : Unit
         HpNotify();
     }
 
-    #region µ¿Àû ÇÒ´ç ¿µ¿ª
-    //¡åÀÌº¥Æ® µ¿Àû ÇÒ´ç
+    #region ë™ì  í• ë‹¹ ì˜ì—­
+    //â–¼ì´ë²¤íŠ¸ ë™ì  í• ë‹¹
     private void SubScribeEvent()
     {
         StageManager.Instance.SubscribeMonsterTargetEvent(this);
@@ -49,7 +49,7 @@ public class MonsterTarget : Unit
     {
         StageManager.Instance.UnSubscribeMonsterTargetEvent(this);
     }
-    //¡åÇÊµå µî·Ï µ¿Àû ÇÒ´ç
+    //â–¼í•„ë“œ ë“±ë¡ ë™ì  í• ë‹¹
     private void SetThisForMonsterManager()
     {
         MonsterManager.Instance.SetMonsterTargetInfo(this);
@@ -71,8 +71,8 @@ public class MonsterTarget : Unit
     }
     private void Start()
     {
-        SubScribeEvent(); //ÀÌº¥Æ® ±¸µ¶½ÃÅ´ (µ¿Àû)
-        SetThisForMonsterManager(); //ÇÊµå ¼³Á¤ (µ¿Àû)
+        SubScribeEvent(); //ì´ë²¤íŠ¸ êµ¬ë…ì‹œí‚´ (ë™ì )
+        SetThisForMonsterManager(); //í•„ë“œ ì„¤ì • (ë™ì )
     }
     private void OnDestroy()
     {
@@ -80,15 +80,15 @@ public class MonsterTarget : Unit
         UnSetThisForMonsterManager();
     }
     /// <summary>
-    /// UI¿¡ HP°¡ ÁÙ¾îµç °ÍÀ» º¸°í
+    /// UIì— HPê°€ ì¤„ì–´ë“  ê²ƒì„ ë³´ê³ 
     /// </summary>
     private void HpNotify()
     {
-        _monsterTargetHpChanged?.Invoke(_hp);
+        _monsterTargetHpChanged?.Invoke(_hp/ _hpInit);
     }
 
     /// <summary>
-    /// StageManager¿¡ Ã¼·ÂÀÌ 0ÀÌµÇ¾î °ÔÀÓÀÌ Á¾·á µÊÀ» ¾Ë¸®´Â ÇÔ¼ö
+    /// StageManagerì— ì²´ë ¥ì´ 0ì´ë˜ì–´ ê²Œì„ì´ ì¢…ë£Œ ë¨ì„ ì•Œë¦¬ëŠ” í•¨ìˆ˜
     /// </summary>
     private void GameFailNotify()
     {

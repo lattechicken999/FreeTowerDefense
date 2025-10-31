@@ -32,6 +32,8 @@ public partial class UIManager : Singleton<UIManager>, ICashObserver,IStageInfo
     [SerializeField] private GameObject _clearButton;
     [SerializeField] private GameObject _failButton;
 
+    [SerializeField] private GameObject _monsterTarget;
+
     private GameObject _selectedUnit;
     private Camera _camera;
     private Canvas _sellUiInst;
@@ -128,6 +130,10 @@ public partial class UIManager : Singleton<UIManager>, ICashObserver,IStageInfo
         _failButton.SetActive(true);
         _failButton.GetComponent<Button>().onClick.AddListener(GameManager.Instance.MainMenuButton);
     }
+    public void SetMonsterTargetHpUi(float hpPersent)
+    {
+        _monsterTargetHpImage.fillAmount = hpPersent;
+    }
 }
 
 public partial class UIManager : Singleton<UIManager>, ICashObserver
@@ -175,6 +181,8 @@ public partial class UIManager : Singleton<UIManager>, ICashObserver
         //_failButton = transform.Find("GameFailButton").gameObject;
         _clearButton.SetActive(false);
         _failButton.SetActive(false);
+
+        _monsterTarget.GetComponent<MonsterTarget>()._monsterTargetHpChanged += SetMonsterTargetHpUi;
     }
     private void Update()
     {

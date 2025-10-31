@@ -381,6 +381,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 34786241432624000, guid: 018cac28d1328e34a9118662c25c904a, type: 3}
+      propertyPath: _hpInit
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 34786241432624000, guid: 018cac28d1328e34a9118662c25c904a, type: 3}
+      propertyPath: _defenceInit
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1004151548003407003, guid: 018cac28d1328e34a9118662c25c904a, type: 3}
       propertyPath: m_LocalPosition.x
       value: 1.6055311
@@ -430,6 +438,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 018cac28d1328e34a9118662c25c904a, type: 3}
+--- !u!1 &783485784 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3873461223158138846, guid: 018cac28d1328e34a9118662c25c904a, type: 3}
+  m_PrefabInstance: {fileID: 783485783}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &944879307
 GameObject:
   m_ObjectHideFlags: 0
@@ -474,6 +487,7 @@ MonoBehaviour:
   _returnMenuButton: {fileID: 298325489}
   _clearButton: {fileID: 1929458100}
   _failButton: {fileID: 1929458099}
+  _monsterTarget: {fileID: 783485784}
 --- !u!4 &944879309
 Transform:
   m_ObjectHideFlags: 0

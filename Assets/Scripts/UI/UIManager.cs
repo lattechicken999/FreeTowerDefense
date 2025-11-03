@@ -2,8 +2,8 @@
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
-
 /// <summary>
 /// 스테이지 정보 및 HP 정보, 지갑 정보 업데이트
 /// 유닛 판매시 판매 UI 띄움
@@ -64,9 +64,10 @@ public partial class UIManager : Singleton<UIManager>, ICashObserver,IStageInfo
     {
         if (Input.GetMouseButtonDown(0))
         {
-            ray = _camera.ScreenPointToRay(Input.mousePosition);
+           
             if (_selectedUnit == null)
             {
+                ray = _camera.ScreenPointToRay(Input.mousePosition);
                 if (Physics.Raycast(ray, out RaycastHit hit, 100f,_pieceLayerMask))
                 {
                     _selectedUnit = hit.transform.gameObject;
@@ -84,7 +85,32 @@ public partial class UIManager : Singleton<UIManager>, ICashObserver,IStageInfo
             else
             {
                 _selectedUnit = null;
-                //_sellUiInst.enabled = false;
+                //EventSystem.current.alreadySelecting
+                //var a = EventSystem.current.currentSelectedGameObject;
+                if (EventSystem.current.IsPointerOverGameObject())
+                {
+                    //Debug.Log("마우스가 UI 위에 있음");
+                    if(!EventSystem.current.currentSelectedGameObject.name.Equals("SellButton"))
+                    {
+                        //Sell UI에 올라간 마우스가 아니면 UI 지움
+                        _sellUiInst.enabled = false;
+                    }
+
+                }
+                else
+                {
+                    //Debug.Log("마우스가 UI 위에 없음");
+                    _sellUiInst.enabled = false;
+                }
+
+                //ray = _camera.ScreenPointToRay(Input.mousePosition);
+
+
+                //if (!Physics.Raycast(Vector3.zero,Input.mousePosition,2000f,_uiLayerMask))
+                //{
+                //    //SellUI 를 클릭하지 않는다면 UI 지우기
+                //    _sellUiInst.enabled = false;
+                //}
             }
         }
     }
@@ -184,6 +210,7 @@ public partial class UIManager : Singleton<UIManager>, ICashObserver
 
         _monsterTarget.GetComponent<MonsterTarget>()._monsterTargetHpChanged += SetMonsterTargetHpUi;
     }
+    
     private void Update()
     {
         GetSelectUnit();

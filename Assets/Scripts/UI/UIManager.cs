@@ -64,9 +64,10 @@ public partial class UIManager : Singleton<UIManager>, ICashObserver,IStageInfo
     {
         if (Input.GetMouseButtonDown(0))
         {
-            ray = _camera.ScreenPointToRay(Input.mousePosition);
+           
             if (_selectedUnit == null)
             {
+                ray = _camera.ScreenPointToRay(Input.mousePosition);
                 if (Physics.Raycast(ray, out RaycastHit hit, 100f,_pieceLayerMask))
                 {
                     _selectedUnit = hit.transform.gameObject;
@@ -86,21 +87,30 @@ public partial class UIManager : Singleton<UIManager>, ICashObserver,IStageInfo
                 _selectedUnit = null;
                 //EventSystem.current.alreadySelecting
                 //var a = EventSystem.current.currentSelectedGameObject;
-                //if(EventSystem.current.IsPointerOverGameObject())
-                //{
-                //    Debug.Log("마우스가 UI 위에 있음");
-                   
-                //}
-                //else
-                //{
-                //    Debug.Log("마우스가 UI 위에 없음");
-                //    _sellUiInst.enabled = false;
-                //}
-                if (!Physics.Raycast(ray, out RaycastHit hit, 100f, _uiLayerMask))
+                if (EventSystem.current.IsPointerOverGameObject())
                 {
-                    //SellUI 를 클릭하지 않는다면 UI 지우기
+                    //Debug.Log("마우스가 UI 위에 있음");
+                    if(!EventSystem.current.currentSelectedGameObject.name.Equals("SellButton"))
+                    {
+                        //Sell UI에 올라간 마우스가 아니면 UI 지움
+                        _sellUiInst.enabled = false;
+                    }
+
+                }
+                else
+                {
+                    //Debug.Log("마우스가 UI 위에 없음");
                     _sellUiInst.enabled = false;
                 }
+
+                //ray = _camera.ScreenPointToRay(Input.mousePosition);
+
+
+                //if (!Physics.Raycast(Vector3.zero,Input.mousePosition,2000f,_uiLayerMask))
+                //{
+                //    //SellUI 를 클릭하지 않는다면 UI 지우기
+                //    _sellUiInst.enabled = false;
+                //}
             }
         }
     }

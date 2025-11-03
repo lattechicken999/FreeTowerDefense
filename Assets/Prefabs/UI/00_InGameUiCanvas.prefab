@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4995687821596461167}
   - component: {fileID: 7506839340836492880}
   - component: {fileID: 7795942244141792819}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -146,7 +146,7 @@ GameObject:
   - component: {fileID: 4472061096368220518}
   - component: {fileID: 7776595472115641999}
   - component: {fileID: 8362536829305889038}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: GameClearButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -267,7 +267,7 @@ GameObject:
   - component: {fileID: 7569406495634573553}
   - component: {fileID: 6625092372140754445}
   - component: {fileID: 8348761783125712593}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: GameFailButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -388,7 +388,7 @@ GameObject:
   - component: {fileID: 8655964800529475570}
   - component: {fileID: 1364295212770101236}
   - component: {fileID: 8963348000746334797}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: XButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -508,7 +508,7 @@ GameObject:
   - component: {fileID: 3418269090673737788}
   - component: {fileID: 4604612058396144010}
   - component: {fileID: 8934551970707937101}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: 00_InGameUiCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -576,10 +576,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
+  m_ReferenceResolution: {x: 1920, y: 1080}
   m_ScreenMatchMode: 0
   m_MatchWidthOrHeight: 0
   m_PhysicalUnit: 3
@@ -615,7 +615,7 @@ GameObject:
   - component: {fileID: 7114784756422915994}
   - component: {fileID: 4556563685523933352}
   - component: {fileID: 4934026795379855176}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -746,9 +746,17 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5268318191006847593}
     m_Modifications:
+    - target: {fileID: 57977411249589865, guid: bfc9af856b3c3934aaefe34bbc21b650, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4657949161639318333, guid: bfc9af856b3c3934aaefe34bbc21b650, type: 3}
       propertyPath: m_Name
       value: GoldWallet
+      objectReference: {fileID: 0}
+    - target: {fileID: 4657949161639318333, guid: bfc9af856b3c3934aaefe34bbc21b650, type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7321751386916260137, guid: bfc9af856b3c3934aaefe34bbc21b650, type: 3}
       propertyPath: m_Pivot.x
@@ -830,6 +838,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8392663596511236186, guid: bfc9af856b3c3934aaefe34bbc21b650, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -848,9 +860,17 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5268318191006847593}
     m_Modifications:
+    - target: {fileID: 5520995884778678682, guid: cb940b8b84db1b54a88028650b546996, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6869710389700012783, guid: cb940b8b84db1b54a88028650b546996, type: 3}
       propertyPath: m_Name
       value: BuyHeroButton
+      objectReference: {fileID: 0}
+    - target: {fileID: 6869710389700012783, guid: cb940b8b84db1b54a88028650b546996, type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6960104105401009972, guid: cb940b8b84db1b54a88028650b546996, type: 3}
       propertyPath: m_Colors.m_PressedColor.b
@@ -863,6 +883,10 @@ PrefabInstance:
     - target: {fileID: 6960104105401009972, guid: cb940b8b84db1b54a88028650b546996, type: 3}
       propertyPath: m_Colors.m_PressedColor.r
       value: 0.8117647
+      objectReference: {fileID: 0}
+    - target: {fileID: 6971083435871747033, guid: cb940b8b84db1b54a88028650b546996, type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7170689941665376296, guid: cb940b8b84db1b54a88028650b546996, type: 3}
       propertyPath: m_Pivot.x
@@ -978,6 +1002,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: ImageHpBarPrefab
       objectReference: {fileID: 0}
+    - target: {fileID: 3739557530924150378, guid: 5cf35cc2d41a0e445bda10200c63dba8, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4646240545404109477, guid: 5cf35cc2d41a0e445bda10200c63dba8, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -1056,6 +1084,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4646240545404109477, guid: 5cf35cc2d41a0e445bda10200c63dba8, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4959563311659674176, guid: 5cf35cc2d41a0e445bda10200c63dba8, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5537589838339432965, guid: 5cf35cc2d41a0e445bda10200c63dba8, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6928507106922269971, guid: 5cf35cc2d41a0e445bda10200c63dba8, type: 3}
+      propertyPath: m_Layer
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -1159,6 +1199,14 @@ PrefabInstance:
     - target: {fileID: 2714244056496021232, guid: 00235cd73e2fa6048aba5b6920f94b24, type: 3}
       propertyPath: m_Name
       value: StageInfo
+      objectReference: {fileID: 0}
+    - target: {fileID: 2714244056496021232, guid: 00235cd73e2fa6048aba5b6920f94b24, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4535367131530620712, guid: 00235cd73e2fa6048aba5b6920f94b24, type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

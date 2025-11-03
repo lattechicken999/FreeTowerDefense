@@ -24,8 +24,9 @@ public class MonsterManager : Singleton<MonsterManager>
     
     //코루틴용 private 필드
     private WaitForSeconds _delay; //StageManager에서 Set하면 설정되는 몬스터 생성 딜레이
-    private Coroutine _coroutine; //코루틴 중복실행때문에 쓸까 하는데 안써도될듯? 좀 생각해봐야함
+    private Coroutine _spawnStartCoroutine; //코루틴 중복실행때문에 쓸까 하는데 안써도될듯? 좀 생각해봐야함
     List<Monster> _aliveMonsters; //살아있는 몬스터 배열 (스테이지에서 몇마리 살아있는지 알아야하기때문에)
+    bool _isStopSpawn = false;
     //▼웨이포인트용 필드
     private MonsterWayPoint _wayPointParent; //웨이포인트 정보를 자식으로 가지고있는 부모 게임 오브젝트
     private List<Transform> _wayPointChilds; //_wayPointParent에 있는 자식정보를 꺼내서 저장한 필드
@@ -144,8 +145,23 @@ public class MonsterManager : Singleton<MonsterManager>
     {
         yield return null;
         _aliveMonsters = new List<Monster>(); //받으면 일단 초기화
-        StartCoroutine(SummonMonsterCoroutine(_spawnCount, _currentStageMonstersInfo)); //실행
+        if (_spawnStartCoroutine == null)
+        {
+            _spawnStartCoroutine = StartCoroutine(SummonMonsterCoroutine(_spawnCount, _currentStageMonstersInfo)); //실행
+        }
     }
+    public void MonsterManangerInit()
+    {
+        if(_spawnStartCoroutine != null)
+        {
+            StopCoroutine(_spawnStartCoroutine);
+        }
+        _isStopSpawn = true;
+        _remainSpawnCount = 0;
+        _spawnStartCoroutine = null;
+    }
+    
+
     /// <summary>
     /// 코루틴에서 사용할 메서드 (몬스터 소환)
     /// </summary>
@@ -172,6 +188,7 @@ public class MonsterManager : Singleton<MonsterManager>
         if(_remainSpawnCount == 0)
         {
             _notifyAllMonsterSpawn.Invoke(true); //끝남
+            _spawnStartCoroutine = null;
         }
     }
     private GameObject CreateMonster(List<GoldManager.MonsterNameEnum> monstersInfo,int index)

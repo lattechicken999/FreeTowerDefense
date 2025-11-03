@@ -71,7 +71,10 @@ public partial class PlaceablePointsCheck : Singleton<PlaceablePointsCheck>
         }
 
     }
-
+    public void OpenPlace(Transform placeTransform)
+    {
+        _placeableStates[_childsDict[placeTransform]] =true;
+    }
     public void CommandChackPlaceable(UnitEnum type)
     {
         _isPlaceState = true;
@@ -123,10 +126,11 @@ public partial class PlaceablePointsCheck : Singleton<PlaceablePointsCheck>
             switch(_pieceType)
             {
                 case UnitEnum.Warrior:
-                    _placeableStates[_selectedPlaceablPoint] = !PieceSpawner.Instance.CreateWarrior(_selectedPointTransform.position);
+                    _placeableStates[_selectedPlaceablPoint] = !PieceSpawner.Instance.CreateWarrior(_selectedPointTransform);
+                    
                     break;
                 case UnitEnum.Wizard:
-                    _placeableStates[_selectedPlaceablPoint] = !PieceSpawner.Instance.CreateWizard(_selectedPointTransform.position);
+                    _placeableStates[_selectedPlaceablPoint] = !PieceSpawner.Instance.CreateWizard(_selectedPointTransform);
                     break;
                 default:
                     break;

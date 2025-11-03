@@ -135,8 +135,13 @@ public class GoldManager : Singleton<GoldManager>
     {
         // 부모 init 호출
         base.init();
-        //_gold = 100;
-        //NotifyChangeGold();
+
+    }
+
+    public void ResetGold()
+    {
+        _gold = 50;
+        NotifyChangeGold();
     }
 
     /// <summary>

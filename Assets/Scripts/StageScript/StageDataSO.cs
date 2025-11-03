@@ -1,11 +1,11 @@
-ï»¿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(menuName ="Stage/Stage Monster Data",fileName ="StageMonsterData")]
 public class StageDataSO : ScriptableObject
 {
-    //ìœ ë‹ˆí‹°ì—ì„œ ì œê³µí•˜ëŠ” ScriptableObjectë¥¼ ì´ìš©í•´ì„œ Inspectorì—ì„œ Stageì •ë³´ë¥¼ ì„¤ì •í•  ìˆ˜ ìˆë„ë¡ ì„¤ì •
+    //À¯´ÏÆ¼¿¡¼­ Á¦°øÇÏ´Â ScriptableObject¸¦ ÀÌ¿ëÇØ¼­ Inspector¿¡¼­ StageÁ¤º¸¸¦ ¼³Á¤ÇÒ ¼ö ÀÖµµ·Ï ¼³Á¤
     public int stageNumber;
     public int spawnDelay;
     public List<GoldManager.MonsterNameEnum> monsterInfoList;

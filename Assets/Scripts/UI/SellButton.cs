@@ -1,4 +1,4 @@
-ï»¿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -12,9 +12,9 @@ public class SellButton : MonoBehaviour
         _canvas = GetComponent<Canvas>();
     }
     /// <summary>
-    /// ê¸°ë¬¼ì„ í´ë¦­í–ˆì„ ë•Œ íŒë§¤ ë²„íŠ¼ì˜ ìœ„ì¹˜ë¥¼ ì¡°ì •í•´ì£¼ëŠ” ë©”ì„œë“œ
+    /// ±â¹°À» Å¬¸¯ÇßÀ» ¶§ ÆÇ¸Å ¹öÆ°ÀÇ À§Ä¡¸¦ Á¶Á¤ÇØÁÖ´Â ¸Ş¼­µå
     /// </summary>
-    /// <param name="position">UIë¥¼ ê¸°ë¬¼ìœ„ì— ë„ìš°ê¸° ìœ„í•œ ìœ„ì¹˜</param>
+    /// <param name="position">UI¸¦ ±â¹°À§¿¡ ¶ç¿ì±â À§ÇÑ À§Ä¡</param>
     public void SetPosition(Vector3 position)
     {
         transform.position = position;
@@ -22,7 +22,5 @@ public class SellButton : MonoBehaviour
     public void ComplateSelling()
     {
         _canvas.enabled = false;
-        PlaceablePointsCheck.Instance.SellingComplate();
     }
-
 }

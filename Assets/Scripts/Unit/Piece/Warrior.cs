@@ -9,7 +9,7 @@ public class Warrior : Piece
     protected override void Start()
     {
         
-        _attackPoint = 5;//전사는 공격력 얼마나 할지
+        _attackPoint = 7;//전사는 공격력 얼마나 할지
         _unitName = UnitEnum.Warrior;
         base.Start();
 

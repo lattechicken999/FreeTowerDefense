@@ -1,8 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
-using UnityEditor.Build.Content;
-using UnityEngine;
+ï»¿using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class GamePlayManager : MonoBehaviour
@@ -14,26 +10,26 @@ public class GamePlayManager : MonoBehaviour
     static GamePlayManager instance;
 
     /// <summary>
-    /// °ÔÀÓÇÃ·¹ÀÌ ½ÃÀÛ½Ã UI·Î ¸Ş¼­µåÈ£Ãâ
+    /// ê²Œì„í”Œë ˆì´ ì‹œì‘ì‹œ UIë¡œ ë©”ì„œë“œí˜¸ì¶œ
     /// </summary>
     public void GameStartUI()
     {
-        //UI±â´É È£Ãâ
+        //UIê¸°ëŠ¥ í˜¸ì¶œ
     }
 
     /// <summary>
-    /// °ÔÀÓÇÃ·¹ÀÌ ½ÃÀÛ½Ã UI·Î ¸Ş¼­µåÈ£Ãâ
+    /// ê²Œì„í”Œë ˆì´ ì‹œì‘ì‹œ UIë¡œ ë©”ì„œë“œí˜¸ì¶œ
     /// </summary>
     public void GameStartStageManager()
     {
-        //UI±â´É È£Ãâ
+        //UIê¸°ëŠ¥ í˜¸ì¶œ
     }
 
-    //¹öÆ°ÀÌ ´­·ÈÀ» ¶§ ¼öÇàÇÒ ±â´ÉÀ» Á¦ÀÛÇÏ¼Å¾ß ÇÔ, ¿©±â°¡ ÀÌ»ó¹Î¾¾ ÀÛ¾÷ÀÇ ³¡
+    //ë²„íŠ¼ì´ ëˆŒë ¸ì„ ë•Œ ìˆ˜í–‰í•  ê¸°ëŠ¥ì„ ì œì‘í•˜ì…”ì•¼ í•¨, ì—¬ê¸°ê°€ ì´ìƒë¯¼ì”¨ ì‘ì—…ì˜ ë
     public void NextStage()
     {
-        Debug.Log("´ÙÀ½½ºÅ×ÀÌÁö ÀÌµ¿");
-        SceneManager.LoadScene("ÀÎ°ÔÀÓ ¾À");
+        Debug.Log("ë‹¤ìŒìŠ¤í…Œì´ì§€ ì´ë™");
+        SceneManager.LoadScene("ì¸ê²Œì„ ì”¬");
     }
 
     public void setisGameover()
@@ -41,9 +37,9 @@ public class GamePlayManager : MonoBehaviour
         _isGameStart = true;
     }
 
-    //1. ÀÌ¸§À¸·Î Ã£±â
+    //1. ì´ë¦„ìœ¼ë¡œ ì°¾ê¸°
     
-    //2. ÅÂ±×·Î Ã£±â
-    //3. µå·¡±×·Î Ã£±â
+    //2. íƒœê·¸ë¡œ ì°¾ê¸°
+    //3. ë“œë˜ê·¸ë¡œ ì°¾ê¸°
 
 }

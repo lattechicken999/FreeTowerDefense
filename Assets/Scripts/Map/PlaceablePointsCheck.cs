@@ -24,7 +24,6 @@ public partial class PlaceablePointsCheck : Singleton<PlaceablePointsCheck>
 
     //마우스를 올려둔 곳이 배치 가능한 곳이라면, 가져올 인덱스 정보
     private int _selectedPlaceablPoint;
-
     //선택된 곳의 위치 정보
     private Transform _selectedPointTransform;
 
@@ -72,7 +71,10 @@ public partial class PlaceablePointsCheck : Singleton<PlaceablePointsCheck>
         }
 
     }
-
+    public void OpenPlace(Transform placeTransform)
+    {
+        _placeableStates[_childsDict[placeTransform]] =true;
+    }
     public void CommandChackPlaceable(UnitEnum type)
     {
         _isPlaceState = true;
@@ -124,10 +126,11 @@ public partial class PlaceablePointsCheck : Singleton<PlaceablePointsCheck>
             switch(_pieceType)
             {
                 case UnitEnum.Warrior:
-                    _placeableStates[_selectedPlaceablPoint] = !PieceSpawner.Instance.CreateWarrior(_selectedPointTransform.position);
+                    _placeableStates[_selectedPlaceablPoint] = !PieceSpawner.Instance.CreateWarrior(_selectedPointTransform);
+                    
                     break;
                 case UnitEnum.Wizard:
-                    _placeableStates[_selectedPlaceablPoint] = !PieceSpawner.Instance.CreateWizard(_selectedPointTransform.position);
+                    _placeableStates[_selectedPlaceablPoint] = !PieceSpawner.Instance.CreateWizard(_selectedPointTransform);
                     break;
                 default:
                     break;
@@ -138,11 +141,6 @@ public partial class PlaceablePointsCheck : Singleton<PlaceablePointsCheck>
             _effect.SetActive(false);
             ComplateChackPlaceable();
         }
-    }
-    public void SellingComplate()
-    {
-        _placeableStates[_childsDict[_selectedPointTransform]] = true;
-        _selectedPointTransform = null;
     }
 }
 

@@ -16,6 +16,9 @@ public class Piece : Unit
     protected virtual int GetPrice() => 0;
     protected UnitEnum _unitName;
 
+    //설치된 자리의 트랜스폼 가지고있기
+    private Transform _placeTransform;
+
     private void Awake()
     {
         _attackDelay = new WaitForSeconds(_atteckCoolTime);
@@ -72,7 +75,15 @@ public class Piece : Unit
 
     }
 
+    public void SetPlaceTransform(Transform placeTransForm)
+    {
+        _placeTransform = placeTransForm;
+    }
 
+    public Transform GetPlaceTransform()
+    {
+        return _placeTransform;
+    }
     /// <summary>
     /// UI���� �Ǹ� Ŭ���� ȣ��Ǵ� �޼���
     /// </summary>
@@ -80,7 +91,8 @@ public class Piece : Unit
     {
 
         GoldManager.Instance.UnitSell(_unitName);
-
+        //설치장소 다시 열기
+        PlaceablePointsCheck.Instance.OpenPlace(_placeTransform);
         // ���� ����
         Destroy(gameObject);
     }

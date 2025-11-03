@@ -28,6 +28,7 @@ public class GameManager : Singleton<GameManager>
     public void GameStartButton()
     {
         _isGameStart = true;
+        GoldManager.Instance.ResetGold();
         SceneManager.LoadScene("InGame");
 
         StageManager.Instance.StageStart(); //스타트 버튼 누르면 실행되도록 Test코드

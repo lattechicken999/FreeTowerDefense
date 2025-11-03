@@ -30,7 +30,7 @@ public class GameManager : Singleton<GameManager>
         _isGameStart = true;
         SceneManager.LoadScene("InGame");
 
-        StageManager.Instance.StageStart(); //스타트 버튼 누르면 실행되도록 Test코드
+        StageManager.Instance.StageFirstStart(); //스타트 버튼 누르면 실행되도록 Test코드
     }
 
     /// <summary>
@@ -48,6 +48,7 @@ public class GameManager : Singleton<GameManager>
     {
         _isGameStart = false;
         SceneManager.LoadScene("MainMenu");
+        MonsterManager.Instance.MonsterManangerInit();
     }
 
 }

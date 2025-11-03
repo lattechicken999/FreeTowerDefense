@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using Unity.VisualScripting;
 using UnityEditor.SearchService;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -68,6 +69,21 @@ public class StageManager : Singleton<StageManager>, IMonsterCount
     {
         _monsterTarget = target;
     }
+    private void StageInit()
+    {
+        _isSpawnFinished = false;
+        _deathMonsterCount = -1;
+        MonsterManager.Instance.MonsterManangerInit();
+    }
+    /// <summary>
+    /// 스테이지 맨 처음 시작
+    /// </summary>
+    public void StageFirstStart()
+    {
+        _stageNum = 1;
+        SetStageData();
+        StageStart();
+    }
 
     /// <summary>
     /// 스테이지 시작과 성공 실패
@@ -75,15 +91,15 @@ public class StageManager : Singleton<StageManager>, IMonsterCount
     //만약 몬스터 규모가 0이 되면
     public void StageStart()
     {
-        _isSpawnFinished = false;
-        _deathMonsterCount = -1;
+        StageInit();
         MonsterManager.Instance?.StartMonsterRun();
     }
+
     private void Start()
     {
         MonsterManager.Instance.SubScribeMonsterCount(this);
         MonsterManager.Instance._notifyAllMonsterSpawn += AllMonsterSpawned;
-        SetStageData();
+        //SetStageData();
         //StageStart();
     }
     private void SetStageData()
